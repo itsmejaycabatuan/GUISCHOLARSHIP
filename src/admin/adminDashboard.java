@@ -71,6 +71,9 @@ public class adminDashboard extends javax.swing.JFrame {
 
         usersnav.setBackground(new java.awt.Color(204, 255, 255));
         usersnav.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                usersnavMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 usersnavMouseEntered(evt);
             }
@@ -125,6 +128,12 @@ public class adminDashboard extends javax.swing.JFrame {
     private void usersnavMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_usersnavMouseExited
         usersnav.setBackground(hover);
     }//GEN-LAST:event_usersnavMouseExited
+
+    private void usersnavMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_usersnavMouseClicked
+       usersTable ut = new usersTable();
+       ut.setVisible(true);
+       this.dispose();
+    }//GEN-LAST:event_usersnavMouseClicked
 
     /**
      * @param args the command line arguments

@@ -118,6 +118,9 @@ public class usersTable extends javax.swing.JFrame {
 
         refreshnav.setBackground(new java.awt.Color(204, 255, 255));
         refreshnav.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                refreshnavMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 refreshnavMouseEntered(evt);
             }
@@ -129,7 +132,7 @@ public class usersTable extends javax.swing.JFrame {
 
         jLabel8.setFont(new java.awt.Font("Arial Black", 1, 18)); // NOI18N
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel8.setText("REFRESH");
+        jLabel8.setText("BACK");
         refreshnav.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, 120, 30));
 
         jPanel2.add(refreshnav, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 380, 240, 50));
@@ -241,6 +244,12 @@ public class usersTable extends javax.swing.JFrame {
     private void refreshnavMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refreshnavMouseExited
         refreshnav.setBackground(hover);
     }//GEN-LAST:event_refreshnavMouseExited
+
+    private void refreshnavMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refreshnavMouseClicked
+      adminDashboard ad = new adminDashboard();
+      ad.setVisible(true);
+      this.dispose();
+    }//GEN-LAST:event_refreshnavMouseClicked
 
     /**
      * @param args the command line arguments
