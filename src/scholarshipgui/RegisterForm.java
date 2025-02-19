@@ -22,6 +22,8 @@ public class RegisterForm extends javax.swing.JFrame {
      */
     public RegisterForm() {
         initComponents();
+         this.viewicon.setVisible(false);
+         this.viewicon1.setVisible(false);
     }
     
     
@@ -52,7 +54,6 @@ public class RegisterForm extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        cpass = new javax.swing.JTextField();
         username = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         fname = new javax.swing.JTextField();
@@ -63,7 +64,6 @@ public class RegisterForm extends javax.swing.JFrame {
         contact = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        pass = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         registernav = new javax.swing.JPanel();
@@ -100,6 +100,12 @@ public class RegisterForm extends javax.swing.JFrame {
         labelback = new javax.swing.JLabel();
         type = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
+        iconhide1 = new javax.swing.JLabel();
+        viewicon = new javax.swing.JLabel();
+        iconhide2 = new javax.swing.JLabel();
+        viewicon1 = new javax.swing.JLabel();
+        pass = new javax.swing.JPasswordField();
+        conpass = new javax.swing.JPasswordField();
 
         jScrollPane1.setViewportView(jTree1);
 
@@ -120,16 +126,6 @@ public class RegisterForm extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel4.setText("User Name:");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 190, 110, 30));
-
-        cpass.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
-        cpass.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        cpass.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
-        cpass.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cpassActionPerformed(evt);
-            }
-        });
-        jPanel1.add(cpass, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 600, 420, 50));
 
         username.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         username.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -200,16 +196,6 @@ public class RegisterForm extends javax.swing.JFrame {
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/register11.png"))); // NOI18N
         jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 10, -1, -1));
-
-        pass.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
-        pass.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        pass.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
-        pass.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                passActionPerformed(evt);
-            }
-        });
-        jPanel1.add(pass, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 540, 420, 50));
 
         jLabel11.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel11.setText("Confirm");
@@ -599,6 +585,62 @@ public class RegisterForm extends javax.swing.JFrame {
         jLabel9.setText("Contact:");
         jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 430, 110, 30));
 
+        iconhide1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/hideicon.png"))); // NOI18N
+        iconhide1.setText("jLabel1");
+        iconhide1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                iconhide1MousePressed(evt);
+            }
+        });
+        jPanel1.add(iconhide1, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 550, 30, 30));
+
+        viewicon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/viewicon.png"))); // NOI18N
+        viewicon.setText("jLabel1");
+        viewicon.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                viewiconMousePressed(evt);
+            }
+        });
+        jPanel1.add(viewicon, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 550, 30, 30));
+
+        iconhide2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/hideicon.png"))); // NOI18N
+        iconhide2.setText("jLabel1");
+        iconhide2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                iconhide2MousePressed(evt);
+            }
+        });
+        jPanel1.add(iconhide2, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 610, 30, 30));
+
+        viewicon1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/viewicon.png"))); // NOI18N
+        viewicon1.setText("jLabel1");
+        viewicon1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                viewicon1MousePressed(evt);
+            }
+        });
+        jPanel1.add(viewicon1, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 610, 30, 30));
+
+        pass.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        pass.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        pass.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
+        pass.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                passActionPerformed(evt);
+            }
+        });
+        jPanel1.add(pass, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 540, 420, 50));
+
+        conpass.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        conpass.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        conpass.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
+        conpass.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                conpassActionPerformed(evt);
+            }
+        });
+        jPanel1.add(conpass, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 600, 420, 50));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -630,17 +672,9 @@ public class RegisterForm extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_emailActionPerformed
 
-    private void cpassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cpassActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cpassActionPerformed
-
     private void contactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contactActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_contactActionPerformed
-
-    private void passActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_passActionPerformed
 
     private void lgnav2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lgnav2MouseEntered
 
@@ -841,7 +875,7 @@ public class RegisterForm extends javax.swing.JFrame {
         dbConnect db = new dbConnect();
       
         if(username.getText().isEmpty() || fname.getText().isEmpty() || lname.getText().isEmpty() || email.getText().isEmpty() || contact.getText().isEmpty() 
-                || pass.getText().isEmpty() || cpass.getText().isEmpty()){
+                || pass.getText().isEmpty() || pass.getText().isEmpty()){
                JOptionPane.showMessageDialog(null, "All fields required");
                
         }else if(!isEmailValid(email.getText())){
@@ -852,14 +886,14 @@ public class RegisterForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Contact number exceeded");
         }else if(pass.getText().length() < 8){
             JOptionPane.showMessageDialog(null, "Password must be at least 8 characters long");
-        }else if(!pass.getText().equals(cpass.getText())){
+        }else if(!pass.getText().equals(pass.getText())){
             JOptionPane.showMessageDialog(null, "Password not Matches");
         }else if(type.getSelectedIndex() == 0){
             JOptionPane.showMessageDialog(null, "Please select a Type of User");
         }else if (db.insertData("INSERT INTO tbl_user (username, f_name, l_name, email, contact, type, pass, cpass, status) "
                 + "VALUES ('"+username.getText()+"', '"+fname.getText()+"', '"+lname.getText()+"', '"+email.getText()+"', "
                         + "'"+contact.getText()+"', '"+type.getSelectedItem()+"', '"+pass.getText()+"', "
-                                + "'"+cpass.getText()+"', 'Pending')") == 1){
+                                + "'"+pass.getText()+"', 'Pending')") == 1){
             JOptionPane.showMessageDialog(null, "Submitted Successfully");
             LoginForm lf = new LoginForm();
             lf.setVisible(true);
@@ -870,6 +904,42 @@ public class RegisterForm extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_lgnav2MouseClicked
+
+    private void passActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_passActionPerformed
+
+    private void conpassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_conpassActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_conpassActionPerformed
+
+    private void viewiconMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewiconMousePressed
+        viewicon.setVisible(false);
+        iconhide1.setVisible(true);
+        pass.setEchoChar('*');
+    }//GEN-LAST:event_viewiconMousePressed
+
+    private void iconhide1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_iconhide1MousePressed
+      
+        viewicon.setVisible(true);
+        iconhide1.setVisible(false);
+        pass.setEchoChar((char)0);
+        
+    }//GEN-LAST:event_iconhide1MousePressed
+
+    private void iconhide2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_iconhide2MousePressed
+       viewicon1.setVisible(true);
+        iconhide2.setVisible(false);
+        conpass.setEchoChar((char)0);
+        
+    }//GEN-LAST:event_iconhide2MousePressed
+
+    private void viewicon1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewicon1MousePressed
+        viewicon1.setVisible(false);
+        iconhide2.setVisible(true);
+        conpass.setEchoChar('*');
+        
+    }//GEN-LAST:event_viewicon1MousePressed
 
     /**
      * @param args the command line arguments
@@ -909,10 +979,12 @@ public class RegisterForm extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backnav;
     private javax.swing.JPanel cancelnav;
+    private javax.swing.JPasswordField conpass;
     private javax.swing.JTextField contact;
-    private javax.swing.JTextField cpass;
     private javax.swing.JTextField email;
     private javax.swing.JTextField fname;
+    private javax.swing.JLabel iconhide1;
+    private javax.swing.JLabel iconhide2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -951,7 +1023,7 @@ public class RegisterForm extends javax.swing.JFrame {
     private javax.swing.JLabel lgnav8;
     private javax.swing.JPanel lgnav9;
     private javax.swing.JTextField lname;
-    private javax.swing.JTextField pass;
+    private javax.swing.JPasswordField pass;
     private javax.swing.JPanel registernav;
     private javax.swing.JPanel registernav2;
     private javax.swing.JPanel registernav3;
@@ -961,5 +1033,7 @@ public class RegisterForm extends javax.swing.JFrame {
     private javax.swing.JPanel registernav7;
     private javax.swing.JComboBox<String> type;
     private javax.swing.JTextField username;
+    private javax.swing.JLabel viewicon;
+    private javax.swing.JLabel viewicon1;
     // End of variables declaration//GEN-END:variables
 }
