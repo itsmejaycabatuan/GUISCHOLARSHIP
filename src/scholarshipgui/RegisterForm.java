@@ -5,8 +5,12 @@
  */
 package scholarshipgui;
 
+import admin.adminDashboard;
 import config.dbConnect;
 import java.awt.Color;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
@@ -22,10 +26,46 @@ public class RegisterForm extends javax.swing.JFrame {
      */
     public RegisterForm() {
         initComponents();
+       
          this.viewicon.setVisible(false);
          this.viewicon1.setVisible(false);
     }
-    
+    public static String email1,username1;
+     public boolean duplicateChecker() {
+    dbConnect db = new dbConnect();
+    boolean isDuplicate = false;
+
+    try {
+        String query = "SELECT username, email FROM tbl_user WHERE username = ? OR email = ?";
+        PreparedStatement pstmt = db.getConnection().prepareStatement(query);
+        pstmt.setString(1, username.getText());
+        pstmt.setString(2, email.getText());
+        ResultSet resultSet = pstmt.executeQuery();
+
+        while (resultSet.next()) { // Iterate over result set
+            String existingEmail = resultSet.getString("email");
+            String existingUsername = resultSet.getString("username");
+
+            if (existingEmail.equals(email.getText())) {
+                JOptionPane.showMessageDialog(null, "Email is Already Used");
+                email.setText("");
+                isDuplicate = true;
+            }
+            if (existingUsername.equals(username.getText())) {
+                JOptionPane.showMessageDialog(null, "Username is Already Used");
+                username.setText("");
+                isDuplicate = true;
+            }
+        }
+
+        resultSet.close();
+        pstmt.close();
+    } catch (SQLException e) {
+        System.out.println("Error: " + e.getMessage());
+    }
+
+    return isDuplicate;
+}
     
      private boolean isEmailValid(String email) {
         // More robust regex (but still not perfect for all valid email addresses)
@@ -36,8 +76,8 @@ public class RegisterForm extends javax.swing.JFrame {
         return matcher.matches();
     }
 
-     Color hover = new Color (204,255,255);
-    Color defaultcolor = new Color  (0,204,204);
+    Color hover = new Color (255,255,255);
+    Color defaultcolor = new Color  (102,102,102);
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -111,19 +151,22 @@ public class RegisterForm extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(102, 102, 102));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel3.setFont(new java.awt.Font("Arial Black", 1, 36)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 204, 102));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("REGISTRATION FORM");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, 540, 40));
 
         jLabel2.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Password:");
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 620, 130, 30));
 
         jLabel4.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("User Name:");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 190, 110, 30));
 
@@ -138,6 +181,7 @@ public class RegisterForm extends javax.swing.JFrame {
         jPanel1.add(username, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 180, 420, 50));
 
         jLabel5.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("First Name:");
         jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 250, 110, 30));
 
@@ -152,6 +196,7 @@ public class RegisterForm extends javax.swing.JFrame {
         jPanel1.add(fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 240, 420, 50));
 
         jLabel6.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Last Name:");
         jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 310, 110, 30));
 
@@ -166,6 +211,7 @@ public class RegisterForm extends javax.swing.JFrame {
         jPanel1.add(lname, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 300, 420, 50));
 
         jLabel7.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Email:");
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 370, 110, 30));
 
@@ -190,6 +236,7 @@ public class RegisterForm extends javax.swing.JFrame {
         jPanel1.add(contact, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 420, 420, 50));
 
         jLabel8.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Type:");
         jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 490, 110, 30));
 
@@ -198,14 +245,16 @@ public class RegisterForm extends javax.swing.JFrame {
         jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 10, -1, -1));
 
         jLabel11.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
         jLabel11.setText("Confirm");
         jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 600, 130, 30));
 
         jLabel12.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
         jLabel12.setText("Password:");
         jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 550, 130, 30));
 
-        registernav.setBackground(new java.awt.Color(204, 255, 255));
+        registernav.setBackground(new java.awt.Color(102, 102, 102));
         registernav.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 registernavMouseEntered(evt);
@@ -217,6 +266,7 @@ public class RegisterForm extends javax.swing.JFrame {
         registernav.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         lgnav2.setFont(new java.awt.Font("Arial Black", 1, 18)); // NOI18N
+        lgnav2.setForeground(new java.awt.Color(51, 51, 51));
         lgnav2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lgnav2.setText("REGISTER");
         lgnav2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -530,7 +580,7 @@ public class RegisterForm extends javax.swing.JFrame {
 
         jPanel1.add(registernav, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 670, 150, 40));
 
-        cancelnav.setBackground(new java.awt.Color(204, 255, 255));
+        cancelnav.setBackground(new java.awt.Color(102, 102, 102));
         cancelnav.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 cancelnavMouseEntered(evt);
@@ -542,13 +592,19 @@ public class RegisterForm extends javax.swing.JFrame {
         cancelnav.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Arial Black", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(51, 51, 51));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("CANCEL");
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel1MouseClicked(evt);
+            }
+        });
         cancelnav.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, 90, 20));
 
         jPanel1.add(cancelnav, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 670, 150, 40));
 
-        backnav.setBackground(new java.awt.Color(204, 255, 255));
+        backnav.setBackground(new java.awt.Color(102, 102, 102));
         backnav.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 backnavMouseEntered(evt);
@@ -560,6 +616,7 @@ public class RegisterForm extends javax.swing.JFrame {
         backnav.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelback.setFont(new java.awt.Font("Arial Black", 1, 24)); // NOI18N
+        labelback.setForeground(new java.awt.Color(51, 51, 51));
         labelback.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelback.setText("→");
         labelback.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -569,10 +626,10 @@ public class RegisterForm extends javax.swing.JFrame {
         });
         backnav.add(labelback, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 40, 20));
 
-        jPanel1.add(backnav, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 710, 70, 40));
+        jPanel1.add(backnav, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 710, 70, 40));
 
         type.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
-        type.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Type of User", "Admin", "Applicant", "Scholarship Providers", "Scholarship Committee" }));
+        type.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Type of User", "Admin", "Applicant", "Scholarship Providers/Committee" }));
         type.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
         type.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -582,10 +639,11 @@ public class RegisterForm extends javax.swing.JFrame {
         jPanel1.add(type, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 480, 420, 50));
 
         jLabel9.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("Contact:");
         jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 430, 110, 30));
 
-        iconhide1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/hideicon.png"))); // NOI18N
+        iconhide1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/iconhide.png"))); // NOI18N
         iconhide1.setText("jLabel1");
         iconhide1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -603,7 +661,7 @@ public class RegisterForm extends javax.swing.JFrame {
         });
         jPanel1.add(viewicon, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 550, 30, 30));
 
-        iconhide2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/hideicon.png"))); // NOI18N
+        iconhide2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/iconhide.png"))); // NOI18N
         iconhide2.setText("jLabel1");
         iconhide2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -645,11 +703,11 @@ public class RegisterForm extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 604, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 763, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 763, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -681,11 +739,11 @@ public class RegisterForm extends javax.swing.JFrame {
     }//GEN-LAST:event_lgnav2MouseEntered
 
     private void registernavMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_registernavMouseEntered
-        registernav.setBackground(defaultcolor);
+        registernav.setBackground(hover);
     }//GEN-LAST:event_registernavMouseEntered
 
     private void registernavMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_registernavMouseExited
-        registernav.setBackground(hover);
+        registernav.setBackground(defaultcolor);
     }//GEN-LAST:event_registernavMouseExited
 
     private void lgnav4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lgnav4MouseEntered
@@ -701,11 +759,11 @@ public class RegisterForm extends javax.swing.JFrame {
     }//GEN-LAST:event_lgnav3MouseExited
 
     private void cancelnavMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelnavMouseEntered
-        cancelnav.setBackground(defaultcolor);
+        cancelnav.setBackground(hover);
     }//GEN-LAST:event_cancelnavMouseEntered
 
     private void cancelnavMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelnavMouseExited
-        cancelnav.setBackground(hover);
+        cancelnav.setBackground(defaultcolor);
     }//GEN-LAST:event_cancelnavMouseExited
 
     private void lgnav8MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lgnav8MouseEntered
@@ -853,11 +911,11 @@ public class RegisterForm extends javax.swing.JFrame {
     }//GEN-LAST:event_registernav4MouseExited
 
     private void backnavMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backnavMouseEntered
-       backnav.setBackground(defaultcolor);
+       backnav.setBackground(hover);
     }//GEN-LAST:event_backnavMouseEntered
 
     private void backnavMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backnavMouseExited
-        backnav.setBackground(hover);
+        backnav.setBackground(defaultcolor);
     }//GEN-LAST:event_backnavMouseExited
 
     private void labelbackMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelbackMouseClicked
@@ -880,7 +938,10 @@ public class RegisterForm extends javax.swing.JFrame {
                
         }else if(!isEmailValid(email.getText())){
             JOptionPane.showMessageDialog(null, "Invalid email format");
-        }else if(!contact.getText().matches("\\d+")){
+        }else if(duplicateChecker()){
+            System.out.println("Duplicate Existed");
+        }
+        else if(!contact.getText().matches("\\d+")){
             JOptionPane.showMessageDialog(null, "Contact number must only contains digit");
         }else if(contact.getText().length() > 11){
             JOptionPane.showMessageDialog(null, "Contact number exceeded");
@@ -890,11 +951,13 @@ public class RegisterForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Password not Matches");
         }else if(type.getSelectedIndex() == 0){
             JOptionPane.showMessageDialog(null, "Please select a Type of User");
-        }else if (db.insertData("INSERT INTO tbl_user (username, f_name, l_name, email, contact, type, pass, cpass, status) "
+        }else if (db.insertData("INSERT INTO tbl_user (username, f_name, l_name, email, contact, type, pass, cpass, status, registration_date) "
                 + "VALUES ('"+username.getText()+"', '"+fname.getText()+"', '"+lname.getText()+"', '"+email.getText()+"', "
                         + "'"+contact.getText()+"', '"+type.getSelectedItem()+"', '"+pass.getText()+"', "
-                                + "'"+pass.getText()+"', 'Pending')") == 1){
+                                + "'"+pass.getText()+"', 'Pending', CURRENT_TIMESTAMP)") == 1){
             JOptionPane.showMessageDialog(null, "Submitted Successfully");
+           adminDashboard ad  = new adminDashboard();
+          ad.loadRecentUsers();
             LoginForm lf = new LoginForm();
             lf.setVisible(true);
             this.dispose();
@@ -940,6 +1003,11 @@ public class RegisterForm extends javax.swing.JFrame {
         conpass.setEchoChar('*');
         
     }//GEN-LAST:event_viewicon1MousePressed
+
+    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
+       LoginForm lf = new LoginForm();
+       
+    }//GEN-LAST:event_jLabel1MouseClicked
 
     /**
      * @param args the command line arguments
