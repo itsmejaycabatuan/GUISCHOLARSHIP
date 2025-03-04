@@ -56,7 +56,7 @@ public class usersTable extends javax.swing.JFrame {
         
         try{
             dbConnect db = new dbConnect();
-        ResultSet rs = db.getData("SELECT * FROM tbl_user");
+        ResultSet rs = db.getData("SELECT u_id, f_name, l_name, email, status FROM tbl_user");
         tbl_users.setModel(DbUtils.resultSetToTableModel(rs));
         rs.close();
         }catch(SQLException e){

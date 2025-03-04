@@ -136,8 +136,6 @@ public class RegisterForm extends javax.swing.JFrame {
         lgnav25 = new javax.swing.JLabel();
         cancelnav = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        backnav = new javax.swing.JPanel();
-        labelback = new javax.swing.JLabel();
         type = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
         iconhide1 = new javax.swing.JLabel();
@@ -604,30 +602,6 @@ public class RegisterForm extends javax.swing.JFrame {
 
         jPanel1.add(cancelnav, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 670, 150, 40));
 
-        backnav.setBackground(new java.awt.Color(102, 102, 102));
-        backnav.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                backnavMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                backnavMouseExited(evt);
-            }
-        });
-        backnav.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        labelback.setFont(new java.awt.Font("Arial Black", 1, 24)); // NOI18N
-        labelback.setForeground(new java.awt.Color(51, 51, 51));
-        labelback.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        labelback.setText("→");
-        labelback.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                labelbackMouseClicked(evt);
-            }
-        });
-        backnav.add(labelback, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 40, 20));
-
-        jPanel1.add(backnav, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 710, 70, 40));
-
         type.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         type.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Type of User", "Admin", "Applicant", "Scholarship Providers/Committee" }));
         type.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
@@ -910,20 +884,6 @@ public class RegisterForm extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_registernav4MouseExited
 
-    private void backnavMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backnavMouseEntered
-       backnav.setBackground(hover);
-    }//GEN-LAST:event_backnavMouseEntered
-
-    private void backnavMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backnavMouseExited
-        backnav.setBackground(defaultcolor);
-    }//GEN-LAST:event_backnavMouseExited
-
-    private void labelbackMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelbackMouseClicked
-      LoginForm lf = new LoginForm();
-      lf.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_labelbackMouseClicked
-
     private void typeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_typeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_typeActionPerformed
@@ -1006,7 +966,8 @@ public class RegisterForm extends javax.swing.JFrame {
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
        LoginForm lf = new LoginForm();
-       
+       lf.setVisible(true);
+       this.dispose();
     }//GEN-LAST:event_jLabel1MouseClicked
 
     /**
@@ -1045,7 +1006,6 @@ public class RegisterForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel backnav;
     private javax.swing.JPanel cancelnav;
     private javax.swing.JPasswordField conpass;
     private javax.swing.JTextField contact;
@@ -1068,7 +1028,6 @@ public class RegisterForm extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTree jTree1;
-    private javax.swing.JLabel labelback;
     private javax.swing.JLabel lgnav10;
     private javax.swing.JLabel lgnav11;
     private javax.swing.JPanel lgnav12;

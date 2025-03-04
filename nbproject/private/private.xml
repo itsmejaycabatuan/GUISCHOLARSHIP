@@ -3,23 +3,20 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/user/OneDrive/Desktop/GUISCHOLARSHIP/src/scholarcommitte/sDashBoard.java</file>
             <file>file:/C:/Users/user/OneDrive/Desktop/GUISCHOLARSHIP/src/admin/addUsers.java</file>
+            <file>file:/C:/Users/user/OneDrive/Desktop/GUISCHOLARSHIP/src/scholarcommitte/sDashBoard.java</file>
             <file>file:/C:/Users/user/OneDrive/Desktop/GUISCHOLARSHIP/src/admin/scholarshipTable.java</file>
-            <file>file:/C:/Users/user/OneDrive/Desktop/GUISCHOLARSHIP/src/scholarcommitte/addScholarship.java</file>
             <file>file:/C:/Users/user/OneDrive/Desktop/GUISCHOLARSHIP/src/applicant/applyScholarship.java</file>
             <file>file:/C:/Users/user/OneDrive/Desktop/GUISCHOLARSHIP/src/admin/usersTable.java</file>
-            <file>file:/C:/Users/user/OneDrive/Desktop/GUISCHOLARSHIP/src/register11.png</file>
             <file>file:/C:/Users/user/OneDrive/Desktop/GUISCHOLARSHIP/src/scholarshipgui/RegisterForm.java</file>
-            <file>file:/C:/Users/user/OneDrive/Desktop/GUISCHOLARSHIP/src/iconforsholarship.png</file>
             <file>file:/C:/Users/user/OneDrive/Desktop/GUISCHOLARSHIP/src/applicant/scholarshipDetails.java</file>
             <file>file:/C:/Users/user/OneDrive/Desktop/GUISCHOLARSHIP/src/config/dbConnect.java</file>
-            <file>file:/C:/Users/user/OneDrive/Desktop/GUISCHOLARSHIP/src/login.png</file>
-            <file>file:/C:/Users/user/OneDrive/Desktop/GUISCHOLARSHIP/src/logoutfordashboard.png</file>
-            <file>file:/C:/Users/user/OneDrive/Desktop/GUISCHOLARSHIP/src/scholarcommitte/scho_table.java</file>
+            <file>file:/C:/Users/user/OneDrive/Desktop/GUISCHOLARSHIP/src/config/Session.java</file>
+            <file>file:/C:/Users/user/OneDrive/Desktop/GUISCHOLARSHIP/src/admin/adminSettings.java</file>
             <file>file:/C:/Users/user/OneDrive/Desktop/GUISCHOLARSHIP/src/admin/adminDashboard.java</file>
-            <file>file:/C:/Users/user/OneDrive/Desktop/GUISCHOLARSHIP/src/error/pagenotfound.java</file>
             <file>file:/C:/Users/user/OneDrive/Desktop/GUISCHOLARSHIP/src/scholarshipgui/LoginForm.java</file>
+            <file>file:/C:/Users/user/OneDrive/Desktop/GUISCHOLARSHIP/src/applicant/applicantSettings.java</file>
+            <file>file:/C:/Users/user/OneDrive/Desktop/GUISCHOLARSHIP/src/scholarcommitte/comsSettings.java</file>
             <file>file:/C:/Users/user/OneDrive/Desktop/GUISCHOLARSHIP/src/applicant/applicantDashboard.java</file>
         </group>
     </open-files>

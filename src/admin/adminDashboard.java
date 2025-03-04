@@ -5,6 +5,7 @@
  */
 package admin;
 
+import config.Session;
 import config.dbConnect;
 import java.awt.Color;
 import java.sql.Connection;
@@ -29,6 +30,9 @@ public class adminDashboard extends javax.swing.JFrame {
      */
     public adminDashboard() {
         initComponents();
+        PendingUser();
+         ActiveUsers();
+        countUsers();
        loadRecentUsers();
     }
     
@@ -79,6 +83,53 @@ public void loadRecentUsers() {
         }
     });
 }
+public void countUsers() {
+    try {
+        dbConnect db = new dbConnect();
+        ResultSet rs = db.getData("SELECT COUNT(*) AS total FROM tbl_user");
+
+        if (rs.next()) {
+            int count = rs.getInt("total");
+            total.setText(""+count); 
+        }
+
+        rs.close();
+    } catch (SQLException e) {
+        System.out.println("Error: " + e.getMessage());
+    }
+}
+public void ActiveUsers() {
+    try {
+        dbConnect db = new dbConnect();
+        ResultSet rs = db.getData("SELECT COUNT(*) AS total FROM tbl_user WHERE status = 'Active'");
+
+        if (rs.next()) {
+            int count = rs.getInt("total");
+            active.setText(""+count); 
+        }
+
+        rs.close();
+    } catch (SQLException e) {
+        System.out.println("Error: " + e.getMessage());
+    }
+}
+public void PendingUser() {
+    try {
+        dbConnect db = new dbConnect();
+        ResultSet rs = db.getData("SELECT COUNT(*) AS total FROM tbl_user WHERE status = 'Pending'");
+
+        if (rs.next()) {
+            int count = rs.getInt("total");
+            pending.setText(""+count); 
+        }
+
+        rs.close();
+    } catch (SQLException e) {
+        System.out.println("Error: " + e.getMessage());
+    }
+}
+
+
      Color hover = new Color (255,255,255);
     Color defaultcolor = new Color  (102,102,102);
 
@@ -104,16 +155,16 @@ public void loadRecentUsers() {
         logout = new javax.swing.JLabel();
         scholarnav1 = new javax.swing.JPanel();
         labelscholar = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        acc_name = new javax.swing.JLabel();
         paneldashboard = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         panelset = new javax.swing.JPanel();
-        jLabel9 = new javax.swing.JLabel();
+        settings = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         jLabel17 = new javax.swing.JLabel();
-        jLabel20 = new javax.swing.JLabel();
+        total = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
         jLabel22 = new javax.swing.JLabel();
@@ -131,11 +182,11 @@ public void loadRecentUsers() {
         jPanel3 = new javax.swing.JPanel();
         jLabel19 = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
-        jLabel27 = new javax.swing.JLabel();
+        active = new javax.swing.JLabel();
         jPanel10 = new javax.swing.JPanel();
         jLabel26 = new javax.swing.JLabel();
         jPanel11 = new javax.swing.JPanel();
-        jLabel25 = new javax.swing.JLabel();
+        pending = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
         jDesktopPane1.setLayout(jDesktopPane1Layout);
@@ -149,6 +200,11 @@ public void loadRecentUsers() {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(102, 102, 102));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -244,10 +300,10 @@ public void loadRecentUsers() {
 
         jPanel2.add(scholarnav1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 300, 260, 50));
 
-        jLabel1.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Hello, Admin");
-        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 120, 190, 20));
+        acc_name.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        acc_name.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        acc_name.setText("Hello, Admin");
+        jPanel2.add(acc_name, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 120, 190, 20));
 
         paneldashboard.setBackground(new java.awt.Color(255, 255, 255));
         paneldashboard.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -278,10 +334,15 @@ public void loadRecentUsers() {
         });
         panelset.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel9.setFont(new java.awt.Font("Arial Black", 1, 15)); // NOI18N
-        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/settings.png"))); // NOI18N
-        jLabel9.setText(" Settings");
-        panelset.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, 160, 29));
+        settings.setFont(new java.awt.Font("Arial Black", 1, 15)); // NOI18N
+        settings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/settings.png"))); // NOI18N
+        settings.setText(" Settings");
+        settings.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                settingsMouseClicked(evt);
+            }
+        });
+        panelset.add(settings, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, 160, 29));
 
         jPanel2.add(panelset, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 370, 280, 50));
 
@@ -321,9 +382,9 @@ public void loadRecentUsers() {
         jLabel17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/total.png"))); // NOI18N
         jPanel6.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 10, 60, 70));
 
-        jLabel20.setFont(new java.awt.Font("Arial Black", 1, 48)); // NOI18N
-        jLabel20.setText("0");
-        jPanel6.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 70, 50, 80));
+        total.setFont(new java.awt.Font("Arial Black", 1, 48)); // NOI18N
+        total.setText("0");
+        jPanel6.add(total, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 70, 50, 80));
 
         jLabel21.setFont(new java.awt.Font("Arial Black", 1, 16)); // NOI18N
         jLabel21.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -444,10 +505,10 @@ public void loadRecentUsers() {
         jPanel9.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 204, 102), 3));
         jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel27.setFont(new java.awt.Font("Arial Black", 1, 24)); // NOI18N
-        jLabel27.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel27.setText("0");
-        jPanel9.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 10, 110, 40));
+        active.setFont(new java.awt.Font("Arial Black", 1, 24)); // NOI18N
+        active.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        active.setText("0");
+        jPanel9.add(active, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 10, 110, 40));
 
         jPanel1.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 490, 270, 60));
 
@@ -466,10 +527,10 @@ public void loadRecentUsers() {
         jPanel11.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 204, 102), 3));
         jPanel11.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel25.setFont(new java.awt.Font("Arial Black", 1, 24)); // NOI18N
-        jLabel25.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel25.setText("0");
-        jPanel11.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 10, 110, 50));
+        pending.setFont(new java.awt.Font("Arial Black", 1, 24)); // NOI18N
+        pending.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pending.setText("0");
+        jPanel11.add(pending, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 10, 110, 50));
 
         jPanel1.add(jPanel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 620, 270, 80));
 
@@ -551,20 +612,29 @@ public void loadRecentUsers() {
     }//GEN-LAST:event_labelscholarMouseClicked
 
     private void logoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseClicked
-       int choice = JOptionPane.showConfirmDialog(null, "Do you want to log out?", " - Logout Confirmation! - ", 
-                                           JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-
-                if (choice == JOptionPane.YES_OPTION) {
-
-                    LoginForm lf = new LoginForm(); 
-                    lf.setVisible(true);
-                    this.dispose(); 
-                }
+       
     }//GEN-LAST:event_logoutMouseClicked
 
     private void recent_tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recent_tableMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_recent_tableMouseClicked
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+     Session sess = Session.getInstance();
+     if(sess.getUser_id() == 0){
+            JOptionPane.showMessageDialog(null, "No account, Please Login First", "Missing Account", JOptionPane.WARNING_MESSAGE);
+            LoginForm lf = new LoginForm();
+            lf.setVisible(true);
+            this.dispose();
+     }
+     acc_name.setText("Hello, "+sess.getFname());
+    }//GEN-LAST:event_formWindowActivated
+
+    private void settingsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsMouseClicked
+      adminSettings as = new adminSettings();
+      as.setVisible(true);
+      this.dispose();
+    }//GEN-LAST:event_settingsMouseClicked
 
     /**
      * @param args the command line arguments
@@ -602,8 +672,9 @@ public void loadRecentUsers() {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel acc_name;
+    private javax.swing.JLabel active;
     private javax.swing.JDesktopPane jDesktopPane1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel14;
@@ -613,20 +684,16 @@ public void loadRecentUsers() {
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
-    private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
-    private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
@@ -644,8 +711,11 @@ public void loadRecentUsers() {
     private javax.swing.JPanel logoutnav;
     private javax.swing.JPanel paneldashboard;
     private javax.swing.JPanel panelset;
+    private javax.swing.JLabel pending;
     private javax.swing.JTable recent_table;
     private javax.swing.JPanel scholarnav1;
+    private javax.swing.JLabel settings;
+    private javax.swing.JLabel total;
     private javax.swing.JPanel usersnav;
     // End of variables declaration//GEN-END:variables
 }

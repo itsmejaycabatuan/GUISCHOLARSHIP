@@ -7,6 +7,7 @@ package scholarshipgui;
 
 import admin.adminDashboard;
 import applicant.applicantDashboard;
+import config.Session;
 import config.dbConnect;
 import java.awt.Color;
 import java.sql.ResultSet;
@@ -37,10 +38,20 @@ public class LoginForm extends javax.swing.JFrame {
             ResultSet resultSet = db.getData(query);
            
             if(resultSet.next()){
-              
+               
                 status1 = resultSet.getString("status"); 
                 type1 = resultSet.getString("type");
-                 
+                  Session sess = Session.getInstance();
+                 sess.setUser_id(resultSet.getInt("u_id"));
+                   sess.setFname(resultSet.getString("f_name"));
+                     sess.setLname(resultSet.getString("l_name"));
+                       sess.setEmail(resultSet.getString("email"));
+                         sess.setUsername(resultSet.getString("username"));
+                           sess.setType(resultSet.getString("type"));
+                             sess.setStatus(resultSet.getString("status"));
+                              sess.setContact(resultSet.getString("contact"));
+                               sess.setPassword(resultSet.getString("pass"));
+                             
                   return true;
             }else{
                 return false; 

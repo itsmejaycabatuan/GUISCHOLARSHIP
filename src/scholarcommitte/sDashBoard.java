@@ -5,6 +5,7 @@
  */
 package scholarcommitte;
 
+import config.Session;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 import scholarshipgui.LoginForm;
@@ -34,14 +35,14 @@ public class sDashBoard extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
+        label = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         logoutnav = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         logout = new javax.swing.JLabel();
         scholarnav1 = new javax.swing.JPanel();
         labelscholar = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        acc_name = new javax.swing.JLabel();
         paneldashboard = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         panelset = new javax.swing.JPanel();
@@ -78,6 +79,11 @@ public class sDashBoard extends javax.swing.JFrame {
         jLabel21 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(102, 102, 102));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -86,9 +92,9 @@ public class sDashBoard extends javax.swing.JFrame {
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 204, 102), 3));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("_____________________________________");
-        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 280, 20));
+        label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        label.setText("_____________________________________");
+        jPanel2.add(label, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 280, 20));
 
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/com.png"))); // NOI18N
@@ -149,10 +155,10 @@ public class sDashBoard extends javax.swing.JFrame {
 
         jPanel2.add(scholarnav1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 220, 260, 50));
 
-        jLabel1.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Hello, Com/Staff");
-        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 120, 190, 20));
+        acc_name.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        acc_name.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        acc_name.setText("Hello, Com/Staff");
+        jPanel2.add(acc_name, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 120, 190, 20));
 
         paneldashboard.setBackground(new java.awt.Color(255, 255, 255));
         paneldashboard.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -186,6 +192,11 @@ public class sDashBoard extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Arial Black", 1, 15)); // NOI18N
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/settings.png"))); // NOI18N
         jLabel9.setText(" Settings");
+        jLabel9.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel9MouseClicked(evt);
+            }
+        });
         panelset.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, 160, 29));
 
         jPanel2.add(panelset, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 370, 280, 50));
@@ -454,6 +465,24 @@ public class sDashBoard extends javax.swing.JFrame {
                 }
     }//GEN-LAST:event_logoutMouseClicked
 
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+       Session sess = Session.getInstance();
+     if(sess.getUser_id() == 0){
+            JOptionPane.showMessageDialog(null, "No account, Please Login First", "Missing Account", JOptionPane.WARNING_MESSAGE);
+            LoginForm lf = new LoginForm();
+            lf.setVisible(true);
+            this.dispose();
+     }
+     acc_name.setText("Hello, "+sess.getFname());
+                                  
+    }//GEN-LAST:event_formWindowActivated
+
+    private void jLabel9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel9MouseClicked
+       comsSettings cs = new comsSettings();
+       cs.setVisible(true);
+       this.dispose();
+    }//GEN-LAST:event_jLabel9MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -490,7 +519,7 @@ public class sDashBoard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel acc_name;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
@@ -507,7 +536,6 @@ public class sDashBoard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel32;
@@ -527,6 +555,7 @@ public class sDashBoard extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JLabel label;
     private javax.swing.JLabel labelscholar;
     private javax.swing.JLabel logout;
     private javax.swing.JPanel logoutnav;

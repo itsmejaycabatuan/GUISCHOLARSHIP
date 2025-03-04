@@ -5,6 +5,7 @@
  */
 package applicant;
 
+import config.Session;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 import scholarshipgui.LoginForm;
@@ -41,7 +42,7 @@ public class applicantDashboard extends javax.swing.JFrame {
         logout = new javax.swing.JLabel();
         scholarnav1 = new javax.swing.JPanel();
         labelscholar = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        acc_name = new javax.swing.JLabel();
         paneldashboard = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         panelset = new javax.swing.JPanel();
@@ -79,6 +80,11 @@ public class applicantDashboard extends javax.swing.JFrame {
         jLabel21 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(102, 102, 102));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -150,10 +156,10 @@ public class applicantDashboard extends javax.swing.JFrame {
 
         jPanel2.add(scholarnav1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 220, 260, 50));
 
-        jLabel1.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Hello, Applicant");
-        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 120, 190, 20));
+        acc_name.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        acc_name.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        acc_name.setText("Hello, Applicant");
+        jPanel2.add(acc_name, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 120, 190, 20));
 
         paneldashboard.setBackground(new java.awt.Color(255, 255, 255));
         paneldashboard.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -187,6 +193,11 @@ public class applicantDashboard extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Arial Black", 1, 15)); // NOI18N
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/settings.png"))); // NOI18N
         jLabel9.setText(" Settings");
+        jLabel9.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel9MouseClicked(evt);
+            }
+        });
         panelset.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, 160, 29));
 
         jPanel2.add(panelset, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 370, 280, 50));
@@ -236,8 +247,8 @@ public class applicantDashboard extends javax.swing.JFrame {
 
         jLabel6.setFont(new java.awt.Font("Arial Black", 1, 15)); // NOI18N
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/userdashboardlogo.png"))); // NOI18N
-        jLabel6.setText("  Applicants");
-        usersnav.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, 150, 30));
+        jLabel6.setText("  Application's");
+        usersnav.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, 170, 30));
 
         jPanel2.add(usersnav, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 290, 260, 50));
 
@@ -460,6 +471,24 @@ public class applicantDashboard extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_logoutMouseClicked
 
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+      Session sess = Session.getInstance();
+     if(sess.getUser_id() == 0){
+            JOptionPane.showMessageDialog(null, "No account, Please Login First", "Missing Account", JOptionPane.WARNING_MESSAGE);
+            LoginForm lf = new LoginForm();
+            lf.setVisible(true);
+            this.dispose();
+     }
+     acc_name.setText("Hello, "+sess.getFname());                             
+
+    }//GEN-LAST:event_formWindowActivated
+
+    private void jLabel9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel9MouseClicked
+        applicantSettings as = new applicantSettings();
+        as.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jLabel9MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -497,7 +526,7 @@ public class applicantDashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel acc_name;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
