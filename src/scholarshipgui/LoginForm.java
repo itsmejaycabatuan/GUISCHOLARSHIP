@@ -241,6 +241,7 @@ public class LoginForm extends javax.swing.JFrame {
         passworduser.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         passworduser.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         passworduser.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
+        passworduser.setEchoChar('\u2022');
         passworduser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 passworduserActionPerformed(evt);

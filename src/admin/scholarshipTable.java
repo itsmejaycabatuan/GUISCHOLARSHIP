@@ -206,7 +206,7 @@ public class scholarshipTable extends javax.swing.JFrame {
 
         jLabel8.setFont(new java.awt.Font("Arial Black", 1, 18)); // NOI18N
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel8.setText("→");
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/back.png"))); // NOI18N
         refreshnav.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 80, 30));
 
         jPanel1.add(refreshnav, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 10, 100, 50));

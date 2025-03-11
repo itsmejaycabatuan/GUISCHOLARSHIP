@@ -383,8 +383,9 @@ public void PendingUser() {
         jPanel6.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 10, 60, 70));
 
         total.setFont(new java.awt.Font("Arial Black", 1, 48)); // NOI18N
+        total.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         total.setText("0");
-        jPanel6.add(total, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 70, 50, 80));
+        jPanel6.add(total, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 70, 110, 80));
 
         jLabel21.setFont(new java.awt.Font("Arial Black", 1, 16)); // NOI18N
         jLabel21.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -612,7 +613,15 @@ public void PendingUser() {
     }//GEN-LAST:event_labelscholarMouseClicked
 
     private void logoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseClicked
-       
+    int choice = JOptionPane.showConfirmDialog(null, "Do you want to log out?", "Logout Confirmation!",
+            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+        if (choice == JOptionPane.YES_OPTION) {
+
+            LoginForm lf = new LoginForm();
+            lf.setVisible(true);
+            this.dispose();
+        }       
     }//GEN-LAST:event_logoutMouseClicked
 
     private void recent_tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recent_tableMouseClicked
@@ -631,9 +640,11 @@ public void PendingUser() {
     }//GEN-LAST:event_formWindowActivated
 
     private void settingsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsMouseClicked
-      adminSettings as = new adminSettings();
-      as.setVisible(true);
-      this.dispose();
+   
+  
+    adminSettings as = new adminSettings();
+    as.setVisible(true);
+    this.dispose(); // Close adminDashboard if needed
     }//GEN-LAST:event_settingsMouseClicked
 
     /**

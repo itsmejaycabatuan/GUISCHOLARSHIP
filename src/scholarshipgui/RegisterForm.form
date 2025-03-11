@@ -1034,6 +1034,7 @@
                 <LineBorder roundedCorners="true" thickness="3"/>
               </Border>
             </Property>
+            <Property name="echoChar" type="char" value="&#x2022;"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="passActionPerformed"/>
@@ -1055,6 +1056,7 @@
                 <LineBorder roundedCorners="true" thickness="3"/>
               </Border>
             </Property>
+            <Property name="echoChar" type="char" value="&#x2022;"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="conpassActionPerformed"/>

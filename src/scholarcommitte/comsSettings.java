@@ -60,6 +60,7 @@ Color hover = new Color (255,255,255);
         id = new javax.swing.JLabel();
         back1 = new javax.swing.JPanel();
         back = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
 
@@ -242,6 +243,9 @@ Color hover = new Color (255,255,255);
 
         jPanel2.add(back1, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 530, 200, 50));
 
+        jLabel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 80, 340, 290));
+
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 930, 610));
 
         jLabel2.setFont(new java.awt.Font("Arial Black", 1, 48)); // NOI18N
@@ -366,6 +370,7 @@ Color hover = new Color (255,255,255);
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

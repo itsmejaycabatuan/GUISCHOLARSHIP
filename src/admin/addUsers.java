@@ -655,6 +655,7 @@ public class addUsers extends javax.swing.JFrame {
         pass.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         pass.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         pass.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        pass.setEchoChar('\u2022');
         pass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 passActionPerformed(evt);
@@ -665,6 +666,7 @@ public class addUsers extends javax.swing.JFrame {
         conpass.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         conpass.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         conpass.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        conpass.setEchoChar('\u2022');
         conpass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 conpassActionPerformed(evt);

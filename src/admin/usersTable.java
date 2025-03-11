@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import net.proteanit.sql.DbUtils;
 
 /**
@@ -334,13 +335,13 @@ private void deleteUser(int userID) {
         edit.setFont(new java.awt.Font("Arial Black", 1, 18)); // NOI18N
         edit.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/edituser.png"))); // NOI18N
-        edit.setText(" Activate");
+        edit.setText(" Edit");
         edit.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 editMouseClicked(evt);
             }
         });
-        editnav.add(edit, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, 160, 30));
+        editnav.add(edit, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, 120, 30));
 
         jPanel2.add(editnav, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 240, 50));
 
@@ -495,23 +496,36 @@ private void deleteUser(int userID) {
     }//GEN-LAST:event_addUsersMouseClicked
 
     private void editMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editMouseClicked
-      int selectedRow = tbl_users.getSelectedRow(); 
+      int rowIndex = tbl_users.getSelectedRow();
+     
+      
+      if(rowIndex < 0 ){
+          JOptionPane.showMessageDialog(null, "Please select an item.", "Click a Item", JOptionPane.WARNING_MESSAGE);
+      }else{
+         
+          try{
+          dbConnect dc = new dbConnect();
+          TableModel tbl  = tbl_users.getModel();
+        ResultSet rs = dc.getData("SELECT * FROM tbl_user WHERE u_id = '" + tbl.getValueAt(rowIndex, 0) + "'");
 
-    if (selectedRow == -1) { 
-        JOptionPane.showMessageDialog(null, "Please select a user to edit.");
-        return;
-    }
-
-    int userID = (int) tbl_users.getValueAt(selectedRow, 0);
-    String currentStatus = (String) tbl_users.getValueAt(selectedRow, 3); 
-
-    if ("Active".equalsIgnoreCase(currentStatus)) {
-        JOptionPane.showMessageDialog(null, "User is already active.");
-        return;
-    }
-
-    updateUserStatus(userID, "Active"); 
-    loadUsersIntoTable(); 
+          if(rs.next()){
+               updateForm uf = new updateForm();
+                 uf.u_id.setText(""+rs.getInt("u_id"));
+                uf.username.setText(""+rs.getString("username"));
+              uf.fname.setText(""+rs.getString("f_name"));
+              uf.lname.setText(""+rs.getString("l_name"));
+               uf.email.setText(""+rs.getString("email"));
+               uf.contact.setText(""+rs.getString("contact"));
+               uf.type.setSelectedItem(""+rs.getString("type"));
+               uf.pass.setText(""+rs.getString("pass"));
+                uf.type1.setSelectedItem(""+rs.getString("status"));
+               uf.setVisible(true);
+              this.dispose();
+          }
+         }catch(SQLException e){
+                       System.out.println(""+e.getMessage());
+                  }
+      }
 
     }//GEN-LAST:event_editMouseClicked
 

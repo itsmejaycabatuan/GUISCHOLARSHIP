@@ -6,7 +6,14 @@
 package admin;
 
 import config.Session;
+import config.dbConnect;
 import java.awt.Color;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import scholarshipgui.LoginForm;
 
@@ -19,9 +26,77 @@ public class adminSettings extends javax.swing.JFrame {
     /**
      * Creates new form adminSettings
      */
+    
     public adminSettings() {
+       
         initComponents();
+        
+
     }
+    public adminSettings(String userId) {
+       
+        initComponents();
+        refreshEmail(userId);
+        refreshContact(userId);
+        // Load latest email when opened
+
+    // Add listener to auto-refresh when window is re-focused
+    this.addWindowListener(new WindowAdapter() {
+        @Override
+        public void windowActivated(WindowEvent e) {
+            refreshEmail(userId); // Refresh email when user clicks back to Settings
+              refreshContact(userId);
+        }
+    });
+    }
+    public void refreshEmail(String userId) {
+    try {
+        dbConnect dc = new dbConnect();
+        Connection con = dc.getConnection();
+        String query = "SELECT email FROM tbl_user WHERE u_id = ?";
+        PreparedStatement pst = con.prepareStatement(query);
+        pst.setString(1, userId);
+        ResultSet rs = pst.executeQuery();
+
+        if (rs.next()) {
+            email.setText(rs.getString("email")); 
+        } else {
+            JOptionPane.showMessageDialog(null, "User not found!");
+        }
+
+        rs.close();
+        pst.close();
+        con.close();
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error refreshing email!");
+    }
+}
+     public void refreshContact(String userId) {
+    try {
+        dbConnect dc = new dbConnect();
+        Connection con = dc.getConnection();
+        String query = "SELECT contact FROM tbl_user WHERE u_id = ?";
+        PreparedStatement pst = con.prepareStatement(query);
+        pst.setString(1, userId);
+        ResultSet rs = pst.executeQuery();
+
+        if (rs.next()) {
+            contact.setText(rs.getString("contact")); 
+        } else {
+            JOptionPane.showMessageDialog(null, "User not found!");
+        }
+
+        rs.close();
+        pst.close();
+        con.close();
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error refreshing contact number!");
+    }
+}
+    
+    
  Color hover = new Color (255,255,255);
     Color defaultcolor = new Color  (102,102,102);
     /**
@@ -35,11 +110,6 @@ public class adminSettings extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        changemail = new javax.swing.JPanel();
-        delete = new javax.swing.JLabel();
-        changepass = new javax.swing.JPanel();
-        edit = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         Email = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -63,6 +133,11 @@ public class adminSettings extends javax.swing.JFrame {
         id = new javax.swing.JLabel();
         back1 = new javax.swing.JPanel();
         back = new javax.swing.JLabel();
+        delete = new javax.swing.JLabel();
+        cemail = new javax.swing.JLabel();
+        delete2 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
 
@@ -80,62 +155,12 @@ public class adminSettings extends javax.swing.JFrame {
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 204, 102), 3));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        changemail.setBackground(new java.awt.Color(255, 255, 255));
-        changemail.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                changemailMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                changemailMouseExited(evt);
-            }
-        });
-        changemail.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        delete.setFont(new java.awt.Font("Arial Black", 0, 12)); // NOI18N
-        delete.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        delete.setText("Change Email");
-        delete.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                deleteMouseClicked(evt);
-            }
-        });
-        changemail.add(delete, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 130, 30));
-
-        jPanel2.add(changemail, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 280, 240, 50));
-
-        changepass.setBackground(new java.awt.Color(255, 255, 255));
-        changepass.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                changepassMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                changepassMouseExited(evt);
-            }
-        });
-        changepass.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        edit.setFont(new java.awt.Font("Arial Black", 0, 12)); // NOI18N
-        edit.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        edit.setText("Change Password");
-        edit.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                editMouseClicked(evt);
-            }
-        });
-        changepass.add(edit, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, 200, 30));
-
-        jPanel2.add(changepass, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 500, 260, 50));
-
-        jLabel1.setFont(new java.awt.Font("Arial Black", 1, 18)); // NOI18N
-        jLabel1.setText("Personal Info");
-        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
-
         jLabel3.setText("__________________________________________________________________________________________________________________________________");
         jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 36, -1, 40));
 
         Email.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
         Email.setText("Password:");
-        jPanel2.add(Email, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 430, 90, 40));
+        jPanel2.add(Email, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 450, 90, 40));
 
         jLabel7.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
         jLabel7.setText("Name:");
@@ -159,7 +184,7 @@ public class adminSettings extends javax.swing.JFrame {
 
         Email3.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
         Email3.setText("Contact:");
-        jPanel2.add(Email3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 370, 90, 40));
+        jPanel2.add(Email3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 330, 90, 40));
 
         jPanel3.setBackground(new java.awt.Color(204, 204, 204));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -204,7 +229,7 @@ public class adminSettings extends javax.swing.JFrame {
         contact.setText("Contact#");
         jPanel6.add(contact, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 10, 200, 30));
 
-        jPanel2.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 350, 350, 50));
+        jPanel2.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 310, 350, 50));
 
         jPanel7.setBackground(new java.awt.Color(204, 204, 204));
         jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -214,7 +239,7 @@ public class adminSettings extends javax.swing.JFrame {
         password.setText("UserPassword");
         jPanel7.add(password, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 10, 180, 30));
 
-        jPanel2.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 410, 350, 50));
+        jPanel2.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 420, 350, 50));
 
         jPanel8.setBackground(new java.awt.Color(204, 204, 204));
         jPanel8.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -250,6 +275,49 @@ public class adminSettings extends javax.swing.JFrame {
 
         jPanel2.add(back1, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 530, 200, 50));
 
+        delete.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        delete.setForeground(new java.awt.Color(51, 51, 51));
+        delete.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        delete.setText("Change Password");
+        delete.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        delete.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                deleteMouseClicked(evt);
+            }
+        });
+        jPanel2.add(delete, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 480, 230, 40));
+
+        cemail.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        cemail.setForeground(new java.awt.Color(51, 51, 51));
+        cemail.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        cemail.setText("Change Email");
+        cemail.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        cemail.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cemailMouseClicked(evt);
+            }
+        });
+        jPanel2.add(cemail, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 260, 230, 40));
+
+        delete2.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        delete2.setForeground(new java.awt.Color(51, 51, 51));
+        delete2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        delete2.setText("Change Contact Number");
+        delete2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        delete2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                delete2MouseClicked(evt);
+            }
+        });
+        jPanel2.add(delete2, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 370, 230, 40));
+
+        jLabel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 80, 340, 290));
+
+        jLabel8.setFont(new java.awt.Font("Arial Black", 1, 18)); // NOI18N
+        jLabel8.setText("Personal Info");
+        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
+
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 930, 610));
 
         jLabel2.setFont(new java.awt.Font("Arial Black", 1, 48)); // NOI18N
@@ -266,9 +334,7 @@ public class adminSettings extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 974, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 974, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -280,30 +346,6 @@ public class adminSettings extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void deleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteMouseClicked
-      
-    }//GEN-LAST:event_deleteMouseClicked
-
-    private void changemailMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changemailMouseEntered
-        changemail.setBackground(defaultcolor);
-    }//GEN-LAST:event_changemailMouseEntered
-
-    private void changemailMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changemailMouseExited
-        changemail.setBackground(hover);
-    }//GEN-LAST:event_changemailMouseExited
-
-    private void editMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editMouseClicked
-        
-    }//GEN-LAST:event_editMouseClicked
-
-    private void changepassMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changepassMouseEntered
-        changepass.setBackground(defaultcolor);
-    }//GEN-LAST:event_changepassMouseEntered
-
-    private void changepassMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changepassMouseExited
-        changepass.setBackground(hover);
-    }//GEN-LAST:event_changepassMouseExited
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
      Session sess = Session.getInstance();
@@ -337,6 +379,24 @@ public class adminSettings extends javax.swing.JFrame {
     private void back1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_back1MouseExited
         back1.setBackground(hover);
     }//GEN-LAST:event_back1MouseExited
+
+    private void deleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteMouseClicked
+    changePassword cp  = new changePassword();
+    cp.setVisible(true);
+    this.dispose();
+    }//GEN-LAST:event_deleteMouseClicked
+
+    private void cemailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cemailMouseClicked
+     changemail ce = new changemail();
+     ce.setVisible(true);
+     this.dispose();
+    }//GEN-LAST:event_cemailMouseClicked
+
+    private void delete2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_delete2MouseClicked
+      changecontact cc = new changecontact();
+      cc.setVisible(true);
+      this.dispose();
+    }//GEN-LAST:event_delete2MouseClicked
 
     /**
      * @param args the command line arguments
@@ -380,21 +440,21 @@ public class adminSettings extends javax.swing.JFrame {
     private javax.swing.JLabel Email3;
     private javax.swing.JLabel back;
     private javax.swing.JPanel back1;
-    private javax.swing.JPanel changemail;
-    private javax.swing.JPanel changepass;
+    private javax.swing.JLabel cemail;
     private javax.swing.JLabel contact;
     private javax.swing.JLabel delete;
-    private javax.swing.JLabel edit;
+    private javax.swing.JLabel delete2;
     private javax.swing.JLabel email;
     private javax.swing.JLabel fname;
     private javax.swing.JLabel id;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

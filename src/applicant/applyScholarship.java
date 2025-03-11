@@ -19,6 +19,7 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.event.DocumentEvent;
@@ -111,7 +112,8 @@ public class applyScholarship extends javax.swing.JFrame {
 
             // ✅ Reapply button renderer & editor
             tbl_scholarship.getColumn("Action").setCellRenderer(new ButtonRenderer());
-            tbl_scholarship.getColumn("Action").setCellEditor(new ButtonEditor(new JCheckBox()));
+          tbl_scholarship.getColumn("Action").setCellEditor(new ButtonEditor(new JCheckBox(), this));
+
 
             if (tbl_scholarship.getRowCount() == 0) {
                 JOptionPane.showMessageDialog(this, "No matching records found.");
@@ -162,7 +164,8 @@ public class applyScholarship extends javax.swing.JFrame {
 
        
         tbl_scholarship.getColumn("Action").setCellRenderer(new ButtonRenderer());
-        tbl_scholarship.getColumn("Action").setCellEditor(new ButtonEditor(new JCheckBox()));
+       tbl_scholarship.getColumn("Action").setCellEditor(new ButtonEditor(new JCheckBox(), this));
+
 
         rs.close();
     } catch (SQLException e) {
@@ -282,13 +285,13 @@ public class applyScholarship extends javax.swing.JFrame {
 
         jLabel3.setFont(new java.awt.Font("Arial Black", 1, 36)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("→");
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/back.png"))); // NOI18N
         jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel3MouseClicked(evt);
             }
         });
-        backingnav.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 0, 50, 30));
+        backingnav.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, 50, 20));
 
         jPanel1.add(backingnav, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 30, 120, 40));
 
@@ -373,41 +376,21 @@ public class applyScholarship extends javax.swing.JFrame {
 }
   class ButtonEditor extends DefaultCellEditor {
     private JButton button;
+    private String label;
+    private boolean clicked;
     private int selectedRow;
     private JTable table;
+    private JFrame parentFrame; // Reference to the parent frame
 
-    public ButtonEditor(JCheckBox checkBox) {
+    public ButtonEditor(JCheckBox checkBox, JFrame parent) {
         super(checkBox);
-        button = new JButton("View");
-
-       
+        this.parentFrame = parent; // Store reference to the parent frame
+        button = new JButton();
         button.setOpaque(true);
-        button.setForeground(Color.BLACK);
-        button.setBackground(Color.LIGHT_GRAY);
-        button.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        button.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
-
-      
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(Color.DARK_GRAY);
-                button.setForeground(Color.WHITE);
-            }
-
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(Color.LIGHT_GRAY);
-                button.setForeground(Color.BLACK);
-            }
-        });
-
-       
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int scholarshipId = (int) table.getValueAt(selectedRow, 0);
-                new scholarshipDetails(scholarshipId).setVisible(true);
+                fireEditingStopped();
             }
         });
     }
@@ -415,8 +398,40 @@ public class applyScholarship extends javax.swing.JFrame {
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         this.table = table;
-        selectedRow = row;
+        this.selectedRow = row;
+        label = (value == null) ? "" : value.toString();
+        button.setText(label);
+        clicked = true;
         return button;
+    }
+
+    @Override
+    public Object getCellEditorValue() {
+        if (clicked) {
+            int scholarshipID = (int) table.getValueAt(selectedRow, 0); // Get scholarship ID
+            openScholarshipDetails(scholarshipID);
+        }
+        clicked = false;
+        return label;
+    }
+
+    private void openScholarshipDetails(int scholarshipID) {
+        JOptionPane.showMessageDialog(null, "Opening details for Scholarship ID: " + scholarshipID);
+
+        // Open the scholarship details frame
+        scholarshipDetails sd = new scholarshipDetails(scholarshipID);
+        sd.setVisible(true);
+
+        // Dispose the parent frame
+        if (parentFrame != null) {
+            parentFrame.dispose();
+        }
+    }
+
+    @Override
+    public boolean stopCellEditing() {
+        clicked = false;
+        return super.stopCellEditing();
     }
 
 
