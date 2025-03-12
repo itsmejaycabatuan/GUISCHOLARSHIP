@@ -93,6 +93,7 @@ public class changecontact extends javax.swing.JFrame {
         ccurrent.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         ccurrent.setText("Current_Contact");
         ccurrent.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        ccurrent.setEnabled(false);
         ccurrent.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ccurrentActionPerformed(evt);

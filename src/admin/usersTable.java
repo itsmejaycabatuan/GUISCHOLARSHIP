@@ -78,16 +78,16 @@ public class usersTable extends javax.swing.JFrame {
 
     String query;
     boolean isSearchEmpty = searchText.isEmpty();
+    
 
-    // ✅ If search field is empty, load all data
     if (isSearchEmpty) {
-        query = "SELECT * FROM tbl_user"; // Load all records
+        query = "SELECT * FROM tbl_user"; 
     } else {
         query = "SELECT * FROM tbl_user WHERE LOWER(username) LIKE ? OR LOWER(status) LIKE ?";
     }
 
     try (PreparedStatement statement = conn.prepareStatement(query)) {
-        if (!isSearchEmpty) { // Only set parameters if searching
+        if (!isSearchEmpty) { 
             statement.setString(1, "%" + searchText + "%");
             statement.setString(2, "%" + searchText + "%");
         }
@@ -103,7 +103,7 @@ public class usersTable extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Error executing query: " + ex.getMessage());
         ex.printStackTrace();
     } finally {
-        db.close(); // ✅ Ensure connection is closed
+        db.close(); 
     }
 }
 public void updateUserStatus(int userID, String newStatus) {
@@ -134,7 +134,7 @@ public void loadUsersIntoTable() {
     dbConnect db = new dbConnect();
     
     try {
-        String query = "SELECT u_id, username, f_name, l_name, email, contact, type, pass, cpass, status, registration_date FROM tbl_user";
+        String query = "SELECT u_id, username, f_name, l_name, email, contact, type, pass, status, registration_date FROM tbl_user";
         PreparedStatement pstmt = db.getConnection().prepareStatement(query);
         ResultSet rs = pstmt.executeQuery();
 
@@ -147,13 +147,13 @@ public void loadUsersIntoTable() {
             String contact = rs.getString("contact");
             String type = rs.getString("type");
             String pass = rs.getString("pass");
-            String cpass = rs.getString("cpass");
+          
             String status = rs.getString("status");
             Timestamp regTimestamp = rs.getTimestamp("registration_date");
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String formattedDate = sdf.format(regTimestamp);
             
-            model.addRow(new Object[]{id, username, f_name, l_name, email, contact, type, pass, cpass, status, formattedDate});
+            model.addRow(new Object[]{id, username, f_name, l_name, email, contact, type, pass, status, formattedDate});
         }
 
         rs.close();
@@ -164,23 +164,48 @@ public void loadUsersIntoTable() {
 }
 private void deleteUser(int userID) {
     dbConnect db = new dbConnect();
+    PreparedStatement pstmt = null;
+    
     try {
+      
         String deleteQuery = "DELETE FROM tbl_user WHERE u_id = ?";
-        PreparedStatement pstmt = db.getConnection().prepareStatement(deleteQuery);
-        pstmt.setInt(1, userID);
-
+        
+      
+        pstmt = db.getConnection().prepareStatement(deleteQuery);
+        pstmt.setInt(1, userID); 
+        
+      
         int deletedRows = pstmt.executeUpdate();
+        
+      
         if (deletedRows > 0) {
             JOptionPane.showMessageDialog(null, "User Deleted Successfully!");
-            loadUsersIntoTable(); // Refresh the table after deletion
+            
+          
+            loadUsersIntoTable(); 
         } else {
-            JOptionPane.showMessageDialog(null, "Failed to delete user.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Failed to delete user. No such user found.", 
+                                          "Error", JOptionPane.ERROR_MESSAGE);
         }
-
-        pstmt.close();
+        
     } catch (SQLException e) {
-        e.printStackTrace();
+      
+        JOptionPane.showMessageDialog(null, "Error occurred while deleting the user. Please try again.",
+                                      "Database Error", JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace(); 
+    } finally {
+ 
+        try {
+            if (pstmt != null) {
+                pstmt.close(); 
+            }
+          
+        } catch (SQLException e) {
+          
+            e.printStackTrace();
+        }
     }
+
 }
 
     Color hover = new Color (255,255,255);
@@ -530,21 +555,41 @@ private void deleteUser(int userID) {
     }//GEN-LAST:event_editMouseClicked
 
     private void deleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteMouseClicked
-         int selectedRow = tbl_users.getSelectedRow();
+     int selectedRow = tbl_users.getSelectedRow();
+
+if (selectedRow != -1) {
+   
+    int userID = (int) tbl_users.getValueAt(selectedRow, 0);
+    System.out.println("Selected user ID to delete: " + userID);  
+
     
-    if (selectedRow != -1) { 
-        int userID = (int) tbl_users.getValueAt(selectedRow, 0); 
+    int confirm = JOptionPane.showConfirmDialog(null, 
+            "Are you sure you want to delete this user?", 
+            "Confirm Deletion", 
+            JOptionPane.YES_NO_OPTION);
 
-        int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this user?", 
-                                                    "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+   
+    if (confirm == JOptionPane.YES_OPTION) {
+        
+        deleteUser(userID);
 
-        if (confirm == JOptionPane.YES_OPTION) {
-            deleteUser(userID);
+       
+        tbl_users.clearSelection();
+
+       
+        DefaultTableModel model = (DefaultTableModel) tbl_users.getModel();
+        model.setRowCount(0);  // Clear the table's existing data
+        loadUsersIntoTable();  // Reload the table with the updated data
+
+      
+        if (model.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(null, "No users available.");
         }
-    } else {
-        JOptionPane.showMessageDialog(null, "Please select a user to delete.");
     }
-
+} else {
+    // If no row is selected, show a warning message
+    JOptionPane.showMessageDialog(null, "Please select a user to delete.");
+}
     }//GEN-LAST:event_deleteMouseClicked
 
     /**

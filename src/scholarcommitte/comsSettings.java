@@ -5,6 +5,11 @@
  */
 package scholarcommitte;
 
+import config.Session;
+import java.awt.Color;
+import javax.swing.JOptionPane;
+import scholarshipgui.LoginForm;
+
 /**
  *
  * @author user
@@ -17,7 +22,8 @@ public class comsSettings extends javax.swing.JFrame {
     public comsSettings() {
         initComponents();
     }
-
+ Color hover = new Color (255,255,255);
+    Color defaultcolor = new Color  (102,102,102);
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -27,21 +33,294 @@ public class comsSettings extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        Email = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        Email1 = new javax.swing.JLabel();
+        Email2 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        Email3 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        fname = new javax.swing.JLabel();
+        lname = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        username = new javax.swing.JLabel();
+        jPanel5 = new javax.swing.JPanel();
+        email = new javax.swing.JLabel();
+        jPanel6 = new javax.swing.JPanel();
+        contact = new javax.swing.JLabel();
+        jPanel7 = new javax.swing.JPanel();
+        password = new javax.swing.JLabel();
+        jPanel8 = new javax.swing.JPanel();
+        id = new javax.swing.JLabel();
+        back1 = new javax.swing.JPanel();
+        back = new javax.swing.JLabel();
+        delete = new javax.swing.JLabel();
+        cemail = new javax.swing.JLabel();
+        delete2 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
+
+        jPanel1.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 204, 102), 3));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel3.setText("__________________________________________________________________________________________________________________________________");
+        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 36, -1, 40));
+
+        Email.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        Email.setText("Password:");
+        jPanel2.add(Email, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 450, 90, 40));
+
+        jLabel7.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        jLabel7.setText("Name:");
+        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 70, 40));
+
+        jLabel11.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        jLabel11.setText("Username: ");
+        jPanel2.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, 90, 40));
+
+        Email1.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        Email1.setText("Email:");
+        jPanel2.add(Email1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 210, 90, 40));
+
+        Email2.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        Email2.setText("Current User ID: ");
+        jPanel2.add(Email2, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 430, 130, 50));
+
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/settingspic.png"))); // NOI18N
+        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 90, 290, 260));
+
+        Email3.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        Email3.setText("Contact:");
+        jPanel2.add(Email3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 330, 90, 40));
+
+        jPanel3.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        fname.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        fname.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        fname.setText("Fname");
+        jPanel3.add(fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, 150, 50));
+
+        lname.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        lname.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lname.setText("Lname");
+        jPanel3.add(lname, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 0, 140, 50));
+
+        jPanel2.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 80, 350, 50));
+
+        jPanel4.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        username.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        username.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        username.setText("Username");
+        jPanel4.add(username, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 10, 200, 30));
+
+        jPanel2.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 140, 350, 50));
+
+        jPanel5.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        email.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        email.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        email.setText("Email@gmal.com");
+        jPanel5.add(email, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 10, 180, 30));
+
+        jPanel2.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 200, 350, 50));
+
+        jPanel6.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        contact.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        contact.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        contact.setText("Contact#");
+        jPanel6.add(contact, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 10, 200, 30));
+
+        jPanel2.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 310, 350, 50));
+
+        jPanel7.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        password.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        password.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        password.setText("UserPassword");
+        jPanel7.add(password, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 10, 180, 30));
+
+        jPanel2.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 420, 350, 50));
+
+        jPanel8.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel8.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        id.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        id.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        id.setText("User_id");
+        jPanel8.add(id, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, 140, 30));
+
+        jPanel2.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 430, 200, 50));
+
+        back1.setBackground(new java.awt.Color(255, 255, 255));
+        back1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                back1MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                back1MouseExited(evt);
+            }
+        });
+        back1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        back.setFont(new java.awt.Font("Arial Black", 1, 18)); // NOI18N
+        back.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        back.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/back.png"))); // NOI18N
+        back.setText(" Back");
+        back.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                backMouseClicked(evt);
+            }
+        });
+        back1.add(back, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 100, 30));
+
+        jPanel2.add(back1, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 530, 200, 50));
+
+        delete.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        delete.setForeground(new java.awt.Color(51, 51, 51));
+        delete.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        delete.setText("Change Password");
+        delete.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        delete.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                deleteMouseClicked(evt);
+            }
+        });
+        jPanel2.add(delete, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 480, 230, 40));
+
+        cemail.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        cemail.setForeground(new java.awt.Color(51, 51, 51));
+        cemail.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        cemail.setText("Change Email");
+        cemail.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        cemail.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cemailMouseClicked(evt);
+            }
+        });
+        jPanel2.add(cemail, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 260, 230, 40));
+
+        delete2.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        delete2.setForeground(new java.awt.Color(51, 51, 51));
+        delete2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        delete2.setText("Change Contact Number");
+        delete2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        delete2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                delete2MouseClicked(evt);
+            }
+        });
+        jPanel2.add(delete2, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 370, 230, 40));
+
+        jLabel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 80, 340, 290));
+
+        jLabel8.setFont(new java.awt.Font("Arial Black", 1, 18)); // NOI18N
+        jLabel8.setText("Personal Info");
+        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 930, 610));
+
+        jLabel2.setFont(new java.awt.Font("Arial Black", 1, 48)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 204, 102));
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("PERSONAL INFORMATION");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 40, 770, 50));
+
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/pi.png"))); // NOI18N
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 110, 80));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 974, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 752, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void backMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backMouseClicked
+        sDashBoard ad = new sDashBoard();
+        ad.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_backMouseClicked
+
+    private void back1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_back1MouseEntered
+        back1.setBackground(defaultcolor);
+    }//GEN-LAST:event_back1MouseEntered
+
+    private void back1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_back1MouseExited
+        back1.setBackground(hover);
+    }//GEN-LAST:event_back1MouseExited
+
+    private void deleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteMouseClicked
+        changePassword cp  = new changePassword();
+        cp.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_deleteMouseClicked
+
+    private void cemailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cemailMouseClicked
+        changemail ce = new changemail();
+        ce.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_cemailMouseClicked
+
+    private void delete2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_delete2MouseClicked
+        changecontact cc = new changecontact();
+        cc.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_delete2MouseClicked
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+      Session sess = Session.getInstance();
+        
+        if(sess.getUser_id() == 0){
+            JOptionPane.showMessageDialog(null, "No account, Please Login First", "Missing Account", JOptionPane.WARNING_MESSAGE);
+            LoginForm lf = new LoginForm();
+            lf.setVisible(true);
+            this.dispose();
+     }
+    fname.setText(""+sess.getFname());
+       lname.setText(""+sess.getLname());
+       username.setText(""+sess.getUsername());
+        email.setText(""+sess.getEmail());
+         contact.setText(""+sess.getContact());
+           password.setText(""+sess.getPassword());
+             id.setText(""+sess.getUser_id());
+    }//GEN-LAST:event_formWindowActivated
 
     /**
      * @param args the command line arguments
@@ -79,5 +358,37 @@ public class comsSettings extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Email;
+    private javax.swing.JLabel Email1;
+    private javax.swing.JLabel Email2;
+    private javax.swing.JLabel Email3;
+    private javax.swing.JLabel back;
+    private javax.swing.JPanel back1;
+    private javax.swing.JLabel cemail;
+    private javax.swing.JLabel contact;
+    private javax.swing.JLabel delete;
+    private javax.swing.JLabel delete2;
+    private javax.swing.JLabel email;
+    private javax.swing.JLabel fname;
+    private javax.swing.JLabel id;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JLabel lname;
+    private javax.swing.JLabel password;
+    private javax.swing.JLabel username;
     // End of variables declaration//GEN-END:variables
 }

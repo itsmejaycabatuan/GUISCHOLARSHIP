@@ -560,7 +560,7 @@ Color hover = new Color (255,255,255);
         jLabel13.setForeground(new java.awt.Color(255, 255, 255));
         jLabel13.setText("Requirements:");
         jPanel1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 360, 180, 30));
-        jPanel1.add(deadline, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 630, 360, 60));
+        jPanel1.add(deadline, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 640, 360, 50));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

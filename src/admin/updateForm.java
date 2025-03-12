@@ -950,7 +950,7 @@ Color hover = new Color (255,255,255);
     private void viewiconMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewiconMousePressed
         viewicon.setVisible(false);
         iconhide1.setVisible(true);
-        pass.setEchoChar('*');
+        pass.setEchoChar('•');
     }//GEN-LAST:event_viewiconMousePressed
 
     private void passActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passActionPerformed

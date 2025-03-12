@@ -57,8 +57,7 @@ public class LoginForm extends javax.swing.JFrame {
              
                  String rehashedPass = passwordHasher.hashPassword(password);
  
-                 System.out.println(""+hashedPass);
-                       System.out.println(""+rehashedPass);
+               
                  if( hashedPass.equals(rehashedPass)){
                        
                 status1 = resultSet.getString("status"); 
