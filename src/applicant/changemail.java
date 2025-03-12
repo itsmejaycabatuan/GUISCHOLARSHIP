@@ -100,7 +100,9 @@ public class changemail extends javax.swing.JFrame {
 
         current.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         current.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        current.setText("Current_Email");
         current.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        current.setEnabled(false);
         current.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 currentActionPerformed(evt);
@@ -246,6 +248,7 @@ public class changemail extends javax.swing.JFrame {
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         Session sess = Session.getInstance();
        id.setText(""+sess.getUser_id());
+       current.setText(""+sess.getEmail());
     }//GEN-LAST:event_formWindowActivated
 
     /**

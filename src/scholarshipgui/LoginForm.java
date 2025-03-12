@@ -9,10 +9,23 @@ import admin.adminDashboard;
 import applicant.applicantDashboard;
 import config.Session;
 import config.dbConnect;
+import config.passwordHasher;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.BorderFactory;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import scholarcommitte.sDashBoard;
 
 /**
@@ -34,11 +47,20 @@ public class LoginForm extends javax.swing.JFrame {
     public static boolean loginAccount(String username, String password){
         dbConnect db = new dbConnect();
         try{
-            String query = "SELECT * FROM tbl_user WHERE username = '"+ username +"' AND pass = '"+password+"'";
+            String query = "SELECT * FROM tbl_user WHERE username = '"+ username +"'";
             ResultSet resultSet = db.getData(query);
            
             if(resultSet.next()){
+                
                
+               String hashedPass = resultSet.getString("pass");
+             
+                 String rehashedPass = passwordHasher.hashPassword(password);
+ 
+                 System.out.println(""+hashedPass);
+                       System.out.println(""+rehashedPass);
+                 if( hashedPass.equals(rehashedPass)){
+                       
                 status1 = resultSet.getString("status"); 
                 type1 = resultSet.getString("type");
                   Session sess = Session.getInstance();
@@ -53,10 +75,16 @@ public class LoginForm extends javax.swing.JFrame {
                                sess.setPassword(resultSet.getString("pass"));
                              
                   return true;
-            }else{
+                 }else{
+                     System.out.println("Password does not match!");
+                     return false;
+                 }
+                 
+                        
+            }else{ 
                 return false; 
             }
-        }catch(SQLException e){
+        }catch(SQLException | NoSuchAlgorithmException e){
            
             return false;
         }
@@ -353,40 +381,92 @@ public class LoginForm extends javax.swing.JFrame {
 
     private void lgnavMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lgnavMouseClicked
       
-        
-       if (username1.getText().isEmpty() && passworduser.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Username and password cannot be empty.", "Missing Credentials", JOptionPane.WARNING_MESSAGE);
-        } else if (username1.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please enter your username.", "Missing Username", JOptionPane.WARNING_MESSAGE);
-        } else if (passworduser.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please enter your password.", "Missing Password", JOptionPane.WARNING_MESSAGE);
+    
+if (username1.getText().isEmpty() && passworduser.getText().isEmpty()) {
+    JOptionPane.showMessageDialog(null, "Username and password cannot be empty.", "Missing Credentials", JOptionPane.WARNING_MESSAGE);
+} else if (username1.getText().isEmpty()) {
+    JOptionPane.showMessageDialog(null, "Please enter your username.", "Missing Username", JOptionPane.WARNING_MESSAGE);
+} else if (passworduser.getText().isEmpty()) {
+    JOptionPane.showMessageDialog(null, "Please enter your password.", "Missing Password", JOptionPane.WARNING_MESSAGE);
+} else {
+    if (loginAccount(username1.getText(), passworduser.getText())) {
+        if (!status1.equals("Active")) {
+            JOptionPane.showMessageDialog(null, "Pending Account, Please wait for Approval");
         } else {
-            if (loginAccount(username1.getText(), passworduser.getText())) {
-                if (!status1.equals("Active")) {
-                    JOptionPane.showMessageDialog(null, "Pending Account, Please wait for Approval");
-                } else {
+            // Show "Login Successful" message
             JOptionPane.showMessageDialog(null, "Login successful! Redirecting to your dashboard...", 
-                              "Login Success", JOptionPane.INFORMATION_MESSAGE);
-                        try {
-                            Thread.sleep(1500); // 1.5-second delay
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+                                          "Login Success", JOptionPane.INFORMATION_MESSAGE);
+
+            // Run delay + auto-disappearing loading message in a separate thread
+            new Thread(() -> {
+                try {
+                    // Create a custom-styled loading dialog
+                    JDialog loadingDialog = new JDialog();
+                    loadingDialog.setSize(300, 120);
+                    loadingDialog.setUndecorated(true); // Remove title bar
+                    loadingDialog.setModal(false); // Allow interaction with other windows
+                    loadingDialog.setLocationRelativeTo(null);
+
+                    // Create a panel with rounded corners and styling
+                    JPanel panel = new JPanel() {
+                        @Override
+                        protected void paintComponent(Graphics g) {
+                            super.paintComponent(g);
+                            Graphics2D g2 = (Graphics2D) g;
+                            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                            g2.setColor(Color.WHITE);
+                            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
                         }
-            if (type1.equals("Admin")) {
-                adminDashboard ad = new adminDashboard();
-                ad.setVisible(true);
-                this.dispose();
-            } else if (type1.equals("Applicant")) {
-                applicantDashboard ad = new applicantDashboard();
-                ad.setVisible(true);
-                this.dispose();
-            } else if (type1.equals("Scholarship Providers/Committee")) {
-                sDashBoard sb = new sDashBoard();
-                sb.setVisible(true);
-                this.dispose();
-            } else {
-                JOptionPane.showMessageDialog(null, "No account type found!");
-            }
+                    };
+                    panel.setLayout(new BorderLayout());
+                    panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+                    
+                    JLabel loadingLabel = new JLabel("Loading, please wait...", SwingConstants.CENTER);
+                    loadingLabel.setFont(new Font("Arial", Font.BOLD, 14));
+                    
+                    // Animated loading dots
+                    JLabel dotsLabel = new JLabel("•  •  •", SwingConstants.CENTER);
+                    dotsLabel.setFont(new Font("Arial", Font.BOLD, 18));
+                    dotsLabel.setForeground(Color.BLUE);
+                    
+                    panel.add(loadingLabel, BorderLayout.NORTH);
+                    panel.add(dotsLabel, BorderLayout.CENTER);
+                    
+                    loadingDialog.add(panel);
+                    loadingDialog.setVisible(true);
+
+                    // Animate dots effect
+                    for (int i = 0; i < 3; i++) {
+                        Thread.sleep(600);
+                        dotsLabel.setText((i % 3 == 0) ? "•" : (i % 3 == 1) ? "•  •" : "•  •  •");
+                    }
+
+                    // Close the loading dialog automatically
+                    loadingDialog.dispose();
+
+                    // Open the respective dashboard
+                    SwingUtilities.invokeLater(() -> {
+                        if (type1.equals("Admin")) {
+                            adminDashboard ad = new adminDashboard();
+                            ad.setVisible(true);
+                        } else if (type1.equals("Applicant")) {
+                            applicantDashboard ad = new applicantDashboard();
+                            ad.setVisible(true);
+                        } else if (type1.equals("Scholarship Providers/Committee")) {
+                            sDashBoard sb = new sDashBoard();
+                            sb.setVisible(true);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "No account type found!");
+                        }
+
+                        // Close login window
+                        dispose();
+                    });
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }).start(); // Start the thread
         }
     } else {
         JOptionPane.showMessageDialog(null, "Invalid Account, Please Register!", "Login Failed", JOptionPane.ERROR_MESSAGE);

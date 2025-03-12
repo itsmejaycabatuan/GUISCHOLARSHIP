@@ -6,6 +6,7 @@
 package admin;
 
 import config.dbConnect;
+import config.passwordHasher;
 import java.awt.Color;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -707,24 +708,57 @@ Color hover = new Color (255,255,255);
     }//GEN-LAST:event_contactActionPerformed
 
     private void updateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateMouseClicked
+                            try {
+                       String passText = pass.getText(); 
 
-         if( email.getText().isEmpty() || contact.getText().isEmpty() || type.getSelectedIndex() == 0
-            || pass.getText().isEmpty() || type1.getSelectedIndex() == 0){
-            JOptionPane.showMessageDialog(null, "All fields required");
-         }else if(pass.getText().length() < 8){
-            JOptionPane.showMessageDialog(null, "Password must be at least 8 characters long");
-         }else if(!isEmailValid(email.getText())){
-            JOptionPane.showMessageDialog(null, "Invalid email format");
-        }else if(updatechecker()){
-            System.out.println("Duplicate Existed");
-        }else{
-        dbConnect dc = new dbConnect();
-        dc.updateData("UPDATE tbl_user SET email = '"+email.getText()+"', contact = '"+contact.getText()+"', type = '"+type.getSelectedItem()+"', "
-                + "pass = '"+pass.getText()+"', status = '"+type1.getSelectedItem()+"' WHERE u_id = '"+u_id.getText()+"'");
-        usersTable ut = new usersTable();
-        ut.setVisible(true);
-        this.dispose();
-        }
+                       if (email.getText().isEmpty() || contact.getText().isEmpty() || type.getSelectedIndex() == 0
+                               || passText.isEmpty() || type1.getSelectedIndex() == 0) {
+                           JOptionPane.showMessageDialog(null, "All fields required");
+                       } else if (passText.length() < 8) {
+                           JOptionPane.showMessageDialog(null, "Password must be at least 8 characters long");
+                       } else if (!isEmailValid(email.getText())) {
+                           JOptionPane.showMessageDialog(null, "Invalid email format");
+                       } else if (updatechecker()) {
+                           System.out.println("Duplicate Existed");
+                       } else {
+                           try {
+
+                               String pass1 = passwordHasher.hashPassword(passText);
+
+                               dbConnect dc = new dbConnect();
+                               String query = "UPDATE tbl_user SET email = ?, contact = ?, type = ?, pass = ?, status = ? WHERE u_id = ?";
+                               PreparedStatement pstmt = dc.getConnection().prepareStatement(query);
+
+                               pstmt.setString(1, email.getText());
+                               pstmt.setString(2, contact.getText());
+                               pstmt.setString(3, (String) type.getSelectedItem());
+                               pstmt.setString(4, pass1); 
+                               pstmt.setString(5, (String) type1.getSelectedItem());
+                               pstmt.setString(6, u_id.getText());
+
+
+                               int rowsUpdated = pstmt.executeUpdate();
+
+                               if (rowsUpdated > 0) {
+                                   JOptionPane.showMessageDialog(null, "User updated successfully!");
+                               } else {
+                                   JOptionPane.showMessageDialog(null, "User update failed!");
+                               }
+
+                               usersTable ut = new usersTable();
+                               ut.setVisible(true);
+                               this.dispose();
+
+                           } catch (Exception e) {
+                               e.printStackTrace();
+                               JOptionPane.showMessageDialog(null, "Error updating user: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                           }
+                       }
+                   } catch (Exception e) {
+                       e.printStackTrace();
+                       JOptionPane.showMessageDialog(null, "Unexpected error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                   }
+
     }//GEN-LAST:event_updateMouseClicked
 
     private void updateMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateMouseEntered

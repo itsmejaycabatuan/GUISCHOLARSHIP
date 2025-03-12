@@ -288,7 +288,9 @@ public class applicantSettings extends javax.swing.JFrame {
     }//GEN-LAST:event_back1MouseExited
 
     private void deleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteMouseClicked
-       
+       changePassword cp = new changePassword();
+       cp.setVisible(true);
+       this.dispose();
     }//GEN-LAST:event_deleteMouseClicked
 
     private void cemailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cemailMouseClicked
@@ -298,7 +300,9 @@ public class applicantSettings extends javax.swing.JFrame {
     }//GEN-LAST:event_cemailMouseClicked
 
     private void delete2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_delete2MouseClicked
-       
+       changecontact cc = new changecontact();
+       cc.setVisible(true);
+       this.dispose();
     }//GEN-LAST:event_delete2MouseClicked
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated

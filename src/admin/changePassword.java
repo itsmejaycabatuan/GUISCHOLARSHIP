@@ -7,7 +7,9 @@ package admin;
 
 import config.Session;
 import config.dbConnect;
+import config.passwordHasher;
 import java.awt.Color;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -44,7 +46,7 @@ Color hover = new Color (255,255,255);
         jLabel7 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         newpass = new javax.swing.JTextField();
-        cpass = new javax.swing.JTextField();
+        CurrentPass = new javax.swing.JTextField();
         back2 = new javax.swing.JPanel();
         back3 = new javax.swing.JLabel();
         back = new javax.swing.JLabel();
@@ -54,6 +56,11 @@ Color hover = new Color (255,255,255);
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(102, 102, 102));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -87,15 +94,17 @@ Color hover = new Color (255,255,255);
         });
         jPanel2.add(newpass, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 270, 410, 60));
 
-        cpass.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
-        cpass.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        cpass.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
-        cpass.addActionListener(new java.awt.event.ActionListener() {
+        CurrentPass.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        CurrentPass.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        CurrentPass.setText("Current_pass");
+        CurrentPass.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        CurrentPass.setEnabled(false);
+        CurrentPass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cpassActionPerformed(evt);
+                CurrentPassActionPerformed(evt);
             }
         });
-        jPanel2.add(cpass, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 190, 410, 60));
+        jPanel2.add(CurrentPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 190, 410, 60));
 
         back2.setBackground(new java.awt.Color(255, 255, 255));
         back2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -172,73 +181,75 @@ Color hover = new Color (255,255,255);
         // TODO add your handling code here:
     }//GEN-LAST:event_newpassActionPerformed
 
-    private void cpassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cpassActionPerformed
+    private void CurrentPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CurrentPassActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cpassActionPerformed
+    }//GEN-LAST:event_CurrentPassActionPerformed
 
     private void back3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_back3MouseClicked
+try {
+    if (CurrentPass.getText().isEmpty() || newpass.getText().isEmpty()) {
+        JOptionPane.showMessageDialog(null, "All Fields Required!", "Missing Information", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
 
-                    if (cpass.getText().isEmpty() || newpass.getText().isEmpty()) {
-                  JOptionPane.showMessageDialog(null, "All Fields Required!", "Missing Information", JOptionPane.WARNING_MESSAGE);
-                  return;
-              }
+    if (newpass.getText().length() < 8) {
+        JOptionPane.showMessageDialog(null, "Password must be at least 8 characters long!", "Invalid Password", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
 
-              if (newpass.getText().length() < 8) {
-                  JOptionPane.showMessageDialog(null, "Password must be at least 8 characters long!", "Invalid Password", JOptionPane.WARNING_MESSAGE);
-                  return;
-              }
+    dbConnect dc = new dbConnect();
+    Connection con = dc.getConnection();
 
-              try {
-                  dbConnect dc = new dbConnect();
-                  Connection con = dc.getConnection();
+    
+    String hashedNewPass = passwordHasher.hashPassword(newpass.getText());
 
-                  // Check if the current password is correct before updating
-                  String checkQuery = "SELECT pass FROM tbl_user WHERE u_id = ?";
-                  PreparedStatement checkStmt = con.prepareStatement(checkQuery);
-                  checkStmt.setInt(1, Session.getInstance().getUser_id());
-                  ResultSet rs = checkStmt.executeQuery();
+    // Update password in the database
+    String updateQuery = "UPDATE tbl_user SET pass = ? WHERE u_id = ?";
+    PreparedStatement updateStmt = con.prepareStatement(updateQuery);
+    updateStmt.setString(1, hashedNewPass); // Store hashed password
+    updateStmt.setInt(2, Session.getInstance().getUser_id());
 
-                  if (rs.next()) {
-                      String existingPass = rs.getString("pass");
+    int updatedRows = updateStmt.executeUpdate();
+    if (updatedRows > 0) {
+        JOptionPane.showMessageDialog(null, "Password updated successfully!");
 
-                      if (!existingPass.equals(cpass.getText())) {
-                          JOptionPane.showMessageDialog(null, "Incorrect current password!", "Error", JOptionPane.WARNING_MESSAGE);
-                          return;
-                      }
-                  } else {
-                      JOptionPane.showMessageDialog(null, "User not found!", "Error", JOptionPane.WARNING_MESSAGE);
-                      return;
-                  }
+        // This part is auto update para session
+        Session sess = Session.getInstance();
+        sess.setPassword(hashedNewPass); // This part is to store the updated password padong sa database
 
-                  // Update password
-                  String updateQuery = "UPDATE tbl_user SET pass = ? WHERE u_id = ?";
-                  PreparedStatement updateStmt = con.prepareStatement(updateQuery);
-                  updateStmt.setString(1, newpass.getText());
-                  updateStmt.setInt(2, Session.getInstance().getUser_id());
+        //This part is refresh
+        String fetchQuery = "SELECT * FROM tbl_user WHERE u_id = ?";
+        PreparedStatement fetchStmt = con.prepareStatement(fetchQuery);
+        fetchStmt.setInt(1, Session.getInstance().getUser_id());
+        ResultSet rs = fetchStmt.executeQuery();
 
-                  int updatedRows = updateStmt.executeUpdate();
-                  if (updatedRows > 0) {
-                      JOptionPane.showMessageDialog(null, "Password updated successfully!");
+        if (rs.next()) {
+            sess.setFname(rs.getString("f_name"));
+            sess.setLname(rs.getString("l_name"));
+            sess.setEmail(rs.getString("email"));
+            sess.setUsername(rs.getString("username"));
+            sess.setType(rs.getString("type"));
+            sess.setStatus(rs.getString("status"));
+            sess.setContact(rs.getString("contact"));
+        }
 
-                      // Update session with the new password
-                      Session sess = Session.getInstance();
-                      sess.setPassword(newpass.getText());
+     
+        adminSettings as = new adminSettings();
+        as.setVisible(true);
+        this.dispose();
+    } else {
+        JOptionPane.showMessageDialog(null, "Failed to update password!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
 
-                      adminSettings as = new adminSettings();
-                      as.setVisible(true);
-                      this.dispose();
-                  } else {
-                      JOptionPane.showMessageDialog(null, "Failed to update password!", "Error", JOptionPane.ERROR_MESSAGE);
-                  }
+   
+    updateStmt.close();
+    con.close();
 
-                  rs.close();
-                  checkStmt.close();
-                  updateStmt.close();
-                  con.close();
-              } catch (SQLException ex) {
-                  ex.printStackTrace();
-                  JOptionPane.showMessageDialog(null, "Error updating password!", "Error", JOptionPane.ERROR_MESSAGE);
-              }
+} catch (SQLException | NoSuchAlgorithmException ex) {
+    ex.printStackTrace();
+    JOptionPane.showMessageDialog(null, "Error updating password!", "Error", JOptionPane.ERROR_MESSAGE);
+}
+
 
     }//GEN-LAST:event_back3MouseClicked
 
@@ -255,6 +266,13 @@ Color hover = new Color (255,255,255);
         as.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_backMouseClicked
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+       Session sess = Session.getInstance();
+       
+         id.setText(""+sess.getUser_id());
+  CurrentPass.setText(""+sess.getPassword());
+    }//GEN-LAST:event_formWindowActivated
 
     /**
      * @param args the command line arguments
@@ -292,11 +310,11 @@ Color hover = new Color (255,255,255);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField CurrentPass;
     private javax.swing.JLabel Email2;
     private javax.swing.JLabel back;
     private javax.swing.JPanel back2;
     private javax.swing.JLabel back3;
-    private javax.swing.JTextField cpass;
     private javax.swing.JLabel id;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
