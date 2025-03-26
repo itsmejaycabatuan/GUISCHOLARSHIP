@@ -98,6 +98,34 @@ public class dbConnect {
             }
         
         }
-        
+      public void insertLog(int userId, String action) {
+    Connection con = null;
+    PreparedStatement pst = null;
+
+    try {
+        dbConnect dc = new dbConnect();
+        con = dc.getConnection();  // ✅ Get a fresh connection
+
+        String insertQuery = "INSERT INTO tbl_logs (user_id, action) VALUES (?, ?)";
+        pst = con.prepareStatement(insertQuery);
+        pst.setInt(1, userId);
+        pst.setString(2, action);
+
+        pst.executeUpdate();  // ✅ Execute the query
+
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Failed to log action!", "Error", JOptionPane.ERROR_MESSAGE);
+    } finally {
+        // ✅ Close resources to prevent memory leaks
+        try {
+            if (pst != null) pst.close();
+            if (con != null) con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
 }
 

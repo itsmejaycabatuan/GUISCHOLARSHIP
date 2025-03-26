@@ -74,9 +74,9 @@ Color hover = new Color (255,255,255);
         jLabel3.setText("_______________________________________________________________________________");
         jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, -1, 40));
 
-        jLabel7.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
-        jLabel7.setText("Current Pass: ");
-        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, 110, 40));
+        jLabel7.setFont(new java.awt.Font("Arial Black", 1, 11)); // NOI18N
+        jLabel7.setText("Current Password: ");
+        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 200, -1, 40));
 
         jLabel11.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
         jLabel11.setText("New Password:");
@@ -94,9 +94,7 @@ Color hover = new Color (255,255,255);
 
         CurrentPass.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         CurrentPass.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        CurrentPass.setText("Current_pass");
         CurrentPass.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
-        CurrentPass.setEnabled(false);
         CurrentPass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CurrentPassActionPerformed(evt);
@@ -117,15 +115,15 @@ Color hover = new Color (255,255,255);
 
         back3.setFont(new java.awt.Font("Arial Black", 1, 18)); // NOI18N
         back3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        back3.setText("UPDATE");
+        back3.setText("SAVE CHANGES");
         back3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 back3MouseClicked(evt);
             }
         });
-        back2.add(back3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, 110, 30));
+        back2.add(back3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 180, 30));
 
-        jPanel2.add(back2, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 340, 190, 50));
+        jPanel2.add(back2, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 340, 220, 50));
 
         back.setFont(new java.awt.Font("Arial Black", 1, 18)); // NOI18N
         back.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -175,6 +173,12 @@ Color hover = new Color (255,255,255);
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+      Session sess = Session.getInstance();
+       id.setText(""+sess.getUser_id());
+    
+    }//GEN-LAST:event_formWindowActivated
+
     private void newpassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newpassActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_newpassActionPerformed
@@ -184,6 +188,8 @@ Color hover = new Color (255,255,255);
     }//GEN-LAST:event_CurrentPassActionPerformed
 
     private void back3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_back3MouseClicked
+      
+        
         try {
             if (CurrentPass.getText().isEmpty() || newpass.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "All Fields Required!", "Missing Information", JOptionPane.WARNING_MESSAGE);
@@ -198,27 +204,40 @@ Color hover = new Color (255,255,255);
             dbConnect dc = new dbConnect();
             Connection con = dc.getConnection();
 
+            String fetchQuery = "SELECT pass FROM tbl_user WHERE u_id = ?";
+            PreparedStatement fetchStmt = con.prepareStatement(fetchQuery);
+            fetchStmt.setInt(1, Session.getInstance().getUser_id());
+            ResultSet rs = fetchStmt.executeQuery();
+
+            if (rs.next()) {
+                String actualCurrentPass = rs.getString("pass");
+
+                if (!passwordHasher.checkPassword(CurrentPass.getText(), actualCurrentPass)) {
+                    JOptionPane.showMessageDialog(null, "Incorrect Current Password!", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "User not found!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             String hashedNewPass = passwordHasher.hashPassword(newpass.getText());
 
-            // Update password in the database
             String updateQuery = "UPDATE tbl_user SET pass = ? WHERE u_id = ?";
             PreparedStatement updateStmt = con.prepareStatement(updateQuery);
-            updateStmt.setString(1, hashedNewPass); // Store hashed password
+            updateStmt.setString(1, hashedNewPass);
             updateStmt.setInt(2, Session.getInstance().getUser_id());
 
             int updatedRows = updateStmt.executeUpdate();
             if (updatedRows > 0) {
                 JOptionPane.showMessageDialog(null, "Password updated successfully!");
 
-                // This part is auto update para session
                 Session sess = Session.getInstance();
-                sess.setPassword(hashedNewPass); // This part is to store the updated password padong sa database
+                sess.setPassword(hashedNewPass);
 
-                //This part is refresh
-                String fetchQuery = "SELECT * FROM tbl_user WHERE u_id = ?";
-                PreparedStatement fetchStmt = con.prepareStatement(fetchQuery);
+                fetchStmt = con.prepareStatement("SELECT * FROM tbl_user WHERE u_id = ?");
                 fetchStmt.setInt(1, Session.getInstance().getUser_id());
-                ResultSet rs = fetchStmt.executeQuery();
+                rs = fetchStmt.executeQuery();
 
                 if (rs.next()) {
                     sess.setFname(rs.getString("f_name"));
@@ -238,6 +257,7 @@ Color hover = new Color (255,255,255);
             }
 
             updateStmt.close();
+            fetchStmt.close();
             con.close();
 
         } catch (SQLException | NoSuchAlgorithmException ex) {
@@ -260,12 +280,6 @@ Color hover = new Color (255,255,255);
         as.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_backMouseClicked
-
-    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-      Session sess = Session.getInstance();
-       id.setText(""+sess.getUser_id());
-     CurrentPass.setText(""+sess.getPassword());
-    }//GEN-LAST:event_formWindowActivated
 
     /**
      * @param args the command line arguments

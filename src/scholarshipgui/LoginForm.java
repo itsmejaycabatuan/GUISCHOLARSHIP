@@ -6,6 +6,7 @@
 package scholarshipgui;
 
 import admin.adminDashboard;
+import admin.enterEmail;
 import applicant.applicantDashboard;
 import config.Session;
 import config.dbConnect;
@@ -17,6 +18,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.BorderFactory;
@@ -72,7 +75,7 @@ public class LoginForm extends javax.swing.JFrame {
                              sess.setStatus(resultSet.getString("status"));
                               sess.setContact(resultSet.getString("contact"));
                                sess.setPassword(resultSet.getString("pass"));
-                             
+                           
                   return true;
                  }else{
                      System.out.println("Password does not match!");
@@ -89,7 +92,33 @@ public class LoginForm extends javax.swing.JFrame {
         }
         
     }
-    
+    public int getUserId(String username) {
+    try {
+        dbConnect dc = new dbConnect();
+        Connection con = dc.getConnection();
+
+        String query = "SELECT u_id FROM tbl_user WHERE username = ?";
+        PreparedStatement pst = con.prepareStatement(query);
+        pst.setString(1, username);
+        ResultSet rs = pst.executeQuery();
+
+        if (rs.next()) {
+            int userId = rs.getInt("u_id"); // ✅ Get user ID
+            rs.close();
+            pst.close();
+            con.close();
+            return userId;
+        }
+
+        rs.close();
+        pst.close();
+        con.close();
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Database Error!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    return -1; // Return -1 if user not found
+}
     
     Color hover = new Color (255,255,255);
     Color defaultcolor = new Color  (102,102,102);
@@ -121,6 +150,7 @@ public class LoginForm extends javax.swing.JFrame {
         viewicon = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         passworduser = new javax.swing.JPasswordField();
+        jLabel12 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
@@ -241,7 +271,7 @@ public class LoginForm extends javax.swing.JFrame {
 
         lgnav1.add(lgnav2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 400, 150, 40));
 
-        jPanel2.add(lgnav1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 410, 150, 40));
+        jPanel2.add(lgnav1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 420, 150, 40));
 
         iconhide.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/iconhide.png"))); // NOI18N
         iconhide.setText("jLabel1");
@@ -275,6 +305,16 @@ public class LoginForm extends javax.swing.JFrame {
             }
         });
         jPanel2.add(passworduser, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 330, 420, 50));
+
+        jLabel12.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel12.setText("Forgot Password?");
+        jLabel12.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel12MouseClicked(evt);
+            }
+        });
+        jPanel2.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 390, 160, -1));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 20, 470, 560));
 
@@ -380,7 +420,7 @@ public class LoginForm extends javax.swing.JFrame {
 
     private void lgnavMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lgnavMouseClicked
       
-    
+    dbConnect dc = new dbConnect();
 if (username1.getText().isEmpty() && passworduser.getText().isEmpty()) {
     JOptionPane.showMessageDialog(null, "Username and password cannot be empty.", "Missing Credentials", JOptionPane.WARNING_MESSAGE);
 } else if (username1.getText().isEmpty()) {
@@ -388,14 +428,17 @@ if (username1.getText().isEmpty() && passworduser.getText().isEmpty()) {
 } else if (passworduser.getText().isEmpty()) {
     JOptionPane.showMessageDialog(null, "Please enter your password.", "Missing Password", JOptionPane.WARNING_MESSAGE);
 } else {
+     int userId = getUserId(username1.getText()); 
     if (loginAccount(username1.getText(), passworduser.getText())) {
         if (!status1.equals("Active")) {
             JOptionPane.showMessageDialog(null, "Pending Account, Please wait for Approval");
         } else {
             // Show "Login Successful" message
+           
             JOptionPane.showMessageDialog(null, "Login successful! Redirecting to your dashboard...", 
                                           "Login Success", JOptionPane.INFORMATION_MESSAGE);
-
+            
+            dc.insertLog(userId, "Login");
             // Run delay + auto-disappearing loading message in a separate thread
             new Thread(() -> {
                 try {
@@ -474,6 +517,12 @@ if (username1.getText().isEmpty() && passworduser.getText().isEmpty()) {
 
     }//GEN-LAST:event_lgnavMouseClicked
 
+    private void jLabel12MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel12MouseClicked
+     enterEmail sq = new enterEmail();
+     sq.setVisible(true);
+     this.dispose();
+    }//GEN-LAST:event_jLabel12MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -515,6 +564,7 @@ if (username1.getText().isEmpty() && passworduser.getText().isEmpty()) {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

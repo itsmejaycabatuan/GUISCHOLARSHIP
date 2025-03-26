@@ -10,6 +10,7 @@ import config.dbConnect;
 import java.awt.Color;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
@@ -91,9 +92,7 @@ public class changecontact extends javax.swing.JFrame {
 
         ccurrent.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         ccurrent.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        ccurrent.setText("Current_Contact");
         ccurrent.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
-        ccurrent.setEnabled(false);
         ccurrent.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ccurrentActionPerformed(evt);
@@ -182,50 +181,61 @@ public class changecontact extends javax.swing.JFrame {
 
     private void back3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_back3MouseClicked
         
-                    if (ccurrent.getText().isEmpty() || newc.getText().isEmpty()) {
-                   JOptionPane.showMessageDialog(null, "All Fields Required!", "Missing Information", JOptionPane.WARNING_MESSAGE);
-                   return;
-               }
+               if (ccurrent.getText().isEmpty() || newc.getText().isEmpty()) {
+        JOptionPane.showMessageDialog(null, "All Fields Required!", "Missing Information", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    if (!ccurrent.getText().matches("\\d{11}")) {
+        JOptionPane.showMessageDialog(null, "Current contact must be exactly 11 digits!", "Invalid Contact", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    if (!newc.getText().matches("\\d{11}")) {
+        JOptionPane.showMessageDialog(null, "New contact must be exactly 11 digits!", "Invalid Contact", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    try {
+        dbConnect dc = new dbConnect();
+        Connection con = dc.getConnection();
+
+        // Check if current contact matches DB
+        String checkQuery = "SELECT contact FROM tbl_user WHERE u_id = ?";
+        PreparedStatement checkPst = con.prepareStatement(checkQuery);
+        checkPst.setInt(1, Session.getInstance().getUser_id());
+        ResultSet rs = checkPst.executeQuery();
+
+        if (rs.next()) {
+            String actualCurrentContact = rs.getString("contact");
+
+            if (!ccurrent.getText().equals(actualCurrentContact)) {
+                JOptionPane.showMessageDialog(null, "Incorrect Current Contact Number!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "User not found!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // ✅ Open enterPassword JFrame for password verification
+        enterPassword1 ep = new enterPassword1(); 
+         ep.userID = Session.getInstance().getUser_id();
+        ep.newContact = newc.getText();
+        
+        ep.setVisible(true);
+        this.dispose();
+
+        // Close resources
+        rs.close();
+        checkPst.close();
+        con.close();
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Database Error!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
 
 
-               if (!ccurrent.getText().matches("\\d{11}")) {
-                   JOptionPane.showMessageDialog(null, "Current contact must be exactly 11 digits!", "Invalid Contact", JOptionPane.WARNING_MESSAGE);
-                   return;
-               }
-
-               if (!newc.getText().matches("\\d{11}")) {
-                   JOptionPane.showMessageDialog(null, "New contact must be exactly 11 digits!", "Invalid Contact", JOptionPane.WARNING_MESSAGE);
-                   return;
-               }
-
-               try {
-                   dbConnect dc = new dbConnect();
-                   Connection con = dc.getConnection();
-                   String query = "UPDATE tbl_user SET contact = ? WHERE u_id = ?";
-                   PreparedStatement pst = con.prepareStatement(query);
-                   pst.setString(1, newc.getText());
-                   pst.setInt(2, Session.getInstance().getUser_id()); 
-
-                   int updatedRows = pst.executeUpdate();
-                   if (updatedRows > 0) {
-                       JOptionPane.showMessageDialog(null, "Contact number updated successfully!");
-
-
-                       Session sess = Session.getInstance();
-                       sess.setContact(newc.getText()); 
-                       adminSettings as = new adminSettings();
-                       as.setVisible(true);
-                       this.dispose(); 
-                   } else {
-                       JOptionPane.showMessageDialog(null, "User not found!");
-                   }
-
-                    pst.close();
-                   con.close();
-               } catch (SQLException ex) {
-                   ex.printStackTrace();
-                   JOptionPane.showMessageDialog(null, "Error updating contact!");
-               }
     }//GEN-LAST:event_back3MouseClicked
 
     private void back2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_back2MouseEntered
@@ -245,7 +255,7 @@ public class changecontact extends javax.swing.JFrame {
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         Session sess = Session.getInstance();
        id.setText(""+sess.getUser_id());
-     ccurrent.setText(""+sess.getContact());
+    
     }//GEN-LAST:event_formWindowActivated
 
     /**

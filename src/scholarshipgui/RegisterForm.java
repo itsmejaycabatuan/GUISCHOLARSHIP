@@ -877,11 +877,11 @@ public class RegisterForm extends javax.swing.JFrame {
             
             try{
                 String pass1 = passwordHasher.hashPassword(pass.getText());
-               
-          if  (db.insertData("INSERT INTO tbl_user (username, f_name, l_name, email, contact, type, pass, status, registration_date) "
-                + "VALUES ('"+username.getText()+"', '"+fname.getText()+"', '"+lname.getText()+"', '"+email.getText()+"', "
-                        + "'"+contact.getText()+"', '"+type.getSelectedItem()+"', '"+pass1+"', "
-                                + "'Pending', CURRENT_TIMESTAMP)") == 1){
+        if (db.insertData("INSERT INTO tbl_user (username, f_name, l_name, email, contact, type, pass, status, registration_date, sec_ques1, answer_1, sec_qeus2, answer_2) "
+    + "VALUES ('" + username.getText() + "', '" + fname.getText() + "', '" + lname.getText() + "', '" + email.getText() + "', "
+    + "'" + contact.getText() + "', '" + type.getSelectedItem() + "', '" + pass1 + "', "
+    + "'Pending', CURRENT_TIMESTAMP, 'N/A', 'N/A', 'N/A', 'N/A')") == 1) {
+
             
             
             JOptionPane.showMessageDialog(null, "Submitted Successfully");

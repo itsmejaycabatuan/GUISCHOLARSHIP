@@ -6,7 +6,12 @@
 package applicant;
 
 import config.Session;
+import config.dbConnect;
 import java.awt.Color;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import scholarshipgui.LoginForm;
 
@@ -22,6 +27,37 @@ public class applicantDashboard extends javax.swing.JFrame {
     public applicantDashboard() {
         initComponents();
     }
+public int getUserId(String firstname) {
+    int userId = -1; 
+
+    try {
+        dbConnect dc = new dbConnect();
+        Connection con = dc.getConnection();
+
+       
+
+        
+        String query = "SELECT u_id FROM tbl_user WHERE LOWER(TRIM(f_name)) = LOWER(TRIM(?))";
+        PreparedStatement pst = con.prepareStatement(query);
+        pst.setString(1, firstname.trim()); // Trim input firstname
+        ResultSet rs = pst.executeQuery();
+
+        if (rs.next()) {
+            userId = rs.getInt("u_id");
+           
+        } else {
+           
+        }
+
+        rs.close();
+        pst.close();
+        con.close();
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    }
+
+    return userId;
+}
  Color hover = new Color (255,255,255);
     Color defaultcolor = new Color  (102,102,102);
     /**
@@ -460,15 +496,30 @@ public class applicantDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_logoutnavMouseClicked
 
     private void logoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseClicked
-        int choice = JOptionPane.showConfirmDialog(null, "Do you want to log out?", "Logout Confirmation!",
-            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        String username = acc_name.getText();
 
-        if (choice == JOptionPane.YES_OPTION) {
 
-            LoginForm lf = new LoginForm();
-            lf.setVisible(true);
-            this.dispose();
-        }
+int userId = getUserId(username);
+
+if (userId == -1) { 
+    System.out.println("🚨 User not found! Cannot log out.");
+    JOptionPane.showMessageDialog(null, "Error: Cannot log action. User not found!", "Error", JOptionPane.ERROR_MESSAGE);
+    return; 
+}
+
+System.out.println("✅ User found! userId: " + userId);
+
+int choice = JOptionPane.showConfirmDialog(null, "Do you want to log out?", "Logout Confirmation!",
+        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+if (choice == JOptionPane.YES_OPTION) {
+    dbConnect dc = new dbConnect();
+    dc.insertLog(userId, "Logout");
+
+    LoginForm lf = new LoginForm();
+    lf.setVisible(true);
+    this.dispose();
+}
     }//GEN-LAST:event_logoutMouseClicked
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
@@ -479,7 +530,7 @@ public class applicantDashboard extends javax.swing.JFrame {
             lf.setVisible(true);
             this.dispose();
      }
-     acc_name.setText("Hello, "+sess.getFname());                             
+     acc_name.setText(""+sess.getFname());                             
 
     }//GEN-LAST:event_formWindowActivated
 

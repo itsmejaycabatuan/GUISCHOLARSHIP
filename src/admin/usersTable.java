@@ -5,6 +5,7 @@
  */
 package admin;
 
+import config.Session;
 import config.dbConnect;
 import java.awt.Color;
 import java.sql.Connection;
@@ -19,6 +20,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import net.proteanit.sql.DbUtils;
+import scholarshipgui.LoginForm;
 
 /**
  *
@@ -162,50 +164,66 @@ public void loadUsersIntoTable() {
         System.out.println("Error loading users: " + e.getMessage());
     }
 }
-private void deleteUser(int userID) {
-    dbConnect db = new dbConnect();
-    PreparedStatement pstmt = null;
+public void deleteUser(int userID) {
+    dbConnect dc = new dbConnect();
     
-    try {
-      
-        String deleteQuery = "DELETE FROM tbl_user WHERE u_id = ?";
-        
-      
-        pstmt = db.getConnection().prepareStatement(deleteQuery);
-        pstmt.setInt(1, userID); 
-        
-      
-        int deletedRows = pstmt.executeUpdate();
-        
-      
-        if (deletedRows > 0) {
-            JOptionPane.showMessageDialog(null, "User Deleted Successfully!");
-            
-          
-            loadUsersIntoTable(); 
-        } else {
-            JOptionPane.showMessageDialog(null, "Failed to delete user. No such user found.", 
-                                          "Error", JOptionPane.ERROR_MESSAGE);
+    try (Connection con = dc.getConnection()) {
+        // 🔹 Step 1: Delete logs related to the user
+        String deleteLogsQuery = "DELETE FROM tbl_logs WHERE user_id = ?";
+        try (PreparedStatement pstmtLogs = con.prepareStatement(deleteLogsQuery)) {
+            pstmtLogs.setInt(1, userID);
+            pstmtLogs.executeUpdate();
         }
-        
-    } catch (SQLException e) {
-      
-        JOptionPane.showMessageDialog(null, "Error occurred while deleting the user. Please try again.",
-                                      "Database Error", JOptionPane.ERROR_MESSAGE);
-        e.printStackTrace(); 
-    } finally {
- 
-        try {
-            if (pstmt != null) {
-                pstmt.close(); 
+
+        // 🔹 Step 2: Delete the user
+        String deleteUserQuery = "DELETE FROM tbl_user WHERE u_id = ?";
+        try (PreparedStatement pstmtUser = con.prepareStatement(deleteUserQuery)) {
+            pstmtUser.setInt(1, userID);
+            int rowsAffected = pstmtUser.executeUpdate();
+
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(null, "User deleted successfully!");
+            } else {
+                JOptionPane.showMessageDialog(null, "User deletion failed!");
             }
-          
-        } catch (SQLException e) {
-          
-            e.printStackTrace();
         }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error deleting user: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    
+
+}
+public int getUserId(String firstname) {
+    int userId = -1; 
+
+    try {
+        dbConnect dc = new dbConnect();
+        Connection con = dc.getConnection();
+
+       
+
+        
+        String query = "SELECT u_id FROM tbl_user WHERE LOWER(TRIM(f_name)) = LOWER(TRIM(?))";
+        PreparedStatement pst = con.prepareStatement(query);
+        pst.setString(1, firstname.trim()); // Trim input firstname
+        ResultSet rs = pst.executeQuery();
+
+        if (rs.next()) {
+            userId = rs.getInt("u_id");
+           
+        } else {
+           
+        }
+
+        rs.close();
+        pst.close();
+        con.close();
+    } catch (SQLException ex) {
+        ex.printStackTrace();
     }
 
+    return userId;
 }
 
     Color hover = new Color (255,255,255);
@@ -234,6 +252,7 @@ private void deleteUser(int userID) {
         delete = new javax.swing.JLabel();
         editnav = new javax.swing.JPanel();
         edit = new javax.swing.JLabel();
+        acc_name = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_users = new javax.swing.JTable();
@@ -253,6 +272,11 @@ private void deleteUser(int userID) {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(102, 102, 102));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -369,6 +393,11 @@ private void deleteUser(int userID) {
         editnav.add(edit, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, 120, 30));
 
         jPanel2.add(editnav, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 240, 50));
+
+        acc_name.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        acc_name.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        acc_name.setText("Hello, Admin");
+        jPanel2.add(acc_name, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, 190, 30));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 280, 680));
 
@@ -521,76 +550,120 @@ private void deleteUser(int userID) {
     }//GEN-LAST:event_addUsersMouseClicked
 
     private void editMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editMouseClicked
-      int rowIndex = tbl_users.getSelectedRow();
-     
-      
-      if(rowIndex < 0 ){
-          JOptionPane.showMessageDialog(null, "Please select an item.", "Click a Item", JOptionPane.WARNING_MESSAGE);
-      }else{
-         
-          try{
-          dbConnect dc = new dbConnect();
-          TableModel tbl  = tbl_users.getModel();
-        ResultSet rs = dc.getData("SELECT * FROM tbl_user WHERE u_id = '" + tbl.getValueAt(rowIndex, 0) + "'");
+                int rowIndex = tbl_users.getSelectedRow();
 
-          if(rs.next()){
-               updateForm uf = new updateForm();
-                 uf.u_id.setText(""+rs.getInt("u_id"));
-                uf.username.setText(""+rs.getString("username"));
-              uf.fname.setText(""+rs.getString("f_name"));
-              uf.lname.setText(""+rs.getString("l_name"));
-               uf.email.setText(""+rs.getString("email"));
-               uf.contact.setText(""+rs.getString("contact"));
-               uf.type.setSelectedItem(""+rs.getString("type"));
-               uf.pass.setText(""+rs.getString("pass"));
-                uf.type1.setSelectedItem(""+rs.getString("status"));
-               uf.setVisible(true);
-              this.dispose();
-          }
-         }catch(SQLException e){
-                       System.out.println(""+e.getMessage());
-                  }
-      }
+
+                if(rowIndex < 0 ){
+                    JOptionPane.showMessageDialog(null, "Please select an item.", "Click a Item", JOptionPane.WARNING_MESSAGE);
+                }else{
+
+                    try{
+                    dbConnect dc = new dbConnect();
+                    TableModel tbl  = tbl_users.getModel();
+                  ResultSet rs = dc.getData("SELECT * FROM tbl_user WHERE u_id = '" + tbl.getValueAt(rowIndex, 0) + "'");
+
+                    if(rs.next()){
+                         updateForm uf = new updateForm();
+                           uf.u_id.setText(""+rs.getInt("u_id"));
+                          uf.username.setText(""+rs.getString("username"));
+                        uf.fname.setText(""+rs.getString("f_name"));
+                        uf.lname.setText(""+rs.getString("l_name"));
+                         uf.email.setText(""+rs.getString("email"));
+                         uf.contact.setText(""+rs.getString("contact"));
+                         uf.type.setSelectedItem(""+rs.getString("type"));
+                         uf.pass.setText(""+rs.getString("pass"));
+                          uf.type1.setSelectedItem(""+rs.getString("status"));
+                         uf.setVisible(true);
+                        this.dispose();
+                    }
+                   }catch(SQLException e){
+                                 System.out.println(""+e.getMessage());
+                            }
+                }
 
     }//GEN-LAST:event_editMouseClicked
 
     private void deleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteMouseClicked
-     int selectedRow = tbl_users.getSelectedRow();
+     
+        
+        int selectedRow = tbl_users.getSelectedRow();
+dbConnect dc = new dbConnect();
 
 if (selectedRow != -1) {
-   
     int userID = (int) tbl_users.getValueAt(selectedRow, 0);
-    System.out.println("Selected user ID to delete: " + userID);  
+    System.out.println("Selected user ID to delete: " + userID);
 
-    
     int confirm = JOptionPane.showConfirmDialog(null, 
             "Are you sure you want to delete this user?", 
             "Confirm Deletion", 
             JOptionPane.YES_NO_OPTION);
 
-   
     if (confirm == JOptionPane.YES_OPTION) {
-        
-        deleteUser(userID);
+        try (Connection con = dc.getConnection()) {
+            con.setAutoCommit(false); // ✅ Disable auto-commit for transaction
 
-       
-        tbl_users.clearSelection();
+           
+            String deleteLogsQuery = "DELETE FROM tbl_logs WHERE user_id = ?";
+            try (PreparedStatement pstmtDeleteLogs = con.prepareStatement(deleteLogsQuery)) {
+                pstmtDeleteLogs.setInt(1, userID);
+                pstmtDeleteLogs.executeUpdate();
+            }
 
-       
-        DefaultTableModel model = (DefaultTableModel) tbl_users.getModel();
-        model.setRowCount(0);  // Clear the table's existing data
-        loadUsersIntoTable();  // Reload the table with the updated data
+          
+            String deleteUserQuery = "DELETE FROM tbl_user WHERE u_id = ?";
+            try (PreparedStatement pstmtDeleteUser = con.prepareStatement(deleteUserQuery)) {
+                pstmtDeleteUser.setInt(1, userID);
+                int rowsDeleted = pstmtDeleteUser.executeUpdate();
 
-      
-        if (model.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(null, "No users available.");
+                if (rowsDeleted > 0) {
+                    System.out.println("User deleted successfully!");
+
+                    // 🔹 Step 3: Log admin action (Admin deleting user)
+                    int adminID = getUserId(acc_name.getText().trim()); // Get admin ID
+                    if (adminID != -1) {
+                        String logQuery = "INSERT INTO tbl_logs (user_id, action, date_time) VALUES (?, ?, NOW())";
+                        try (PreparedStatement pstmtLog = con.prepareStatement(logQuery)) {
+                            pstmtLog.setInt(1, adminID);
+                            pstmtLog.setString(2, "Admin deleted user with ID: " + userID);
+                            pstmtLog.executeUpdate();
+                        }
+                    }
+
+                    con.commit(); // ✅ Commit changes
+
+                    JOptionPane.showMessageDialog(null, "User deleted successfully and logged!");
+
+                    // ✅ Refresh Table
+                    tbl_users.clearSelection();
+                    DefaultTableModel model = (DefaultTableModel) tbl_users.getModel();
+                    model.setRowCount(0);
+                    loadUsersIntoTable();
+                } else {
+                    JOptionPane.showMessageDialog(null, "User deletion failed!");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error deleting user: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 } else {
-    // If no row is selected, show a warning message
     JOptionPane.showMessageDialog(null, "Please select a user to delete.");
 }
+
     }//GEN-LAST:event_deleteMouseClicked
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        Session sess = Session.getInstance();
+     if(sess.getUser_id() == 0){
+            JOptionPane.showMessageDialog(null, "No account, Please Login First", "Missing Account", JOptionPane.WARNING_MESSAGE);
+            LoginForm lf = new LoginForm();
+            lf.setVisible(true);
+            this.dispose();
+     }
+     acc_name.setText(""+sess.getFname());
+   
+    }//GEN-LAST:event_formWindowActivated
 
     /**
      * @param args the command line arguments
@@ -628,6 +701,7 @@ if (selectedRow != -1) {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel acc_name;
     private javax.swing.JLabel addUsers;
     private javax.swing.JLabel delete;
     private javax.swing.JPanel deletenav;

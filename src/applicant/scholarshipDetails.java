@@ -150,6 +150,7 @@ Color hover = new Color (255,255,255);
         capacity.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         capacity.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         capacity.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        capacity.setEnabled(false);
         capacity.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 capacityActionPerformed(evt);
@@ -517,6 +518,7 @@ Color hover = new Color (255,255,255);
         require.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         require.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         require.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        require.setEnabled(false);
         require.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 requireActionPerformed(evt);
@@ -532,6 +534,7 @@ Color hover = new Color (255,255,255);
         gpa.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         gpa.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         gpa.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        gpa.setEnabled(false);
         gpa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 gpaActionPerformed(evt);
@@ -547,6 +550,7 @@ Color hover = new Color (255,255,255);
         annincome.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         annincome.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         annincome.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        annincome.setEnabled(false);
         annincome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 annincomeActionPerformed(evt);
@@ -562,6 +566,7 @@ Color hover = new Color (255,255,255);
         amount.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         amount.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         amount.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        amount.setEnabled(false);
         amount.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 amountActionPerformed(evt);
@@ -577,6 +582,7 @@ Color hover = new Color (255,255,255);
         sname.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         sname.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         sname.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        sname.setEnabled(false);
         sname.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 snameActionPerformed(evt);
@@ -592,6 +598,7 @@ Color hover = new Color (255,255,255);
         des.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         des.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         des.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        des.setEnabled(false);
         des.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 desActionPerformed(evt);
@@ -607,6 +614,7 @@ Color hover = new Color (255,255,255);
         deadline1.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         deadline1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         deadline1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        deadline1.setEnabled(false);
         jPanel1.add(deadline1, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 430, 290, 50));
 
         jLabel14.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
@@ -617,6 +625,7 @@ Color hover = new Color (255,255,255);
         status.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         status.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         status.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        status.setEnabled(false);
         status.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 statusActionPerformed(evt);
@@ -632,6 +641,7 @@ Color hover = new Color (255,255,255);
         s_id.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         s_id.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         s_id.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        s_id.setEnabled(false);
         s_id.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 s_idActionPerformed(evt);

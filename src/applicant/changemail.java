@@ -10,6 +10,7 @@ import config.dbConnect;
 import java.awt.Color;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -100,9 +101,7 @@ public class changemail extends javax.swing.JFrame {
 
         current.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         current.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        current.setText("Current_Email");
         current.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
-        current.setEnabled(false);
         current.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 currentActionPerformed(evt);
@@ -181,6 +180,12 @@ public class changemail extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        Session sess = Session.getInstance();
+       id.setText(""+sess.getUser_id());
+      
+    }//GEN-LAST:event_formWindowActivated
+
     private void newemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newemActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_newemActionPerformed
@@ -191,12 +196,12 @@ public class changemail extends javax.swing.JFrame {
 
     private void back3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_back3MouseClicked
 
-        if(newem.getText().isEmpty() || current.getText().isEmpty()){
+        if (newem.getText().isEmpty() || current.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "All Fields Required!", "Missing Information", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        if(!isEmailValid(newem.getText())) {
+        if (!isEmailValid(newem.getText())) {
             JOptionPane.showMessageDialog(null, "Invalid Email Format!", "Invalid Format", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -204,30 +209,38 @@ public class changemail extends javax.swing.JFrame {
         try {
             dbConnect dc = new dbConnect();
             Connection con = dc.getConnection();
-            String query = "UPDATE tbl_user SET email = ? WHERE u_id = ?";
-            PreparedStatement pst = con.prepareStatement(query);
-            pst.setString(1, newem.getText());
-            pst.setInt(2, Session.getInstance().getUser_id());
 
-            int updatedRows = pst.executeUpdate();
-            if (updatedRows > 0) {
-                JOptionPane.showMessageDialog(null, "Email updated successfully!");
+            String checkQuery = "SELECT email FROM tbl_user WHERE u_id = ?";
+            PreparedStatement checkPst = con.prepareStatement(checkQuery);
+            checkPst.setInt(1, Session.getInstance().getUser_id());
+            ResultSet rs = checkPst.executeQuery();
 
-                Session sess = Session.getInstance();
-                sess.setEmail(newem.getText());
+            if (rs.next()) {
+                String actualCurrentEmail = rs.getString("email");
 
-                applicantSettings as = new applicantSettings();
-                as.setVisible(true);
-                this.dispose();
+                if (!current.getText().equals(actualCurrentEmail)) {
+                    JOptionPane.showMessageDialog(null, "Incorrect Current Email!", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
             } else {
-                JOptionPane.showMessageDialog(null, "User not found!");
+                JOptionPane.showMessageDialog(null, "User not found!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
             }
 
-            pst.close();
+            enterPassword ep = new enterPassword();
+
+            ep.userID = Session.getInstance().getUser_id();
+            ep.newEmail = newem.getText();
+
+            ep.setVisible(true);
+            this.dispose();
+            // Close resources
+            rs.close();
+            checkPst.close();
             con.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error updating email!");
+            JOptionPane.showMessageDialog(null, "Error verifying email!", "Database Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_back3MouseClicked
 
@@ -244,12 +257,6 @@ public class changemail extends javax.swing.JFrame {
         as.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_backMouseClicked
-
-    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-        Session sess = Session.getInstance();
-       id.setText(""+sess.getUser_id());
-       current.setText(""+sess.getEmail());
-    }//GEN-LAST:event_formWindowActivated
 
     /**
      * @param args the command line arguments
@@ -292,7 +299,7 @@ public class changemail extends javax.swing.JFrame {
     private javax.swing.JPanel back2;
     private javax.swing.JLabel back3;
     private javax.swing.JTextField current;
-    private javax.swing.JLabel id;
+    public javax.swing.JLabel id;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;

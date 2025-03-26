@@ -5,6 +5,7 @@
  */
 package applicant;
 
+import admin.SecurityQuestions;
 import config.Session;
 import java.awt.Color;
 import javax.swing.JOptionPane;
@@ -64,6 +65,9 @@ public class applicantSettings extends javax.swing.JFrame {
         delete2 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        changelastname = new javax.swing.JLabel();
+        sec = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
 
@@ -86,7 +90,7 @@ public class applicantSettings extends javax.swing.JFrame {
 
         Email.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
         Email.setText("Password:");
-        jPanel2.add(Email, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 450, 90, 40));
+        jPanel2.add(Email, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 320, 90, 40));
 
         jLabel7.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
         jLabel7.setText("Name:");
@@ -102,15 +106,15 @@ public class applicantSettings extends javax.swing.JFrame {
 
         Email2.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
         Email2.setText("Current User ID: ");
-        jPanel2.add(Email2, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 430, 130, 50));
+        jPanel2.add(Email2, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 390, 130, 50));
 
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/settingspic.png"))); // NOI18N
-        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 90, 290, 260));
+        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 90, 300, 270));
 
         Email3.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
         Email3.setText("Contact:");
-        jPanel2.add(Email3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 330, 90, 40));
+        jPanel2.add(Email3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 260, 90, 40));
 
         jPanel3.setBackground(new java.awt.Color(204, 204, 204));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -155,17 +159,17 @@ public class applicantSettings extends javax.swing.JFrame {
         contact.setText("Contact#");
         jPanel6.add(contact, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 10, 200, 30));
 
-        jPanel2.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 310, 350, 50));
+        jPanel2.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 260, 350, 50));
 
         jPanel7.setBackground(new java.awt.Color(204, 204, 204));
         jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         password.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
         password.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        password.setText("UserPassword");
+        password.setText("Change Password");
         jPanel7.add(password, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 10, 180, 30));
 
-        jPanel2.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 420, 350, 50));
+        jPanel2.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 320, 350, 50));
 
         jPanel8.setBackground(new java.awt.Color(204, 204, 204));
         jPanel8.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -175,7 +179,7 @@ public class applicantSettings extends javax.swing.JFrame {
         id.setText("User_id");
         jPanel8.add(id, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, 140, 30));
 
-        jPanel2.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 430, 200, 50));
+        jPanel2.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 390, 200, 50));
 
         back1.setBackground(new java.awt.Color(255, 255, 255));
         back1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -199,52 +203,85 @@ public class applicantSettings extends javax.swing.JFrame {
         });
         back1.add(back, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 100, 30));
 
-        jPanel2.add(back1, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 530, 200, 50));
+        jPanel2.add(back1, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 460, 200, 50));
 
         delete.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
         delete.setForeground(new java.awt.Color(51, 51, 51));
         delete.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        delete.setText("Change Password");
-        delete.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        delete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/change.png"))); // NOI18N
+        delete.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         delete.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 deleteMouseClicked(evt);
             }
         });
-        jPanel2.add(delete, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 480, 230, 40));
+        jPanel2.add(delete, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 320, 50, 50));
 
         cemail.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
         cemail.setForeground(new java.awt.Color(51, 51, 51));
         cemail.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        cemail.setText("Change Email");
-        cemail.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        cemail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/change.png"))); // NOI18N
+        cemail.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         cemail.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 cemailMouseClicked(evt);
             }
         });
-        jPanel2.add(cemail, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 260, 230, 40));
+        jPanel2.add(cemail, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 200, 50, 50));
 
         delete2.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
         delete2.setForeground(new java.awt.Color(51, 51, 51));
         delete2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        delete2.setText("Change Contact Number");
-        delete2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        delete2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/change.png"))); // NOI18N
+        delete2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         delete2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 delete2MouseClicked(evt);
             }
         });
-        jPanel2.add(delete2, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 370, 230, 40));
+        jPanel2.add(delete2, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 260, 50, 50));
 
         jLabel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 80, 340, 290));
+        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 80, 340, 300));
 
         jLabel8.setFont(new java.awt.Font("Arial Black", 1, 18)); // NOI18N
         jLabel8.setText("Personal Info");
         jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 930, 610));
+        jLabel1.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Forgot Password?");
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel1MouseClicked(evt);
+            }
+        });
+        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 410, 210, -1));
+
+        changelastname.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        changelastname.setForeground(new java.awt.Color(51, 51, 51));
+        changelastname.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        changelastname.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/change.png"))); // NOI18N
+        changelastname.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        changelastname.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                changelastnameMouseClicked(evt);
+            }
+        });
+        jPanel2.add(changelastname, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 80, 50, 50));
+
+        sec.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        sec.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        sec.setText("Security Question");
+        sec.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        sec.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                secMouseClicked(evt);
+            }
+        });
+        jPanel2.add(sec, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 10, 170, 40));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 930, 530));
 
         jLabel2.setFont(new java.awt.Font("Arial Black", 1, 48)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 204, 102));
@@ -265,45 +302,13 @@ public class applicantSettings extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 752, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 680, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void backMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backMouseClicked
-        applicantDashboard ad = new applicantDashboard();
-        ad.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_backMouseClicked
-
-    private void back1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_back1MouseEntered
-        back1.setBackground(defaultcolor);
-    }//GEN-LAST:event_back1MouseEntered
-
-    private void back1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_back1MouseExited
-        back1.setBackground(hover);
-    }//GEN-LAST:event_back1MouseExited
-
-    private void deleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteMouseClicked
-       changePassword cp = new changePassword();
-       cp.setVisible(true);
-       this.dispose();
-    }//GEN-LAST:event_deleteMouseClicked
-
-    private void cemailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cemailMouseClicked
-        changemail ce = new changemail();
-        ce.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_cemailMouseClicked
-
-    private void delete2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_delete2MouseClicked
-       changecontact cc = new changecontact();
-       cc.setVisible(true);
-       this.dispose();
-    }//GEN-LAST:event_delete2MouseClicked
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
                                      
@@ -320,9 +325,60 @@ public class applicantSettings extends javax.swing.JFrame {
        username.setText(""+sess.getUsername());
         email.setText(""+sess.getEmail());
          contact.setText(""+sess.getContact());
-           password.setText(""+sess.getPassword());
+          
              id.setText(""+sess.getUser_id());
     }//GEN-LAST:event_formWindowActivated
+
+    private void backMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backMouseClicked
+        applicantDashboard ad = new applicantDashboard();
+        ad.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_backMouseClicked
+
+    private void back1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_back1MouseEntered
+        back1.setBackground(defaultcolor);
+    }//GEN-LAST:event_back1MouseEntered
+
+    private void back1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_back1MouseExited
+        back1.setBackground(hover);
+    }//GEN-LAST:event_back1MouseExited
+
+    private void deleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteMouseClicked
+        changePassword cp  = new changePassword();
+        cp.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_deleteMouseClicked
+
+    private void cemailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cemailMouseClicked
+        changemail ce = new changemail();
+        ce.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_cemailMouseClicked
+
+    private void delete2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_delete2MouseClicked
+        changecontact cc = new changecontact();
+        cc.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_delete2MouseClicked
+
+    private void changelastnameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changelastnameMouseClicked
+        changefnameorLname cf = new changefnameorLname();
+        cf.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_changelastnameMouseClicked
+
+    private void secMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_secMouseClicked
+        SecurityQuestions sq = new SecurityQuestions();
+        sq.setVisible(true);
+        this.dispose();
+
+    }//GEN-LAST:event_secMouseClicked
+
+    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
+       entermail ee = new entermail();
+       ee.setVisible(true);
+       this.dispose();
+    }//GEN-LAST:event_jLabel1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -367,12 +423,14 @@ public class applicantSettings extends javax.swing.JFrame {
     private javax.swing.JLabel back;
     private javax.swing.JPanel back1;
     private javax.swing.JLabel cemail;
+    private javax.swing.JLabel changelastname;
     private javax.swing.JLabel contact;
     private javax.swing.JLabel delete;
     private javax.swing.JLabel delete2;
     private javax.swing.JLabel email;
     private javax.swing.JLabel fname;
     private javax.swing.JLabel id;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -391,6 +449,7 @@ public class applicantSettings extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JLabel lname;
     private javax.swing.JLabel password;
+    private javax.swing.JLabel sec;
     private javax.swing.JLabel username;
     // End of variables declaration//GEN-END:variables
 }

@@ -9,9 +9,11 @@ import config.dbConnect;
 import config.passwordHasher;
 import java.awt.Color;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
@@ -74,7 +76,7 @@ public class addUsers extends javax.swing.JFrame {
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
-    
+  
  Color hover = new Color (255,255,255);
     Color defaultcolor = new Color  (102,102,102);
     /**
@@ -668,37 +670,95 @@ public class addUsers extends javax.swing.JFrame {
     }//GEN-LAST:event_contactActionPerformed
 
     private void lgnav2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lgnav2MouseClicked
-try{
-        dbConnect db = new dbConnect();
-        String pass1 = passwordHasher.hashPassword(pass.getText());
-        if(username.getText().isEmpty() || fname.getText().isEmpty() || lname.getText().isEmpty() || email.getText().isEmpty() || contact.getText().isEmpty()
-            || pass.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "All fields required");
+try {
+    dbConnect db = new dbConnect();
+    
+    // Validate input
+    if (username.getText().isEmpty() || fname.getText().isEmpty() || lname.getText().isEmpty() || 
+        email.getText().isEmpty() || contact.getText().isEmpty() || pass.getText().isEmpty()) {
+        JOptionPane.showMessageDialog(null, "All fields are required");
+        return;
+    }
+    
+    if (!isEmailValid(email.getText())) {
+        JOptionPane.showMessageDialog(null, "Invalid email format");
+        return;
+    }
+    
+    if (duplicateChecker()) {
+        System.out.println("Duplicate Existed");
+        return;
+    }
+    
+    if (!contact.getText().matches("\\d+")) {
+        JOptionPane.showMessageDialog(null, "Contact number must only contain digits");
+        return;
+    }
+    
+    if (contact.getText().length() != 11) { // Fix: Length check should be exactly 11
+        JOptionPane.showMessageDialog(null, "Contact number must be exactly 11 digits");
+        return;
+    }
+    
+    if (pass.getText().length() < 8) {
+        JOptionPane.showMessageDialog(null, "Password must be at least 8 characters long");
+        return;
+    }
+    
+    if (type.getSelectedIndex() == 0) {
+        JOptionPane.showMessageDialog(null, "Please select a Type of User");
+        return;
+    }
 
-        }else if(!isEmailValid(email.getText())){
-            JOptionPane.showMessageDialog(null, "Invalid email format");
-        }else if(duplicateChecker()){
-            System.out.println("Duplicate Existed");
-        }
-        else if(!contact.getText().matches("\\d+")){
-            JOptionPane.showMessageDialog(null, "Contact number must only contains digit");
-        }else if(contact.getText().length() > 11 && contact.getText().length() < 11){
-            JOptionPane.showMessageDialog(null, "Contact number exceeded");
-        }else if(pass.getText().length() < 8 ){
-            JOptionPane.showMessageDialog(null, "Password must be at least 8 characters long");
-        }else if(type.getSelectedIndex() == 0){
-            JOptionPane.showMessageDialog(null, "Please select a Type of User");
-        }else if (db.insertData("INSERT INTO tbl_user (username, f_name, l_name, email, contact, type, pass, status, registration_date) "
-            + "VALUES ('"+username.getText()+"', '"+fname.getText()+"', '"+lname.getText()+"', '"+email.getText()+"', "
-            + "'"+contact.getText()+"', '"+type.getSelectedItem()+"', '"+pass1+"','Pending', CURRENT_TIMESTAMP)") == 1){
+   
+    String pass1 = passwordHasher.hashPassword(pass.getText());
+
+   
+    String insertQuery = "INSERT INTO tbl_user (username, f_name, l_name, email, contact, type, pass, status, registration_date, sec_ques1, answer_1, sec_ques2, answer_2) " +
+                         "VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending', CURRENT_TIMESTAMP, 'N/A', 'N/A', 'N/A', 'N/A')";
+
+    Connection con = db.getConnection();
+    PreparedStatement pst = con.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
+    pst.setString(1, username.getText());
+    pst.setString(2, fname.getText());
+    pst.setString(3, lname.getText());
+    pst.setString(4, email.getText());
+    pst.setString(5, contact.getText());
+    pst.setString(6, type.getSelectedItem().toString());
+    pst.setString(7, pass1);
+
+    int rowsAffected = pst.executeUpdate();
+
+    if (rowsAffected == 1) {
         JOptionPane.showMessageDialog(null, "Submitted Successfully");
+
+        // ✅ Get the generated user ID
+        ResultSet generatedKeys = pst.getGeneratedKeys();
+        int userId = -1;
+        if (generatedKeys.next()) {
+            userId = generatedKeys.getInt(1); // Get newly inserted user ID
+        }
+        generatedKeys.close();
+        pst.close();
+     
+
+        if (userId != -1) {
+            db.insertLog(userId, "Admin Added A User"); // ✅ Log after getting user ID
+        }
+        
         usersTable tb = new usersTable();
         tb.setVisible(true);
         this.dispose();
-        }
-}catch(NoSuchAlgorithmException e){
-    System.out.println(""+e);
+    }
+
+} catch (NoSuchAlgorithmException e) {
+    e.printStackTrace();
+    JOptionPane.showMessageDialog(null, "Error while hashing password!", "Error", JOptionPane.ERROR_MESSAGE);
+} catch (SQLException e) {
+    e.printStackTrace();
+    JOptionPane.showMessageDialog(null, "Database error!", "Error", JOptionPane.ERROR_MESSAGE);
 }
+
     }//GEN-LAST:event_lgnav2MouseClicked
 
     private void lgnav2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lgnav2MouseEntered

@@ -34,7 +34,9 @@ public class adminDashboard extends javax.swing.JFrame {
          ActiveUsers();
         countUsers();
        loadRecentUsers();
+         
     }
+   
     
 public void loadRecentUsers() {
     SwingUtilities.invokeLater(() -> {
@@ -129,7 +131,37 @@ public void PendingUser() {
     }
 }
 
+ public int getUserId(String firstname) {
+    int userId = -1; 
 
+    try {
+        dbConnect dc = new dbConnect();
+        Connection con = dc.getConnection();
+
+       
+
+        
+        String query = "SELECT u_id FROM tbl_user WHERE LOWER(TRIM(f_name)) = LOWER(TRIM(?))";
+        PreparedStatement pst = con.prepareStatement(query);
+        pst.setString(1, firstname.trim()); // Trim input firstname
+        ResultSet rs = pst.executeQuery();
+
+        if (rs.next()) {
+            userId = rs.getInt("u_id");
+           
+        } else {
+           
+        }
+
+        rs.close();
+        pst.close();
+        con.close();
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    }
+
+    return userId;
+}
      Color hover = new Color (255,255,255);
     Color defaultcolor = new Color  (102,102,102);
 
@@ -162,6 +194,7 @@ public void PendingUser() {
         settings = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
+        logout1 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         jLabel17 = new javax.swing.JLabel();
         total = new javax.swing.JLabel();
@@ -263,6 +296,7 @@ public void PendingUser() {
         logoutnav.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 320, -1, -1));
 
         logout.setFont(new java.awt.Font("Arial Black", 1, 15)); // NOI18N
+        logout.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         logout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/logoutfordashboard.png"))); // NOI18N
         logout.setText("  Logout");
         logout.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -270,9 +304,9 @@ public void PendingUser() {
                 logoutMouseClicked(evt);
             }
         });
-        logoutnav.add(logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 160, 30));
+        logoutnav.add(logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, 150, 30));
 
-        jPanel2.add(logoutnav, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 440, 270, 50));
+        jPanel2.add(logoutnav, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 510, 270, 50));
 
         scholarnav1.setBackground(new java.awt.Color(255, 255, 255));
         scholarnav1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -359,18 +393,21 @@ public void PendingUser() {
 
         jPanel2.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 600, -1, -1));
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 270, Short.MAX_VALUE)
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 50, Short.MAX_VALUE)
-        );
+        jPanel5.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel2.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 530, -1, -1));
+        logout1.setFont(new java.awt.Font("Arial Black", 1, 15)); // NOI18N
+        logout1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        logout1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logs.png"))); // NOI18N
+        logout1.setText("  Logs");
+        logout1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                logout1MouseClicked(evt);
+            }
+        });
+        jPanel5.add(logout1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, 100, 30));
+
+        jPanel2.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 440, 270, 50));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 310, 680));
 
@@ -613,15 +650,30 @@ public void PendingUser() {
     }//GEN-LAST:event_labelscholarMouseClicked
 
     private void logoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseClicked
-    int choice = JOptionPane.showConfirmDialog(null, "Do you want to log out?", "Logout Confirmation!",
-            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+          
+   String username = acc_name.getText();
+   System.out.println("Attempting to get userId for: " + username);
 
-        if (choice == JOptionPane.YES_OPTION) {
+    int userId = getUserId(username); 
 
-            LoginForm lf = new LoginForm();
-            lf.setVisible(true);
-            this.dispose();
-        }       
+                if (userId == -1) { 
+                    JOptionPane.showMessageDialog(null, "Error: Cannot log action. User not found!", "Error", JOptionPane.ERROR_MESSAGE);
+                    return; 
+                }
+                int choice = JOptionPane.showConfirmDialog(null, "Do you want to log out?", "Logout Confirmation!",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+                if (choice == JOptionPane.YES_OPTION) {
+
+                    dbConnect dc = new dbConnect();
+                    dc.insertLog(userId, "Logout");
+
+
+                    LoginForm lf = new LoginForm();
+                    lf.setVisible(true);
+                    this.dispose();
+                }
+    
     }//GEN-LAST:event_logoutMouseClicked
 
     private void recent_tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recent_tableMouseClicked
@@ -636,7 +688,7 @@ public void PendingUser() {
             lf.setVisible(true);
             this.dispose();
      }
-     acc_name.setText("Hello, "+sess.getFname());
+     acc_name.setText(""+sess.getFname());
     }//GEN-LAST:event_formWindowActivated
 
     private void settingsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsMouseClicked
@@ -646,6 +698,12 @@ public void PendingUser() {
     as.setVisible(true);
     this.dispose(); // Close adminDashboard if needed
     }//GEN-LAST:event_settingsMouseClicked
+
+    private void logout1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logout1MouseClicked
+        Logs lg = new Logs();
+        lg.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_logout1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -719,6 +777,7 @@ public void PendingUser() {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel labelscholar;
     private javax.swing.JLabel logout;
+    private javax.swing.JLabel logout1;
     private javax.swing.JPanel logoutnav;
     private javax.swing.JPanel paneldashboard;
     private javax.swing.JPanel panelset;
