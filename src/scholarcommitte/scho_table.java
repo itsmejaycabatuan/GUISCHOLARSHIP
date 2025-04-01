@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import net.proteanit.sql.DbUtils;
 
 /**
@@ -51,7 +53,7 @@ public class scho_table extends javax.swing.JFrame {
         try{
             dbConnect db = new dbConnect();
         ResultSet rs = db.getData("SELECT * FROM tbl_scholarship");
-        tbl_scholarship.setModel(DbUtils.resultSetToTableModel(rs));
+        tbl_scholarship1.setModel(DbUtils.resultSetToTableModel(rs));
         rs.close();
         }catch(SQLException e){
             System.out.println("Erros: "+e.getMessage());
@@ -86,9 +88,9 @@ public class scho_table extends javax.swing.JFrame {
         }
 
         try (ResultSet resultSet = statement.executeQuery()) {
-            tbl_scholarship.setModel(DbUtils.resultSetToTableModel(resultSet));
+            tbl_scholarship1.setModel(DbUtils.resultSetToTableModel(resultSet));
 
-            if (tbl_scholarship.getRowCount() == 0) {
+            if (tbl_scholarship1.getRowCount() == 0) {
                 JOptionPane.showMessageDialog(this, "No matching records found.");
             }
         }
@@ -97,6 +99,39 @@ public class scho_table extends javax.swing.JFrame {
         ex.printStackTrace();
     } finally {
         db.close(); // ✅ Ensure connection is closed
+    }
+}
+    private void loadScholarships() {
+    try {
+        dbConnect dc = new dbConnect();
+        Connection con = dc.getConnection();
+        String query = "SELECT * FROM tbl_scholarship";
+        PreparedStatement pstmt = con.prepareStatement(query);
+        ResultSet rs = pstmt.executeQuery();
+        
+        DefaultTableModel model = (DefaultTableModel) tbl_scholarship1.getModel();
+        model.setRowCount(0); // Clear table before loading
+
+        while (rs.next()) {
+            model.addRow(new Object[]{
+                rs.getInt("s_id"),
+                rs.getString("s_name"),
+                rs.getString("description"),
+                rs.getString("GPA"),
+                rs.getString("requirements"),
+                rs.getInt("annual_income"),
+                rs.getInt("fund_amount"),
+                rs.getInt("capacity"),
+                rs.getString("Deadline"),
+                rs.getString("status")
+            });
+        }
+
+        rs.close();
+        pstmt.close();
+        con.close();
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error loading scholarships: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
     Color hover = new Color (255,255,255);
@@ -121,12 +156,12 @@ public class scho_table extends javax.swing.JFrame {
         backnav = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         deletenav = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
+        delete = new javax.swing.JLabel();
         editnav = new javax.swing.JPanel();
-        jLabel9 = new javax.swing.JLabel();
+        edit = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tbl_scholarship = new javax.swing.JTable();
+        tbl_scholarship1 = new javax.swing.JTable();
         searchfield = new javax.swing.JTextField();
         searchnav = new javax.swing.JPanel();
         search = new javax.swing.JLabel();
@@ -217,11 +252,16 @@ public class scho_table extends javax.swing.JFrame {
         });
         deletenav.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel6.setFont(new java.awt.Font("Arial Black", 1, 18)); // NOI18N
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/deleteform.png"))); // NOI18N
-        jLabel6.setText(" Delete");
-        deletenav.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 160, 30));
+        delete.setFont(new java.awt.Font("Arial Black", 1, 18)); // NOI18N
+        delete.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        delete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/deleteform.png"))); // NOI18N
+        delete.setText(" Delete");
+        delete.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                deleteMouseClicked(evt);
+            }
+        });
+        deletenav.add(delete, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 160, 30));
 
         jPanel2.add(deletenav, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 290, 240, 50));
 
@@ -236,11 +276,16 @@ public class scho_table extends javax.swing.JFrame {
         });
         editnav.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel9.setFont(new java.awt.Font("Arial Black", 1, 18)); // NOI18N
-        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/editform.png"))); // NOI18N
-        jLabel9.setText(" Edit");
-        editnav.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, 120, 30));
+        edit.setFont(new java.awt.Font("Arial Black", 1, 18)); // NOI18N
+        edit.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        edit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/editform.png"))); // NOI18N
+        edit.setText(" Edit");
+        edit.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                editMouseClicked(evt);
+            }
+        });
+        editnav.add(edit, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, 120, 30));
 
         jPanel2.add(editnav, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 240, 50));
 
@@ -252,10 +297,10 @@ public class scho_table extends javax.swing.JFrame {
         jLabel2.setText("SCHOLARSHIP'S");
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 50, 610, 50));
 
-        tbl_scholarship.setBackground(new java.awt.Color(153, 153, 153));
-        tbl_scholarship.setFont(new java.awt.Font("Arial Black", 0, 12)); // NOI18N
-        tbl_scholarship.setForeground(new java.awt.Color(255, 255, 255));
-        tbl_scholarship.setModel(new javax.swing.table.DefaultTableModel(
+        tbl_scholarship1.setBackground(new java.awt.Color(153, 153, 153));
+        tbl_scholarship1.setFont(new java.awt.Font("Arial Black", 0, 12)); // NOI18N
+        tbl_scholarship1.setForeground(new java.awt.Color(255, 255, 255));
+        tbl_scholarship1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -263,7 +308,7 @@ public class scho_table extends javax.swing.JFrame {
 
             }
         ));
-        jScrollPane1.setViewportView(tbl_scholarship);
+        jScrollPane1.setViewportView(tbl_scholarship1);
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 180, 860, 520));
 
@@ -394,6 +439,81 @@ public class scho_table extends javax.swing.JFrame {
       this.dispose();
     }//GEN-LAST:event_jLabel7MouseClicked
 
+    private void editMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editMouseClicked
+             int rowIndex = tbl_scholarship1.getSelectedRow();
+
+
+                if(rowIndex < 0 ){
+                    JOptionPane.showMessageDialog(null, "Please select an item.", "Click a Item", JOptionPane.WARNING_MESSAGE);
+                }else{
+
+                    try{
+                    dbConnect dc = new dbConnect();
+                    TableModel tbl  = tbl_scholarship1.getModel();
+                  ResultSet rs = dc.getData("SELECT * FROM tbl_scholarship WHERE s_id = '" + tbl.getValueAt(rowIndex, 0) + "'");
+
+                    if(rs.next()){
+                         updateForm uf = new updateForm();
+                           uf.s_id.setText(""+rs.getInt("s_id"));
+                          uf.sname.setText(""+rs.getString("s_name"));
+                        uf.des.setText(""+rs.getString("description"));
+                        uf.gpa.setText(""+rs.getString("GPA"));
+                         uf.require.setText(""+rs.getString("requirements"));
+                         uf.annincome.setText(""+rs.getString("annual_income"));
+                         uf.amount.setText(""+rs.getString("fund_amount"));
+                         uf.capacity.setText(""+rs.getString("capacity"));
+                          uf.status.setSelectedItem(""+rs.getString("status"));
+                          uf.deadline1.setText(""+rs.getString("Deadline"));
+                          
+                         uf.setVisible(true);
+                        this.dispose();
+                    }
+                   }catch(SQLException e){
+                                 System.out.println(""+e.getMessage());
+                            }
+                }
+    }//GEN-LAST:event_editMouseClicked
+
+    private void deleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteMouseClicked
+       int rowIndex = tbl_scholarship1.getSelectedRow();
+
+    if (rowIndex < 0) {
+        JOptionPane.showMessageDialog(null, "Please select a scholarship to delete!", "No Selection", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this scholarship?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+    
+    if (confirm == JOptionPane.YES_OPTION) {
+        try {
+            dbConnect dc = new dbConnect();
+            Connection con = dc.getConnection();
+            TableModel tbl = tbl_scholarship1.getModel();
+
+            int scholarshipID = Integer.parseInt(tbl.getValueAt(rowIndex, 0).toString()); // Get s_id
+
+            String query = "DELETE FROM tbl_scholarship WHERE s_id = ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, scholarshipID);
+
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(null, "Scholarship deleted successfully!");
+                loadScholarships(); // Refresh table after deletion
+            } else {
+                JOptionPane.showMessageDialog(null, "Failed to delete scholarship. Please try again.");
+            }
+
+            pstmt.close();
+            con.close();
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Database Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    }//GEN-LAST:event_deleteMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -431,24 +551,24 @@ public class scho_table extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backnav;
+    private javax.swing.JLabel delete;
     private javax.swing.JPanel deletenav;
+    private javax.swing.JLabel edit;
     private javax.swing.JPanel editnav;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel search;
     private javax.swing.JTextField searchfield;
     private javax.swing.JPanel searchnav;
-    private javax.swing.JTable tbl_scholarship;
+    private javax.swing.JTable tbl_scholarship1;
     private javax.swing.JPanel usersnav;
     // End of variables declaration//GEN-END:variables
 }

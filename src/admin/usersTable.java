@@ -547,6 +547,8 @@ public int getUserId(String firstname) {
         addUsers au = new addUsers();
         au.setVisible(true);
         this.dispose();
+        au.remove.setEnabled(false);
+        au.select.setEnabled(true);
     }//GEN-LAST:event_addUsersMouseClicked
 
     private void editMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editMouseClicked
@@ -573,6 +575,19 @@ public int getUserId(String firstname) {
                          uf.type.setSelectedItem(""+rs.getString("type"));
                          uf.pass.setText(""+rs.getString("pass"));
                           uf.type1.setSelectedItem(""+rs.getString("status"));
+                          uf.image.setIcon( uf.ResizeImage(rs.getString("image"), null, uf.image));
+                          uf.oldpath = rs.getString("image");
+                          uf.path = rs.getString("image");
+                          uf.destination = rs.getString("image");
+                          
+                          if(rs.getString("image").isEmpty()){
+                              uf.select.setEnabled(true);
+                              uf.remove.setEnabled(false);
+                          }else{
+                              uf.select.setEnabled(false);
+                              uf.remove.setEnabled(true);
+                          }
+                          
                          uf.setVisible(true);
                         this.dispose();
                     }

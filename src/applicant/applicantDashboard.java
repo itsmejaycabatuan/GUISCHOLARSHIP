@@ -82,7 +82,7 @@ public int getUserId(String firstname) {
         paneldashboard = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         panelset = new javax.swing.JPanel();
-        jLabel9 = new javax.swing.JLabel();
+        settings = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         usersnav = new javax.swing.JPanel();
@@ -226,15 +226,15 @@ public int getUserId(String firstname) {
         });
         panelset.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel9.setFont(new java.awt.Font("Arial Black", 1, 15)); // NOI18N
-        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/settings.png"))); // NOI18N
-        jLabel9.setText(" Settings");
-        jLabel9.addMouseListener(new java.awt.event.MouseAdapter() {
+        settings.setFont(new java.awt.Font("Arial Black", 1, 15)); // NOI18N
+        settings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/settings.png"))); // NOI18N
+        settings.setText(" Settings");
+        settings.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel9MouseClicked(evt);
+                settingsMouseClicked(evt);
             }
         });
-        panelset.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, 160, 29));
+        panelset.add(settings, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, 160, 29));
 
         jPanel2.add(panelset, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 370, 280, 50));
 
@@ -534,11 +534,12 @@ if (choice == JOptionPane.YES_OPTION) {
 
     }//GEN-LAST:event_formWindowActivated
 
-    private void jLabel9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel9MouseClicked
+    private void settingsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsMouseClicked
         applicantSettings as = new applicantSettings();
         as.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_jLabel9MouseClicked
+       
+          this.dispose();
+    }//GEN-LAST:event_settingsMouseClicked
 
     /**
      * @param args the command line arguments
@@ -603,7 +604,6 @@ if (choice == JOptionPane.YES_OPTION) {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
@@ -621,6 +621,7 @@ if (choice == JOptionPane.YES_OPTION) {
     private javax.swing.JPanel paneldashboard;
     private javax.swing.JPanel panelset;
     private javax.swing.JPanel scholarnav1;
+    private javax.swing.JLabel settings;
     private javax.swing.JPanel usersnav;
     // End of variables declaration//GEN-END:variables
 }

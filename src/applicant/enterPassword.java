@@ -102,6 +102,11 @@ public static String newEmail;
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(102, 102, 102));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -262,6 +267,12 @@ public static String newEmail;
         ce.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_backMouseClicked
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        Session sess = Session.getInstance();
+       
+         id.setText(""+sess.getUser_id());
+    }//GEN-LAST:event_formWindowActivated
 
     /**
      * @param args the command line arguments

@@ -5,15 +5,28 @@
  */
 package admin;
 
+import static admin.addUsers.getHeightFromWidth;
 import config.dbConnect;
 import config.passwordHasher;
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 /**
@@ -28,6 +41,10 @@ public class updateForm extends javax.swing.JFrame {
     public updateForm() {
         initComponents();
     }
+     public String destination = "";
+    File selectedFile;
+    public String oldpath;
+    public String path;
       public static String email1,username1;
     public boolean duplicateChecker() {
     dbConnect db = new dbConnect();
@@ -85,6 +102,77 @@ public class updateForm extends javax.swing.JFrame {
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
+      public  ImageIcon ResizeImage(String ImagePath, byte[] pic, JLabel label) {
+    ImageIcon MyImage = null;
+        if(ImagePath !=null){
+            MyImage = new ImageIcon(ImagePath);
+        }else{
+            MyImage = new ImageIcon(pic);
+        }
+        
+    int newHeight = getHeightFromWidth(ImagePath, label.getWidth());
+
+    Image img = MyImage.getImage();
+    Image newImg = img.getScaledInstance(label.getWidth(), newHeight, Image.SCALE_SMOOTH);
+    ImageIcon image = new ImageIcon(newImg);
+    return image;
+}
+       public static int getHeightFromWidth(String imagePath, int desiredWidth) {
+        try {
+            // Read the image file
+            File imageFile = new File(imagePath);
+            BufferedImage image = ImageIO.read(imageFile);
+            
+            // Get the original width and height of the image
+            int originalWidth = image.getWidth();
+            int originalHeight = image.getHeight();
+            
+            // Calculate the new height based on the desired width and the aspect ratio
+            int newHeight = (int) ((double) desiredWidth / originalWidth * originalHeight);
+            
+            return newHeight;
+        } catch (IOException ex) {
+            System.out.println("No image found!");
+        }
+        
+        return -1;
+    }
+          public int FileExistenceChecker(String path){
+        File file = new File(path);
+        String fileName = file.getName();
+        
+        Path filePath = Paths.get("src/userimages", fileName);
+        boolean fileExists = Files.exists(filePath);
+        
+        if (fileExists) {
+            return 1;
+        } else {
+            return 0;
+        }
+    
+    }
+            public void imageUpdater(String existingFilePath, String newFilePath){
+        File existingFile = new File(existingFilePath);
+        if (existingFile.exists()) {
+            String parentDirectory = existingFile.getParent();
+            File newFile = new File(newFilePath);
+            String newFileName = newFile.getName();
+            File updatedFile = new File(parentDirectory, newFileName);
+            existingFile.delete();
+            try {
+                Files.copy(newFile.toPath(), updatedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                System.out.println("Image updated successfully.");
+            } catch (IOException e) {
+                System.out.println("Error occurred while updating the image: "+e);
+            }
+        } else {
+            try{
+                Files.copy(selectedFile.toPath(), new File(destination).toPath(), StandardCopyOption.REPLACE_EXISTING);
+            }catch(IOException e){
+                System.out.println("Error on update!");
+            }
+        }
+   }
 Color hover = new Color (255,255,255);
     Color defaultcolor = new Color  (102,102,102);
     /**
@@ -149,6 +237,10 @@ Color hover = new Color (255,255,255);
         jLabel13 = new javax.swing.JLabel();
         username = new javax.swing.JTextField();
         type = new javax.swing.JComboBox<>();
+        jPanel9 = new javax.swing.JPanel();
+        image = new javax.swing.JLabel();
+        select = new javax.swing.JLabel();
+        remove = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -159,7 +251,7 @@ Color hover = new Color (255,255,255);
         jLabel3.setForeground(new java.awt.Color(255, 204, 102));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("UPDATING FORM");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 30, 430, 60));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 30, 680, 60));
 
         jLabel4.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
@@ -175,7 +267,7 @@ Color hover = new Color (255,255,255);
                 u_idActionPerformed(evt);
             }
         });
-        jPanel1.add(u_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 120, 420, 50));
+        jPanel1.add(u_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 120, 310, 50));
 
         jLabel5.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
@@ -191,7 +283,7 @@ Color hover = new Color (255,255,255);
                 fnameActionPerformed(evt);
             }
         });
-        jPanel1.add(fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 240, 420, 50));
+        jPanel1.add(fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 240, 310, 50));
 
         jLabel6.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
@@ -207,7 +299,7 @@ Color hover = new Color (255,255,255);
                 lnameActionPerformed(evt);
             }
         });
-        jPanel1.add(lname, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 300, 420, 50));
+        jPanel1.add(lname, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 300, 310, 50));
 
         jLabel7.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
@@ -222,7 +314,7 @@ Color hover = new Color (255,255,255);
                 emailActionPerformed(evt);
             }
         });
-        jPanel1.add(email, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 360, 420, 50));
+        jPanel1.add(email, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 360, 310, 50));
 
         contact.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         contact.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -232,7 +324,7 @@ Color hover = new Color (255,255,255);
                 contactActionPerformed(evt);
             }
         });
-        jPanel1.add(contact, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 420, 420, 50));
+        jPanel1.add(contact, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 420, 310, 50));
 
         jLabel8.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
@@ -577,7 +669,7 @@ Color hover = new Color (255,255,255);
 
         registernav.add(registernav4, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 620, 150, 40));
 
-        jPanel1.add(registernav, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 670, 150, 40));
+        jPanel1.add(registernav, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 670, 150, 40));
 
         cancelnav.setBackground(new java.awt.Color(102, 102, 102));
         cancelnav.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -601,7 +693,7 @@ Color hover = new Color (255,255,255);
         });
         cancelnav.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, 90, 20));
 
-        jPanel1.add(cancelnav, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 670, 150, 40));
+        jPanel1.add(cancelnav, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 670, 150, 40));
 
         type1.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         type1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Status", "Pending", "Active" }));
@@ -611,7 +703,7 @@ Color hover = new Color (255,255,255);
                 type1ActionPerformed(evt);
             }
         });
-        jPanel1.add(type1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 600, 420, 50));
+        jPanel1.add(type1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 600, 310, 50));
 
         jLabel9.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
@@ -625,7 +717,7 @@ Color hover = new Color (255,255,255);
                 iconhide1MousePressed(evt);
             }
         });
-        jPanel1.add(iconhide1, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 550, 30, 30));
+        jPanel1.add(iconhide1, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 550, 30, 30));
 
         viewicon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/viewicon.png"))); // NOI18N
         viewicon.setText("jLabel1");
@@ -634,18 +726,19 @@ Color hover = new Color (255,255,255);
                 viewiconMousePressed(evt);
             }
         });
-        jPanel1.add(viewicon, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 550, 30, 30));
+        jPanel1.add(viewicon, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 550, 30, 30));
 
         pass.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         pass.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         pass.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
         pass.setEchoChar('\u2022');
+        pass.setEnabled(false);
         pass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 passActionPerformed(evt);
             }
         });
-        jPanel1.add(pass, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 540, 420, 50));
+        jPanel1.add(pass, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 540, 310, 50));
 
         jLabel13.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(255, 255, 255));
@@ -661,7 +754,7 @@ Color hover = new Color (255,255,255);
                 usernameActionPerformed(evt);
             }
         });
-        jPanel1.add(username, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 180, 420, 50));
+        jPanel1.add(username, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 180, 310, 50));
 
         type.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         type.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Type of User", "Admin", "Applicant", "Scholarship Providers/Committee" }));
@@ -671,13 +764,45 @@ Color hover = new Color (255,255,255);
                 typeActionPerformed(evt);
             }
         });
-        jPanel1.add(type, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 480, 420, 50));
+        jPanel1.add(type, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 480, 310, 50));
+
+        jPanel9.setLayout(null);
+
+        image.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jPanel9.add(image);
+        image.setBounds(10, 10, 320, 280);
+
+        jPanel1.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 120, 340, 300));
+
+        select.setBackground(new java.awt.Color(255, 255, 255));
+        select.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        select.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        select.setText("SELECT");
+        select.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        select.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                selectMouseClicked(evt);
+            }
+        });
+        jPanel1.add(select, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 430, 150, 40));
+
+        remove.setBackground(new java.awt.Color(255, 255, 255));
+        remove.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        remove.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        remove.setText("REMOVE");
+        remove.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        remove.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                removeMouseClicked(evt);
+            }
+        });
+        jPanel1.add(remove, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 430, 160, 40));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 845, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -709,16 +834,30 @@ Color hover = new Color (255,255,255);
     }//GEN-LAST:event_contactActionPerformed
 
     private void updateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateMouseClicked
-        try {
+   try {
     String passText = pass.getText();
     dbConnect dc = new dbConnect(); 
 
-    // ✅ Validation checks
+   
     if (email.getText().isEmpty() || contact.getText().isEmpty() || type.getSelectedIndex() == 0 ||
         passText.isEmpty() || type1.getSelectedIndex() == 0) {
         JOptionPane.showMessageDialog(null, "All fields required");
         return;
     }
+
+   
+    if (destination.isEmpty()) {
+        File existingFile = new File(oldpath);
+        if (existingFile.exists()) { 
+            existingFile.delete();
+        }
+    } else {
+        if (!oldpath.equals(path)) { 
+            imageUpdater(oldpath, path);
+        }
+    }
+
+    // ✅ Password validation
     if (passText.length() < 8) {
         JOptionPane.showMessageDialog(null, "Password must be at least 8 characters long");
         return;
@@ -732,9 +871,9 @@ Color hover = new Color (255,255,255);
         return;
     }
 
-    // ✅ Use a single connection for both queries
+  
     try (Connection con = dc.getConnection()) {
-        // ✅ Fetch current password from DB
+       
         String currentPass = "";
         String getPasswordQuery = "SELECT pass FROM tbl_user WHERE u_id = ?";
         
@@ -750,8 +889,8 @@ Color hover = new Color (255,255,255);
       
         String pass1 = passText.equals(currentPass) ? currentPass : passwordHasher.hashPassword(passText);
 
-      
-        String query = "UPDATE tbl_user SET email = ?, contact = ?, type = ?, pass = ?, status = ? WHERE u_id = ?";
+       
+        String query = "UPDATE tbl_user SET email = ?, contact = ?, type = ?, pass = ?, status = ?, image = ? WHERE u_id = ?";
         
         try (PreparedStatement pstmt = con.prepareStatement(query)) {
             pstmt.setString(1, email.getText());
@@ -759,25 +898,24 @@ Color hover = new Color (255,255,255);
             pstmt.setString(3, (String) type.getSelectedItem());
             pstmt.setString(4, pass1);
             pstmt.setString(5, (String) type1.getSelectedItem());
-            pstmt.setString(6, u_id.getText());
+            pstmt.setString(6, destination); 
+            pstmt.setString(7, u_id.getText());
 
             int rowsUpdated = pstmt.executeUpdate();
 
             if (rowsUpdated > 0) {
                 JOptionPane.showMessageDialog(null, "User updated successfully!");
                 
-              
+               
                 int userId = Integer.parseInt(u_id.getText()); 
-              
-                int updatedUserId = Integer.parseInt(u_id.getText()); 
-                dc.insertLog(userId, "Admin updated user with ID: " + updatedUserId);
+                dc.insertLog(userId, "Admin updated user with ID: " + userId);
             } else {
                 JOptionPane.showMessageDialog(null, "User update failed!");
             }
         }
     }
 
-    // ✅ Redirect to user table
+ 
     usersTable ut = new usersTable();
     ut.setVisible(true);
     this.dispose();
@@ -786,6 +924,8 @@ Color hover = new Color (255,255,255);
     e.printStackTrace();
     JOptionPane.showMessageDialog(null, "Unexpected error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 }
+
+        
     }//GEN-LAST:event_updateMouseClicked
 
     private void updateMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateMouseEntered
@@ -999,6 +1139,39 @@ Color hover = new Color (255,255,255);
         // TODO add your handling code here:
     }//GEN-LAST:event_typeActionPerformed
 
+    private void selectMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectMouseClicked
+
+        JFileChooser fileChooser = new JFileChooser();
+        int returnValue = fileChooser.showOpenDialog(null);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            try {
+                selectedFile = fileChooser.getSelectedFile();
+                destination = "src/userimages/" + selectedFile.getName();
+                path  = selectedFile.getAbsolutePath();
+
+                if(FileExistenceChecker(path) == 1){
+                    JOptionPane.showMessageDialog(null, "File Already Exist, Rename or Choose another!");
+                    destination = "";
+                    path="";
+                }else{
+                    image.setIcon(ResizeImage(path, null, image));
+                    select.setEnabled(false);
+                    remove.setEnabled(true);
+                }
+            } catch (Exception ex) {
+                System.out.println("File Error!");
+            }
+        }
+    }//GEN-LAST:event_selectMouseClicked
+
+    private void removeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeMouseClicked
+        remove.setEnabled(false);
+        select.setEnabled(true);
+        image.setIcon(null);
+        destination = "";
+        path = "";
+    }//GEN-LAST:event_removeMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -1040,6 +1213,7 @@ Color hover = new Color (255,255,255);
     public javax.swing.JTextField email;
     public javax.swing.JTextField fname;
     private javax.swing.JLabel iconhide1;
+    public javax.swing.JLabel image;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1053,6 +1227,7 @@ Color hover = new Color (255,255,255);
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JLabel lgnav10;
     private javax.swing.JLabel lgnav11;
     private javax.swing.JPanel lgnav12;
@@ -1082,6 +1257,8 @@ Color hover = new Color (255,255,255);
     private javax.swing.JPanel registernav5;
     private javax.swing.JPanel registernav6;
     private javax.swing.JPanel registernav7;
+    public javax.swing.JLabel remove;
+    public javax.swing.JLabel select;
     public javax.swing.JComboBox<String> type;
     public javax.swing.JComboBox<String> type1;
     public javax.swing.JTextField u_id;

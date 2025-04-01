@@ -190,80 +190,95 @@ Color hover = new Color (255,255,255);
     private void back3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_back3MouseClicked
       
         
-        try {
-            if (CurrentPass.getText().isEmpty() || newpass.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "All Fields Required!", "Missing Information", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
+         try {
+                  if (CurrentPass.getText().isEmpty() || newpass.getText().isEmpty()) {
+                      JOptionPane.showMessageDialog(null, "All Fields Required!", "Missing Information", JOptionPane.WARNING_MESSAGE);
+                      return;
+                  }
 
-            if (newpass.getText().length() < 8) {
-                JOptionPane.showMessageDialog(null, "Password must be at least 8 characters long!", "Invalid Password", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
+                  if (newpass.getText().length() < 8) {
+                      JOptionPane.showMessageDialog(null, "Password must be at least 8 characters long!", "Invalid Password", JOptionPane.WARNING_MESSAGE);
+                      return;
+                  }
 
-            dbConnect dc = new dbConnect();
-            Connection con = dc.getConnection();
+                  dbConnect dc = new dbConnect();
+                  Connection con = dc.getConnection();
 
-            String fetchQuery = "SELECT pass FROM tbl_user WHERE u_id = ?";
-            PreparedStatement fetchStmt = con.prepareStatement(fetchQuery);
-            fetchStmt.setInt(1, Session.getInstance().getUser_id());
-            ResultSet rs = fetchStmt.executeQuery();
 
-            if (rs.next()) {
-                String actualCurrentPass = rs.getString("pass");
+                  String fetchQuery = "SELECT pass FROM tbl_user WHERE u_id = ?";
+                  PreparedStatement fetchStmt = con.prepareStatement(fetchQuery);
+                  fetchStmt.setInt(1, Session.getInstance().getUser_id());
+                  ResultSet rs = fetchStmt.executeQuery();
 
-                if (!passwordHasher.checkPassword(CurrentPass.getText(), actualCurrentPass)) {
-                    JOptionPane.showMessageDialog(null, "Incorrect Current Password!", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, "User not found!", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+                  if (rs.next()) {
+                      String actualCurrentPass = rs.getString("pass"); 
 
-            String hashedNewPass = passwordHasher.hashPassword(newpass.getText());
 
-            String updateQuery = "UPDATE tbl_user SET pass = ? WHERE u_id = ?";
-            PreparedStatement updateStmt = con.prepareStatement(updateQuery);
-            updateStmt.setString(1, hashedNewPass);
-            updateStmt.setInt(2, Session.getInstance().getUser_id());
+                      if (!passwordHasher.checkPassword(CurrentPass.getText(), actualCurrentPass)) {
+                          JOptionPane.showMessageDialog(null, "Incorrect Current Password!", "Error", JOptionPane.ERROR_MESSAGE);
+                          return;
+                      }
+                  } else {
+                      JOptionPane.showMessageDialog(null, "User not found!", "Error", JOptionPane.ERROR_MESSAGE);
+                      return;
+                  }
 
-            int updatedRows = updateStmt.executeUpdate();
-            if (updatedRows > 0) {
-                JOptionPane.showMessageDialog(null, "Password updated successfully!");
 
-                Session sess = Session.getInstance();
-                sess.setPassword(hashedNewPass);
+                  String hashedNewPass = passwordHasher.hashPassword(newpass.getText());
 
-                fetchStmt = con.prepareStatement("SELECT * FROM tbl_user WHERE u_id = ?");
-                fetchStmt.setInt(1, Session.getInstance().getUser_id());
-                rs = fetchStmt.executeQuery();
 
-                if (rs.next()) {
-                    sess.setFname(rs.getString("f_name"));
-                    sess.setLname(rs.getString("l_name"));
-                    sess.setEmail(rs.getString("email"));
-                    sess.setUsername(rs.getString("username"));
-                    sess.setType(rs.getString("type"));
-                    sess.setStatus(rs.getString("status"));
-                    sess.setContact(rs.getString("contact"));
-                }
+                  String updateQuery = "UPDATE tbl_user SET pass = ? WHERE u_id = ?";
+                  PreparedStatement updateStmt = con.prepareStatement(updateQuery);
+                  updateStmt.setString(1, hashedNewPass);
+                  updateStmt.setInt(2, Session.getInstance().getUser_id());
 
-                applicantSettings as = new applicantSettings();
-                as.setVisible(true);
-                this.dispose();
-            } else {
-                JOptionPane.showMessageDialog(null, "Failed to update password!", "Error", JOptionPane.ERROR_MESSAGE);
-            }
+                  int updatedRows = updateStmt.executeUpdate();
+                  if (updatedRows > 0) {
+                      JOptionPane.showMessageDialog(null, "Password updated successfully!");
 
-            updateStmt.close();
-            fetchStmt.close();
-            con.close();
 
-        } catch (SQLException | NoSuchAlgorithmException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error updating password!", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+                      Session sess = Session.getInstance();
+                      sess.setPassword(hashedNewPass);
+
+
+                      String logQuery = "INSERT INTO tbl_logs (user_id, action, `date_time`) VALUES (?, ?, NOW())";
+                      PreparedStatement logStmt = con.prepareStatement(logQuery);
+                      logStmt.setInt(1, Session.getInstance().getUser_id());
+                      logStmt.setString(2, "Applicant changed a password");
+                      logStmt.executeUpdate();
+                      logStmt.close();
+
+                      fetchStmt = con.prepareStatement("SELECT * FROM tbl_user WHERE u_id = ?");
+                      fetchStmt.setInt(1, Session.getInstance().getUser_id());
+                      rs = fetchStmt.executeQuery();
+
+                      if (rs.next()) {
+                          sess.setFname(rs.getString("f_name"));
+                          sess.setLname(rs.getString("l_name"));
+                          sess.setEmail(rs.getString("email"));
+                          sess.setUsername(rs.getString("username"));
+                          sess.setType(rs.getString("type"));
+                          sess.setStatus(rs.getString("status"));
+                          sess.setContact(rs.getString("contact"));
+                      }
+
+
+                      applicantSettings as = new applicantSettings();
+                      as.setVisible(true);
+                      this.dispose();
+                  } else {
+                      JOptionPane.showMessageDialog(null, "Failed to update password!", "Error", JOptionPane.ERROR_MESSAGE);
+                  }
+
+
+                  updateStmt.close();
+                  fetchStmt.close();
+                  con.close();
+
+              } catch (SQLException | NoSuchAlgorithmException ex) {
+                  ex.printStackTrace();
+                  JOptionPane.showMessageDialog(null, "Error updating password!", "Error", JOptionPane.ERROR_MESSAGE);
+              }
 
     }//GEN-LAST:event_back3MouseClicked
 

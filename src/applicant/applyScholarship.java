@@ -152,7 +152,7 @@ public class applyScholarship extends javax.swing.JFrame {
                 rs.getInt("s_id"),
                 rs.getString("s_name"),
                 rs.getString("description"),
-                rs.getDouble("fund_amount"),
+                rs.getString("fund_amount"),
                 rs.getInt("capacity"),
                 rs.getString("status"),
                 rs.getString("deadline"),

@@ -596,15 +596,16 @@ Color hover = new Color (255,255,255);
 
                     JOptionPane.showMessageDialog(null, "All fields are required");
                 } 
-                else if (!gpa.getText().matches("\\d+(\\.\\d+)?")) {
-                    JOptionPane.showMessageDialog(null, "GPA must be a valid number (e.g., 3.5)");
-                } 
-                else if (!annincome.getText().matches("\\d+")) {
-                    JOptionPane.showMessageDialog(null, "Annual income should only contain numbers");
-                } 
-                else if (!amount.getText().matches("\\d+")) {
-                    JOptionPane.showMessageDialog(null, "Fund amount should only contain numbers");
-                } 
+                                else if (!gpa.getText().matches("^(Above|Below|Minimum|Between)?\\s*\\d+(\\.\\d+)?(\\s*(-|to|and)\\s*\\d+(\\.\\d+)?)?$")) {
+                    JOptionPane.showMessageDialog(null, "Invalid GPA format!\nExamples: 3.5, 2.0 - 3.5, Above 3.0, Between 2.0 and 3.5");
+                    return;
+                }
+                else if (!annincome.getText().matches("^[a-zA-Z\\s]*\\d*[a-zA-Z\\s]*$")) {
+    JOptionPane.showMessageDialog(null, "Annual income should be a number or contain descriptive text (e.g., 'Above 50000', 'No income')");
+} 
+else if (!amount.getText().matches("^[a-zA-Z\\s]*\\d*[a-zA-Z\\s]*$")) {
+    JOptionPane.showMessageDialog(null, "Fund amount should be a number or contain descriptive text (e.g., 'Up to 50000')");
+} 
                 else if (!capacity.getText().matches("\\d+")) {
                     JOptionPane.showMessageDialog(null, "Capacity should only contain numbers");
                 } 

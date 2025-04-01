@@ -7,7 +7,24 @@ package applicant;
 
 import admin.SecurityQuestions;
 import config.Session;
+import config.dbConnect;
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import scholarshipgui.LoginForm;
 
@@ -22,8 +39,214 @@ public class applicantSettings extends javax.swing.JFrame {
      */
     public applicantSettings() {
         initComponents();
+        fetchAndDisplayImage();
+        checkUserImage();
     }
-   
+                    private void checkUserImage() {
+                       try {
+                           dbConnect dc = new dbConnect();
+                           Connection con = dc.getConnection();
+                           if (con == null) {
+                               JOptionPane.showMessageDialog(null, "Database connection failed!", "Error", JOptionPane.ERROR_MESSAGE);
+                               return;
+                           }
+
+
+                           String imagePath = null;
+                           String query = "SELECT image FROM tbl_user WHERE u_id = ?";
+                           PreparedStatement pstmt = con.prepareStatement(query);
+                           Integer userId = Session.getInstance().getUser_id();
+
+                           if (userId == null) {
+                               JOptionPane.showMessageDialog(null, "Session error: User ID not found!", "Error", JOptionPane.ERROR_MESSAGE);
+                               return;
+                           }
+
+                           pstmt.setInt(1, userId);
+                           ResultSet rs = pstmt.executeQuery();
+                           if (rs.next()) {
+                               imagePath = rs.getString("image");
+                           }
+
+                           rs.close();
+                           pstmt.close();
+                           con.close();
+
+
+                           if (imagePath != null && !imagePath.isEmpty()) {
+                               remove.setEnabled(true);
+                               select.setEnabled(false);
+                           } else {
+                               remove.setEnabled(false);
+                               select.setEnabled(true);
+                           }
+
+                       } catch (SQLException e) {
+                           JOptionPane.showMessageDialog(null, "Database error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                       }
+                   }
+
+                  private void fetchAndDisplayImage() {
+                       dbConnect dc = new dbConnect();
+                       Connection con = dc.getConnection();
+                       String query = "SELECT image FROM tbl_user WHERE u_id = ?";
+
+                       try {
+                           PreparedStatement pst = con.prepareStatement(query);
+                           pst.setInt(1, Session.getInstance().getUser_id()); 
+                           ResultSet rs = pst.executeQuery();
+
+                           if (rs.next()) {
+                               String imagePath = rs.getString("image");
+
+                               if (imagePath != null && !imagePath.isEmpty()) {
+                                   displayImage(imagePath);
+                               }
+                           }
+
+                           rs.close();
+                           pst.close();
+                           con.close();
+                       } catch (SQLException e) {
+                           e.printStackTrace();
+                       }
+                   } private void displayImage(String imagePath) {
+                   if (imagePath == null || imagePath.isEmpty()) {
+                       System.out.println("Image path is null or empty!");
+                       return;
+                   }
+
+                   File imgFile = new File(imagePath);
+                   if (!imgFile.exists()) {
+                       System.out.println("Image file not found: " + imagePath);
+                       return; 
+                   }
+
+                   ImageIcon icon = new ImageIcon(imagePath);
+                   Image img = icon.getImage().getScaledInstance(image.getWidth(), image.getHeight(), Image.SCALE_SMOOTH);
+                   image.setIcon(new ImageIcon(img));
+               }
+
+
+    public String destination = "";
+    File selectedFile;
+    public String oldpath;
+    public String path;
+    
+    public int FileExistenceChecker(String path){
+        File file = new File(path);
+        String fileName = file.getName();
+        
+        Path filePath = Paths.get("src/userimages", fileName);
+        boolean fileExists = Files.exists(filePath);
+        
+        if (fileExists) {
+            return 1;
+        } else {
+            return 0;
+        }
+    
+    }
+    public  ImageIcon ResizeImage(String ImagePath, byte[] pic, JLabel label) {
+    ImageIcon MyImage = null;
+        if(ImagePath !=null){
+            MyImage = new ImageIcon(ImagePath);
+        }else{
+            MyImage = new ImageIcon(pic);
+        }
+        
+    int newHeight = getHeightFromWidth(ImagePath, label.getWidth());
+
+    Image img = MyImage.getImage();
+    Image newImg = img.getScaledInstance(label.getWidth(), newHeight, Image.SCALE_SMOOTH);
+    ImageIcon image = new ImageIcon(newImg);
+    return image;
+}
+    public static int getHeightFromWidth(String imagePath, int desiredWidth) {
+        try {
+            // Read the image file
+            File imageFile = new File(imagePath);
+            BufferedImage image = ImageIO.read(imageFile);
+            
+            // Get the original width and height of the image
+            int originalWidth = image.getWidth();
+            int originalHeight = image.getHeight();
+            
+            // Calculate the new height based on the desired width and the aspect ratio
+            int newHeight = (int) ((double) desiredWidth / originalWidth * originalHeight);
+            
+            return newHeight;
+        } catch (IOException ex) {
+            System.out.println("No image found!");
+        }
+        
+        return -1;
+    }
+    public void imageUpdater(String existingFilePath, String newFilePath){
+        File existingFile = new File(existingFilePath);
+        if (existingFile.exists()) {
+            String parentDirectory = existingFile.getParent();
+            File newFile = new File(newFilePath);
+            String newFileName = newFile.getName();
+            File updatedFile = new File(parentDirectory, newFileName);
+            existingFile.delete();
+            try {
+                Files.copy(newFile.toPath(), updatedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                System.out.println("Image updated successfully.");
+            } catch (IOException e) {
+                System.out.println("Error occurred while updating the image: "+e);
+            }
+        } else {
+            try{
+                Files.copy(selectedFile.toPath(), new File(destination).toPath(), StandardCopyOption.REPLACE_EXISTING);
+            }catch(IOException e){
+                System.out.println("Error on update!");
+            }
+        }
+   }
+    private String getCurrentImagePath() {
+    String imagePath = null;
+    try {
+        dbConnect dc = new dbConnect();
+        Connection con = dc.getConnection();
+        
+        String query = "SELECT image FROM tbl_user WHERE u_id = ?";
+        PreparedStatement pstmt = con.prepareStatement(query);
+        pstmt.setInt(1, Session.getInstance().getUser_id()); 
+        
+        ResultSet rs = pstmt.executeQuery();
+        if (rs.next()) {
+            imagePath = rs.getString("image");
+        }
+
+        rs.close();
+        pstmt.close();
+        con.close();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    
+    return imagePath; // This should NOT be null!
+}
+    private void loadProfileImage() {
+    String imagePath = getCurrentImagePath(); // ✅ Fetch latest image from DB
+
+    if (imagePath == null || imagePath.isEmpty()) {
+        System.out.println("No image found in database!");
+        return;
+    }
+
+    File imgFile = new File(imagePath);
+    if (!imgFile.exists()) {
+        System.out.println("Image file does not exist: " + imagePath);
+        return;
+    }
+
+    // ✅ Scale and display the image
+    ImageIcon icon = new ImageIcon(imagePath);
+    Image img = icon.getImage().getScaledInstance(image.getWidth(), image.getHeight(), Image.SCALE_SMOOTH);
+    image.setIcon(new ImageIcon(img));
+}
  Color hover = new Color (255,255,255);
     Color defaultcolor = new Color  (102,102,102);
     /**
@@ -42,8 +265,6 @@ public class applicantSettings extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         Email1 = new javax.swing.JLabel();
-        Email2 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         Email3 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         fname = new javax.swing.JLabel();
@@ -63,11 +284,16 @@ public class applicantSettings extends javax.swing.JFrame {
         delete = new javax.swing.JLabel();
         cemail = new javax.swing.JLabel();
         delete2 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         changelastname = new javax.swing.JLabel();
         sec = new javax.swing.JLabel();
+        jPanel9 = new javax.swing.JPanel();
+        image = new javax.swing.JLabel();
+        remove = new javax.swing.JLabel();
+        select = new javax.swing.JLabel();
+        save = new javax.swing.JLabel();
+        save1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
 
@@ -104,14 +330,6 @@ public class applicantSettings extends javax.swing.JFrame {
         Email1.setText("Email:");
         jPanel2.add(Email1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 210, 90, 40));
 
-        Email2.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
-        Email2.setText("Current User ID: ");
-        jPanel2.add(Email2, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 390, 130, 50));
-
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/settingspic.png"))); // NOI18N
-        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 90, 300, 270));
-
         Email3.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
         Email3.setText("Contact:");
         jPanel2.add(Email3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 260, 90, 40));
@@ -146,7 +364,7 @@ public class applicantSettings extends javax.swing.JFrame {
 
         email.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
         email.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        email.setText("Email@gmal.com");
+        email.setText("email@gmail.com");
         jPanel5.add(email, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 10, 180, 30));
 
         jPanel2.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 200, 350, 50));
@@ -177,9 +395,9 @@ public class applicantSettings extends javax.swing.JFrame {
         id.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
         id.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         id.setText("User_id");
-        jPanel8.add(id, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, 140, 30));
+        jPanel8.add(id, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 0, 160, 40));
 
-        jPanel2.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 390, 200, 50));
+        jPanel2.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 10, 230, 40));
 
         back1.setBackground(new java.awt.Color(255, 255, 255));
         back1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -201,9 +419,9 @@ public class applicantSettings extends javax.swing.JFrame {
                 backMouseClicked(evt);
             }
         });
-        back1.add(back, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 100, 30));
+        back1.add(back, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, 100, 30));
 
-        jPanel2.add(back1, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 460, 200, 50));
+        jPanel2.add(back1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 470, 180, 50));
 
         delete.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
         delete.setForeground(new java.awt.Color(51, 51, 51));
@@ -241,9 +459,6 @@ public class applicantSettings extends javax.swing.JFrame {
         });
         jPanel2.add(delete2, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 260, 50, 50));
 
-        jLabel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 80, 340, 300));
-
         jLabel8.setFont(new java.awt.Font("Arial Black", 1, 18)); // NOI18N
         jLabel8.setText("Personal Info");
         jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
@@ -280,6 +495,56 @@ public class applicantSettings extends javax.swing.JFrame {
             }
         });
         jPanel2.add(sec, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 10, 170, 40));
+
+        jPanel9.setLayout(null);
+        jPanel9.add(image);
+        image.setBounds(11, 10, 320, 280);
+
+        jPanel2.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 80, 340, 300));
+
+        remove.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        remove.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        remove.setText("REMOVE");
+        remove.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        remove.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                removeMouseClicked(evt);
+            }
+        });
+        jPanel2.add(remove, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 390, 110, 40));
+
+        select.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        select.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        select.setText("SELECT");
+        select.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        select.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                selectMouseClicked(evt);
+            }
+        });
+        jPanel2.add(select, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 390, 100, 40));
+
+        save.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        save.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        save.setText("SAVE");
+        save.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        save.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                saveMouseClicked(evt);
+            }
+        });
+        jPanel2.add(save, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 390, 110, 40));
+
+        save1.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        save1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        save1.setText("SAVE");
+        save1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        save1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                save1MouseClicked(evt);
+            }
+        });
+        jPanel2.add(save1, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 390, 110, 40));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 930, 530));
 
@@ -380,6 +645,131 @@ public class applicantSettings extends javax.swing.JFrame {
        this.dispose();
     }//GEN-LAST:event_jLabel1MouseClicked
 
+    private void selectMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectMouseClicked
+
+        JFileChooser fileChooser = new JFileChooser();
+                int returnValue = fileChooser.showOpenDialog(null);
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    try {
+                        selectedFile = fileChooser.getSelectedFile();
+                        destination = "src/userimages/" + selectedFile.getName();
+                        path  = selectedFile.getAbsolutePath();
+                        
+                        
+                        if(FileExistenceChecker(path) == 1){
+                          JOptionPane.showMessageDialog(null, "File Already Exist, Rename or Choose another!");
+                            destination = "";
+                            path="";
+                        }else{
+                            image.setIcon(ResizeImage(path, null, image));
+                            select.setEnabled(false);
+                            remove.setEnabled(true);
+                        }
+                    } catch (Exception ex) {
+                        System.out.println("File Error!");
+                    }
+                }
+
+    }//GEN-LAST:event_selectMouseClicked
+
+    private void removeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeMouseClicked
+    remove.setEnabled(false);
+    select.setEnabled(true);
+    image.setIcon(null);
+    destination = "";
+    path = "";
+    }//GEN-LAST:event_removeMouseClicked
+
+    private void saveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saveMouseClicked
+     if (destination == null || destination.isEmpty()) {
+    JOptionPane.showMessageDialog(null, "Please select an image first!");
+    return;
+}
+
+if (selectedFile == null) {
+    JOptionPane.showMessageDialog(null, "No file selected!");
+    return;
+}
+
+try {
+    dbConnect dc = new dbConnect();
+    Connection con = dc.getConnection();
+
+    if (con == null) {
+        JOptionPane.showMessageDialog(null, "Database connection failed!", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+  
+    String oldpath = null;
+    String fetchQuery = "SELECT image FROM tbl_user WHERE u_id = ?";
+    PreparedStatement fetchStmt = con.prepareStatement(fetchQuery);
+    Integer userId = Session.getInstance().getUser_id();
+    
+    if (userId == null) {
+        JOptionPane.showMessageDialog(null, "Session error: User ID not found!", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    fetchStmt.setInt(1, userId);
+    ResultSet rs = fetchStmt.executeQuery();
+    if (rs.next()) {
+        oldpath = rs.getString("image");
+    }
+    rs.close();
+    fetchStmt.close();
+
+    // ✅ DEBUG: Print paths to check correctness
+    System.out.println("Old Path: " + oldpath);
+    System.out.println("New Destination: " + destination);
+
+    // ✅ Delete old image if it exists
+    if (oldpath != null && !oldpath.isEmpty()) {
+        File oldFile = new File(oldpath);
+        if (oldFile.exists()) {
+            if (oldFile.delete()) {
+                System.out.println("Old image deleted successfully!");
+            } else {
+                System.out.println("Failed to delete old image!");
+            }
+        } else {
+            System.out.println("Old image does not exist.");
+        }
+    }
+
+    // ✅ Copy new image
+    File newFile = new File(destination);
+    Files.copy(selectedFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    System.out.println("New image copied successfully!");
+
+    // ✅ Update image in the database
+    String updateQuery = "UPDATE tbl_user SET image = ? WHERE u_id = ?";
+    PreparedStatement updateStmt = con.prepareStatement(updateQuery);
+    updateStmt.setString(1, destination);
+    updateStmt.setInt(2, userId);
+
+    int rowsUpdated = updateStmt.executeUpdate();
+    if (rowsUpdated > 0) {
+        JOptionPane.showMessageDialog(null, "Profile picture updated successfully!");
+        loadProfileImage(); // ✅ Reload image after updating
+    } else {
+        JOptionPane.showMessageDialog(null, "Failed to update profile picture!");
+    }
+
+    updateStmt.close();
+    con.close();
+} catch (IOException e) {
+    JOptionPane.showMessageDialog(null, "File Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+} catch (SQLException e) {
+    JOptionPane.showMessageDialog(null, "Database Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+}
+
+    }//GEN-LAST:event_saveMouseClicked
+
+    private void save1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_save1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_save1MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -418,7 +808,6 @@ public class applicantSettings extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Email;
     private javax.swing.JLabel Email1;
-    private javax.swing.JLabel Email2;
     private javax.swing.JLabel Email3;
     private javax.swing.JLabel back;
     private javax.swing.JPanel back1;
@@ -430,13 +819,12 @@ public class applicantSettings extends javax.swing.JFrame {
     private javax.swing.JLabel email;
     private javax.swing.JLabel fname;
     private javax.swing.JLabel id;
+    private javax.swing.JLabel image;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
@@ -447,9 +835,14 @@ public class applicantSettings extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JLabel lname;
     private javax.swing.JLabel password;
+    public javax.swing.JLabel remove;
+    public javax.swing.JLabel save;
+    public javax.swing.JLabel save1;
     private javax.swing.JLabel sec;
+    public javax.swing.JLabel select;
     private javax.swing.JLabel username;
     // End of variables declaration//GEN-END:variables
 }

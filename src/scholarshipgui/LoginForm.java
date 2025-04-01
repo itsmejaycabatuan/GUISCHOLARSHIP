@@ -174,7 +174,7 @@ public class LoginForm extends javax.swing.JFrame {
                 RegisterLabelMouseClicked(evt);
             }
         });
-        jPanel2.add(RegisterLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 480, 320, 30));
+        jPanel2.add(RegisterLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 480, 340, 30));
 
         jLabel2.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel2.setText("User Name");
@@ -271,7 +271,7 @@ public class LoginForm extends javax.swing.JFrame {
 
         lgnav1.add(lgnav2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 400, 150, 40));
 
-        jPanel2.add(lgnav1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 420, 150, 40));
+        jPanel2.add(lgnav1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 420, 150, 40));
 
         iconhide.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/iconhide.png"))); // NOI18N
         iconhide.setText("jLabel1");

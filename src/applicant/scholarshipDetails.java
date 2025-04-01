@@ -80,7 +80,6 @@ Color hover = new Color (255,255,255);
         jPanel1 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        capacity = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         registernav = new javax.swing.JPanel();
         lgnav3 = new javax.swing.JPanel();
@@ -109,27 +108,28 @@ Color hover = new Color (255,255,255);
         lgnav23 = new javax.swing.JLabel();
         lgnav24 = new javax.swing.JPanel();
         lgnav25 = new javax.swing.JLabel();
-        add = new javax.swing.JLabel();
+        apply = new javax.swing.JLabel();
         cancelnav = new javax.swing.JPanel();
         backdash1 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        require = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        gpa = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        annincome = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        amount = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
-        sname = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
-        des = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
-        deadline1 = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
-        status = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        s_id = new javax.swing.JTextField();
+        s_id = new javax.swing.JLabel();
+        sname = new javax.swing.JLabel();
+        gpa = new javax.swing.JLabel();
+        capacity = new javax.swing.JLabel();
+        annincome = new javax.swing.JLabel();
+        amount = new javax.swing.JLabel();
+        require = new javax.swing.JLabel();
+        des = new javax.swing.JLabel();
+        deadline1 = new javax.swing.JLabel();
+        status = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -146,17 +146,6 @@ Color hover = new Color (255,255,255);
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Capacity:");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 270, 140, 60));
-
-        capacity.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
-        capacity.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        capacity.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
-        capacity.setEnabled(false);
-        capacity.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                capacityActionPerformed(evt);
-            }
-        });
-        jPanel1.add(capacity, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 320, 290, 50));
 
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/info.png"))); // NOI18N
@@ -472,18 +461,18 @@ Color hover = new Color (255,255,255);
 
         registernav.add(registernav4, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 620, 150, 40));
 
-        add.setFont(new java.awt.Font("Arial Black", 1, 18)); // NOI18N
-        add.setForeground(new java.awt.Color(51, 51, 51));
-        add.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        add.setText("APPLY");
-        add.addMouseListener(new java.awt.event.MouseAdapter() {
+        apply.setFont(new java.awt.Font("Arial Black", 1, 18)); // NOI18N
+        apply.setForeground(new java.awt.Color(51, 51, 51));
+        apply.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        apply.setText("APPLY");
+        apply.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                addMouseClicked(evt);
+                applyMouseClicked(evt);
             }
         });
-        registernav.add(add, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, 90, 20));
+        registernav.add(apply, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, 90, 20));
 
-        jPanel1.add(registernav, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 590, 150, 40));
+        jPanel1.add(registernav, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 600, 150, 40));
 
         cancelnav.setBackground(new java.awt.Color(102, 102, 102));
         cancelnav.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -507,7 +496,7 @@ Color hover = new Color (255,255,255);
         });
         cancelnav.add(backdash1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, 90, 20));
 
-        jPanel1.add(cancelnav, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 590, 150, 40));
+        jPanel1.add(cancelnav, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 600, 150, 40));
 
         jLabel5.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
@@ -515,139 +504,115 @@ Color hover = new Color (255,255,255);
         jLabel5.setText("Status:");
         jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 480, 150, 40));
 
-        require.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
-        require.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        require.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
-        require.setEnabled(false);
-        require.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                requireActionPerformed(evt);
-            }
-        });
-        jPanel1.add(require, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 420, 290, 150));
-
         jLabel6.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("GPA:");
         jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 180, 190, 30));
-
-        gpa.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
-        gpa.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        gpa.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
-        gpa.setEnabled(false);
-        gpa.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                gpaActionPerformed(evt);
-            }
-        });
-        jPanel1.add(gpa, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 220, 290, 50));
 
         jLabel7.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Annual Income:");
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 280, 190, 40));
 
-        annincome.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
-        annincome.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        annincome.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
-        annincome.setEnabled(false);
-        annincome.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                annincomeActionPerformed(evt);
-            }
-        });
-        jPanel1.add(annincome, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 320, 290, 50));
-
         jLabel9.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("Fund Amount:");
         jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 270, 200, 60));
-
-        amount.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
-        amount.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        amount.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
-        amount.setEnabled(false);
-        amount.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                amountActionPerformed(evt);
-            }
-        });
-        jPanel1.add(amount, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 320, 290, 50));
 
         jLabel11.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
         jLabel11.setText("Scholarship Id: ");
         jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 180, 170, 30));
 
-        sname.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
-        sname.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        sname.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
-        sname.setEnabled(false);
-        sname.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                snameActionPerformed(evt);
-            }
-        });
-        jPanel1.add(sname, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 220, 290, 50));
-
         jLabel12.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(255, 255, 255));
         jLabel12.setText("Description:");
         jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 380, 170, 30));
-
-        des.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
-        des.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        des.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
-        des.setEnabled(false);
-        des.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                desActionPerformed(evt);
-            }
-        });
-        jPanel1.add(des, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 420, 290, 150));
 
         jLabel13.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(255, 255, 255));
         jLabel13.setText("Requirements:");
         jPanel1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 380, 180, 30));
 
-        deadline1.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
-        deadline1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        deadline1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
-        deadline1.setEnabled(false);
-        jPanel1.add(deadline1, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 430, 290, 50));
-
         jLabel14.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel14.setForeground(new java.awt.Color(255, 255, 255));
         jLabel14.setText("Scholarship Name: ");
         jPanel1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 180, 170, 30));
-
-        status.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
-        status.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        status.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
-        status.setEnabled(false);
-        status.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                statusActionPerformed(evt);
-            }
-        });
-        jPanel1.add(status, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 520, 290, 50));
 
         jLabel8.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Deadline:");
         jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 390, 140, 30));
 
+        s_id.setBackground(new java.awt.Color(255, 255, 255));
         s_id.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
-        s_id.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        s_id.setForeground(new java.awt.Color(255, 255, 255));
+        s_id.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         s_id.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
-        s_id.setEnabled(false);
-        s_id.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                s_idActionPerformed(evt);
-            }
-        });
         jPanel1.add(s_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 220, 290, 50));
+
+        sname.setBackground(new java.awt.Color(255, 255, 255));
+        sname.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        sname.setForeground(new java.awt.Color(255, 255, 255));
+        sname.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        sname.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        jPanel1.add(sname, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 220, 290, 50));
+
+        gpa.setBackground(new java.awt.Color(255, 255, 255));
+        gpa.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        gpa.setForeground(new java.awt.Color(255, 255, 255));
+        gpa.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        gpa.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        jPanel1.add(gpa, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 220, 290, 50));
+
+        capacity.setBackground(new java.awt.Color(255, 255, 255));
+        capacity.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        capacity.setForeground(new java.awt.Color(255, 255, 255));
+        capacity.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        capacity.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        jPanel1.add(capacity, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 320, 290, 50));
+
+        annincome.setBackground(new java.awt.Color(255, 255, 255));
+        annincome.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        annincome.setForeground(new java.awt.Color(255, 255, 255));
+        annincome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        annincome.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        jPanel1.add(annincome, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 320, 290, 50));
+
+        amount.setBackground(new java.awt.Color(255, 255, 255));
+        amount.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        amount.setForeground(new java.awt.Color(255, 255, 255));
+        amount.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        amount.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        jPanel1.add(amount, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 320, 290, 50));
+
+        require.setBackground(new java.awt.Color(255, 255, 255));
+        require.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        require.setForeground(new java.awt.Color(255, 255, 255));
+        require.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        require.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        jPanel1.add(require, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 430, 290, 150));
+
+        des.setBackground(new java.awt.Color(255, 255, 255));
+        des.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        des.setForeground(new java.awt.Color(255, 255, 255));
+        des.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        des.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        jPanel1.add(des, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 430, 290, 150));
+
+        deadline1.setBackground(new java.awt.Color(255, 255, 255));
+        deadline1.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        deadline1.setForeground(new java.awt.Color(255, 255, 255));
+        deadline1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        deadline1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        jPanel1.add(deadline1, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 430, 290, 50));
+
+        status.setBackground(new java.awt.Color(255, 255, 255));
+        status.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
+        status.setForeground(new java.awt.Color(255, 255, 255));
+        status.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        status.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        jPanel1.add(status, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 530, 290, 50));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -663,10 +628,6 @@ Color hover = new Color (255,255,255);
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void capacityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_capacityActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_capacityActionPerformed
 
     private void lgnav4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lgnav4MouseEntered
         // TODO add your handling code here:
@@ -824,10 +785,12 @@ Color hover = new Color (255,255,255);
         // TODO add your handling code here:
     }//GEN-LAST:event_registernav4MouseExited
 
-    private void addMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addMouseClicked
-
+    private void applyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_applyMouseClicked
+     
         
-    }//GEN-LAST:event_addMouseClicked
+        
+        
+    }//GEN-LAST:event_applyMouseClicked
 
     private void registernavMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_registernavMouseEntered
         registernav.setBackground(hover);
@@ -850,38 +813,6 @@ Color hover = new Color (255,255,255);
     private void cancelnavMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelnavMouseExited
         cancelnav.setBackground(defaultcolor);
     }//GEN-LAST:event_cancelnavMouseExited
-
-    private void requireActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_requireActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_requireActionPerformed
-
-    private void gpaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gpaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_gpaActionPerformed
-
-    private void annincomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_annincomeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_annincomeActionPerformed
-
-    private void amountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_amountActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_amountActionPerformed
-
-    private void snameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_snameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_snameActionPerformed
-
-    private void desActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_desActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_desActionPerformed
-
-    private void statusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statusActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_statusActionPerformed
-
-    private void s_idActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_s_idActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_s_idActionPerformed
 
     /**
      * @param args the command line arguments
@@ -919,15 +850,15 @@ Color hover = new Color (255,255,255);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel add;
-    private javax.swing.JTextField amount;
-    private javax.swing.JTextField annincome;
+    private javax.swing.JLabel amount;
+    private javax.swing.JLabel annincome;
+    private javax.swing.JLabel apply;
     private javax.swing.JLabel backdash1;
     private javax.swing.JPanel cancelnav;
-    private javax.swing.JTextField capacity;
-    private javax.swing.JTextField deadline1;
-    private javax.swing.JTextField des;
-    private javax.swing.JTextField gpa;
+    private javax.swing.JLabel capacity;
+    private javax.swing.JLabel deadline1;
+    private javax.swing.JLabel des;
+    private javax.swing.JLabel gpa;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -968,9 +899,9 @@ Color hover = new Color (255,255,255);
     private javax.swing.JPanel registernav5;
     private javax.swing.JPanel registernav6;
     private javax.swing.JPanel registernav7;
-    private javax.swing.JTextField require;
-    private javax.swing.JTextField s_id;
-    private javax.swing.JTextField sname;
-    private javax.swing.JTextField status;
+    private javax.swing.JLabel require;
+    private javax.swing.JLabel s_id;
+    private javax.swing.JLabel sname;
+    private javax.swing.JLabel status;
     // End of variables declaration//GEN-END:variables
 }

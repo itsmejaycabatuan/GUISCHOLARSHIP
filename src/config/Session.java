@@ -21,7 +21,15 @@ public class Session {
     private String status;
     private String contact;
     private String password;
+    private String image;
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
    
 
    

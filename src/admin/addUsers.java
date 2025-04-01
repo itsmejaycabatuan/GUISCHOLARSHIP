@@ -5,9 +5,18 @@
  */
 package admin;
 
+import static applicant.applicantSettings.getHeightFromWidth;
 import config.dbConnect;
 import config.passwordHasher;
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,6 +25,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 /**
  *
@@ -32,6 +45,10 @@ public class addUsers extends javax.swing.JFrame {
          this.viewicon.setVisible(false);
        
     }
+        public String destination = "";
+        File selectedFile;
+        public String oldpath;
+        public String path;
       public static String email1,username1;
      public boolean duplicateChecker() {
     dbConnect db = new dbConnect();
@@ -76,7 +93,55 @@ public class addUsers extends javax.swing.JFrame {
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
-  
+     public int FileExistenceChecker(String path){
+        File file = new File(path);
+        String fileName = file.getName();
+        
+        Path filePath = Paths.get("src/userimages", fileName);
+        boolean fileExists = Files.exists(filePath);
+        
+        if (fileExists) {
+            return 1;
+        } else {
+            return 0;
+        }
+    
+    }
+     public  ImageIcon ResizeImage(String ImagePath, byte[] pic, JLabel label) {
+    ImageIcon MyImage = null;
+        if(ImagePath !=null){
+            MyImage = new ImageIcon(ImagePath);
+        }else{
+            MyImage = new ImageIcon(pic);
+        }
+        
+    int newHeight = getHeightFromWidth(ImagePath, label.getWidth());
+
+    Image img = MyImage.getImage();
+    Image newImg = img.getScaledInstance(label.getWidth(), newHeight, Image.SCALE_SMOOTH);
+    ImageIcon image = new ImageIcon(newImg);
+    return image;
+}
+    public static int getHeightFromWidth(String imagePath, int desiredWidth) {
+        try {
+            // Read the image file
+            File imageFile = new File(imagePath);
+            BufferedImage image = ImageIO.read(imageFile);
+            
+            // Get the original width and height of the image
+            int originalWidth = image.getWidth();
+            int originalHeight = image.getHeight();
+            
+            // Calculate the new height based on the desired width and the aspect ratio
+            int newHeight = (int) ((double) desiredWidth / originalWidth * originalHeight);
+            
+            return newHeight;
+        } catch (IOException ex) {
+            System.out.println("No image found!");
+        }
+        
+        return -1;
+    }
  Color hover = new Color (255,255,255);
     Color defaultcolor = new Color  (102,102,102);
     /**
@@ -137,6 +202,10 @@ public class addUsers extends javax.swing.JFrame {
         iconhide1 = new javax.swing.JLabel();
         viewicon = new javax.swing.JLabel();
         pass = new javax.swing.JPasswordField();
+        jPanel9 = new javax.swing.JPanel();
+        image = new javax.swing.JLabel();
+        select = new javax.swing.JLabel();
+        remove = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -147,13 +216,12 @@ public class addUsers extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(255, 204, 102));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("ADD USER");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 120, 490, 40));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 40, 690, 40));
 
         jLabel4.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("User Name:");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, 300, 30));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 300, 30));
 
         username.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         username.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -163,13 +231,12 @@ public class addUsers extends javax.swing.JFrame {
                 usernameActionPerformed(evt);
             }
         });
-        jPanel1.add(username, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 220, 300, 50));
+        jPanel1.add(username, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 120, 300, 50));
 
         jLabel5.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("First Name:");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 280, 300, 30));
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 190, 300, 30));
 
         fname.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         fname.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -179,13 +246,12 @@ public class addUsers extends javax.swing.JFrame {
                 fnameActionPerformed(evt);
             }
         });
-        jPanel1.add(fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 310, 300, 50));
+        jPanel1.add(fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 180, 300, 50));
 
         jLabel6.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("Last Name:");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 370, 300, 30));
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 250, 300, 30));
 
         lname.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         lname.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -195,13 +261,12 @@ public class addUsers extends javax.swing.JFrame {
                 lnameActionPerformed(evt);
             }
         });
-        jPanel1.add(lname, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 400, 300, 50));
+        jPanel1.add(lname, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 240, 300, 50));
 
         jLabel7.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel7.setText("Email:");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 170, 300, 50));
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 300, 300, 50));
 
         email.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         email.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -211,7 +276,7 @@ public class addUsers extends javax.swing.JFrame {
                 emailActionPerformed(evt);
             }
         });
-        jPanel1.add(email, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 220, 300, 50));
+        jPanel1.add(email, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 300, 300, 50));
 
         contact.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         contact.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -221,23 +286,21 @@ public class addUsers extends javax.swing.JFrame {
                 contactActionPerformed(evt);
             }
         });
-        jPanel1.add(contact, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 310, 300, 50));
+        jPanel1.add(contact, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 360, 300, 50));
 
         jLabel8.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel8.setText("Type:");
-        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 370, 300, 30));
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 430, 300, 30));
 
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/adduserform.png"))); // NOI18N
-        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 10, 110, 110));
+        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 110, 100));
 
         jLabel12.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel12.setText("Password:");
-        jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 460, 300, 30));
+        jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 490, 300, 30));
 
         registernav.setBackground(new java.awt.Color(102, 102, 102));
         registernav.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -563,7 +626,7 @@ public class addUsers extends javax.swing.JFrame {
 
         registernav.add(registernav4, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 620, 150, 40));
 
-        jPanel1.add(registernav, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 550, 150, 40));
+        jPanel1.add(registernav, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 550, 150, 40));
 
         cancelnav.setBackground(new java.awt.Color(102, 102, 102));
         cancelnav.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -587,7 +650,7 @@ public class addUsers extends javax.swing.JFrame {
         });
         cancelnav.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, 90, 20));
 
-        jPanel1.add(cancelnav, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 550, 150, 40));
+        jPanel1.add(cancelnav, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 550, 150, 40));
 
         type.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         type.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Type of User", "Admin", "Applicant", "Scholarship Providers/Committee" }));
@@ -597,13 +660,12 @@ public class addUsers extends javax.swing.JFrame {
                 typeActionPerformed(evt);
             }
         });
-        jPanel1.add(type, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 400, 300, 50));
+        jPanel1.add(type, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 420, 300, 50));
 
         jLabel9.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel9.setText("Contact:");
-        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 280, 300, 30));
+        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 370, 300, 30));
 
         iconhide1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/iconhide.png"))); // NOI18N
         iconhide1.setText("jLabel1");
@@ -612,7 +674,7 @@ public class addUsers extends javax.swing.JFrame {
                 iconhide1MousePressed(evt);
             }
         });
-        jPanel1.add(iconhide1, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 500, 30, 30));
+        jPanel1.add(iconhide1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 490, 30, 30));
 
         viewicon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/viewicon.png"))); // NOI18N
         viewicon.setText("jLabel1");
@@ -621,7 +683,7 @@ public class addUsers extends javax.swing.JFrame {
                 viewiconMousePressed(evt);
             }
         });
-        jPanel1.add(viewicon, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 500, 30, 30));
+        jPanel1.add(viewicon, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 490, 30, 30));
 
         pass.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         pass.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -632,13 +694,46 @@ public class addUsers extends javax.swing.JFrame {
                 passActionPerformed(evt);
             }
         });
-        jPanel1.add(pass, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 490, 300, 50));
+        jPanel1.add(pass, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 480, 300, 50));
+
+        jPanel9.setLayout(null);
+
+        image.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jPanel9.add(image);
+        image.setBounds(10, 10, 320, 280);
+
+        jPanel1.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 120, 340, 300));
+
+        select.setBackground(new java.awt.Color(255, 255, 255));
+        select.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        select.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        select.setText("SELECT");
+        select.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        select.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                selectMouseClicked(evt);
+            }
+        });
+        jPanel1.add(select, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 430, 150, 40));
+
+        remove.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
+        remove.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        remove.setText("REMOVE");
+        remove.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        remove.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                removeMouseClicked(evt);
+            }
+        });
+        jPanel1.add(remove, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 430, 160, 40));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 723, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 856, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -673,7 +768,7 @@ public class addUsers extends javax.swing.JFrame {
 try {
     dbConnect db = new dbConnect();
     
-    // Validate input
+    // Validate input fields
     if (username.getText().isEmpty() || fname.getText().isEmpty() || lname.getText().isEmpty() || 
         email.getText().isEmpty() || contact.getText().isEmpty() || pass.getText().isEmpty()) {
         JOptionPane.showMessageDialog(null, "All fields are required");
@@ -695,7 +790,7 @@ try {
         return;
     }
     
-    if (contact.getText().length() != 11) { // Fix: Length check should be exactly 11
+    if (contact.getText().length() != 11) { 
         JOptionPane.showMessageDialog(null, "Contact number must be exactly 11 digits");
         return;
     }
@@ -710,12 +805,12 @@ try {
         return;
     }
 
-   
+    // ✅ Hash password before storing
     String pass1 = passwordHasher.hashPassword(pass.getText());
 
-   
-    String insertQuery = "INSERT INTO tbl_user (username, f_name, l_name, email, contact, type, pass, status, registration_date, sec_ques1, answer_1, sec_ques2, answer_2) " +
-                         "VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending', CURRENT_TIMESTAMP, 'N/A', 'N/A', 'N/A', 'N/A')";
+    // ✅ Corrected SQL Query (added 'image' field, removed extra comma)
+    String insertQuery = "INSERT INTO tbl_user (username, f_name, l_name, email, contact, type, pass, status, registration_date, sec_ques1, answer_1, sec_ques2, answer_2, image) " +
+                         "VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending', CURRENT_TIMESTAMP, 'N/A', 'N/A', 'N/A', 'N/A', ?)";
 
     Connection con = db.getConnection();
     PreparedStatement pst = con.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
@@ -726,6 +821,7 @@ try {
     pst.setString(5, contact.getText());
     pst.setString(6, type.getSelectedItem().toString());
     pst.setString(7, pass1);
+    pst.setString(8, destination); // ✅ Insert image path into database
 
     int rowsAffected = pst.executeUpdate();
 
@@ -740,12 +836,20 @@ try {
         }
         generatedKeys.close();
         pst.close();
-     
 
-        if (userId != -1) {
-            db.insertLog(userId, "Admin Added A User"); // ✅ Log after getting user ID
+        // ✅ Copy the image only if user is inserted successfully
+        try {
+            Files.copy(selectedFile.toPath(), new File(destination).toPath(), StandardCopyOption.REPLACE_EXISTING);
+            JOptionPane.showMessageDialog(null, "Image saved successfully!");
+        } catch (IOException e) {
+            System.out.println("Insert Image Error! " + e);
         }
-        
+
+        // ✅ Insert log after everything is successful
+        if (userId != -1) {
+            db.insertLog(userId, "Admin Added A User");
+        }
+
         usersTable tb = new usersTable();
         tb.setVisible(true);
         this.dispose();
@@ -758,6 +862,7 @@ try {
     e.printStackTrace();
     JOptionPane.showMessageDialog(null, "Database error!", "Error", JOptionPane.ERROR_MESSAGE);
 }
+
 
     }//GEN-LAST:event_lgnav2MouseClicked
 
@@ -965,6 +1070,39 @@ try {
         // TODO add your handling code here:
     }//GEN-LAST:event_passActionPerformed
 
+    private void selectMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectMouseClicked
+
+        JFileChooser fileChooser = new JFileChooser();
+        int returnValue = fileChooser.showOpenDialog(null);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            try {
+                selectedFile = fileChooser.getSelectedFile();
+                destination = "src/userimages/" + selectedFile.getName();
+                path  = selectedFile.getAbsolutePath();
+
+                if(FileExistenceChecker(path) == 1){
+                    JOptionPane.showMessageDialog(null, "File Already Exist, Rename or Choose another!");
+                    destination = "";
+                    path="";
+                }else{
+                    image.setIcon(ResizeImage(path, null, image));
+                    select.setEnabled(false);
+                    remove.setEnabled(true);
+                }
+            } catch (Exception ex) {
+                System.out.println("File Error!");
+            }
+        }
+    }//GEN-LAST:event_selectMouseClicked
+
+    private void removeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeMouseClicked
+        remove.setEnabled(false);
+        select.setEnabled(true);
+        image.setIcon(null);
+        destination = "";
+        path = "";
+    }//GEN-LAST:event_removeMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -1006,6 +1144,7 @@ try {
     private javax.swing.JTextField email;
     private javax.swing.JTextField fname;
     private javax.swing.JLabel iconhide1;
+    public javax.swing.JLabel image;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel12;
@@ -1017,6 +1156,7 @@ try {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JLabel lgnav10;
     private javax.swing.JLabel lgnav11;
     private javax.swing.JPanel lgnav12;
@@ -1047,6 +1187,8 @@ try {
     private javax.swing.JPanel registernav5;
     private javax.swing.JPanel registernav6;
     private javax.swing.JPanel registernav7;
+    public javax.swing.JLabel remove;
+    public javax.swing.JLabel select;
     private javax.swing.JComboBox<String> type;
     private javax.swing.JTextField username;
     private javax.swing.JLabel viewicon;

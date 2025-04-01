@@ -28,29 +28,36 @@ public class enterPassword1 extends javax.swing.JFrame {
     public enterPassword1() {
         initComponents();
     }
- private void updateContact() {
+private void updateContact() {
     try {
         dbConnect dc = new dbConnect();
         Connection con = dc.getConnection();
 
-       
+        // Update query for contact number
         String updateQuery = "UPDATE tbl_user SET contact = ? WHERE u_id = ?";
         PreparedStatement updatePst = con.prepareStatement(updateQuery);
-        updatePst.setString(1, newContact); 
+        updatePst.setString(1, newContact);
         updatePst.setInt(2, Session.getInstance().getUser_id());
 
         int updatedRows = updatePst.executeUpdate();
         if (updatedRows > 0) {
             JOptionPane.showMessageDialog(null, "Contact number updated successfully!");
 
-           
+            // Update session contact
             Session sess = Session.getInstance();
-            sess.setContact(newContact); 
+            sess.setContact(newContact);
 
-           
+            // Log the update action
+            String logQuery = "INSERT INTO tbl_logs (user_id, action, date_time) VALUES (?, ?, NOW())";
+            PreparedStatement logPst = con.prepareStatement(logQuery);
+            logPst.setInt(1, Session.getInstance().getUser_id());
+            logPst.setString(2, "SPC updated contact number.");
+            logPst.executeUpdate();
+            logPst.close();
+
+            // Refresh the settings screen
             comsSettings as = new comsSettings();
             as.setVisible(true);
-         
         } else {
             JOptionPane.showMessageDialog(null, "Update failed!", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -62,7 +69,7 @@ public class enterPassword1 extends javax.swing.JFrame {
         ex.printStackTrace();
         JOptionPane.showMessageDialog(null, "Database Error!", "Error", JOptionPane.ERROR_MESSAGE);
     }
-    }
+}
 Color hover = new Color (255,255,255);
     Color defaultcolor = new Color  (102,102,102);
    public static int userID;
@@ -91,6 +98,11 @@ public static String newContact;
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(102, 102, 102));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -250,6 +262,12 @@ public static String newContact;
         ce.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_backMouseClicked
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        Session sess = Session.getInstance();
+       
+         id.setText(""+sess.getUser_id());
+    }//GEN-LAST:event_formWindowActivated
 
     /**
      * @param args the command line arguments

@@ -29,25 +29,34 @@ public class enterPassword extends javax.swing.JFrame {
     public enterPassword() {
         initComponents();
     }
- private void updateEmail() {
+  private void updateEmail() {
     try {
         dbConnect dc = new dbConnect();
         Connection con = dc.getConnection();
 
+      
         String updateQuery = "UPDATE tbl_user SET email = ? WHERE u_id = ?";
         PreparedStatement updatePst = con.prepareStatement(updateQuery);
-        updatePst.setString(1, newEmail); // Use the email stored from previous frame
+        updatePst.setString(1, newEmail); 
         updatePst.setInt(2, userID);
 
         int updatedRows = updatePst.executeUpdate();
         if (updatedRows > 0) {
             JOptionPane.showMessageDialog(null, "Email updated successfully!");
 
-            // Update the session email
+           
             Session sess = Session.getInstance();
             sess.setEmail(newEmail); 
 
-            // Refresh the admin settings screen
+          
+            String logQuery = "INSERT INTO tbl_logs (user_id, action, date_time) VALUES (?, ?, NOW())";
+            try (PreparedStatement pstmtLog = con.prepareStatement(logQuery)) {
+                pstmtLog.setInt(1, userID); 
+                pstmtLog.setString(2, "SPC updated email address");
+                pstmtLog.executeUpdate();
+            }
+
+          
             comsSettings as = new comsSettings();
             as.setVisible(true);
         } else {
@@ -60,7 +69,7 @@ public class enterPassword extends javax.swing.JFrame {
         ex.printStackTrace();
         JOptionPane.showMessageDialog(null, "Error updating email!", "Database Error", JOptionPane.ERROR_MESSAGE);
     }
-    }
+}
 Color hover = new Color (255,255,255);
     Color defaultcolor = new Color  (102,102,102);
     public static int userID;
@@ -89,6 +98,11 @@ public static String newEmail;
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(102, 102, 102));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -249,6 +263,12 @@ public static String newEmail;
         ce.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_backMouseClicked
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+ Session sess = Session.getInstance();
+       
+         id.setText(""+sess.getUser_id());       
+    }//GEN-LAST:event_formWindowActivated
 
     /**
      * @param args the command line arguments
