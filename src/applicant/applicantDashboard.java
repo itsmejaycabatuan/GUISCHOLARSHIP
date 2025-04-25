@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import scholarshipgui.LoginForm;
 
 /**
@@ -26,7 +27,53 @@ public class applicantDashboard extends javax.swing.JFrame {
      */
     public applicantDashboard() {
         initComponents();
+        loadApplicationCount();
+        loadPendingApplicationCount();
+        loadApprovedApplicationCount();
+        loadRejectedApplicationCount();
+        loadRecentApplications();
     }
+    public void loadRecentApplications() {
+    dbConnect db = new dbConnect();
+    try (Connection con = db.getConnection()) {
+
+       
+        String query = "SELECT r_id, s_id, fname, lname, u_email, date_submit, status " +
+                       "FROM tbl_records " +
+                       "WHERE user_id = ? " +
+                       "ORDER BY date_submit DESC";
+
+        PreparedStatement pst = con.prepareStatement(query);
+        pst.setInt(1, Session.getInstance().getUser_id()); // Use session to get the current user_id
+        ResultSet rs = pst.executeQuery();
+
+        // Table model to display data
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(new String[]{"Application ID", "Scholarship ID", "First Name", "Last Name", "Email", "Submission Date", "Status"});
+
+        while (rs.next()) {
+            model.addRow(new Object[]{
+                rs.getInt("r_id"),
+                rs.getInt("s_id"),  // Scholarship ID (could be used for displaying scholarship name later)
+                rs.getString("fname"),
+                rs.getString("lname"),
+                rs.getString("u_email"),
+                rs.getDate("date_submit"),
+                rs.getString("status")
+            });
+        }
+
+        // Assuming recentApplicationTable is the JTable for displaying recent applications
+        tbl_recent.setModel(model);
+
+        rs.close();
+        pst.close();
+
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error loading recent applications!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
 public int getUserId(String firstname) {
     int userId = -1; 
 
@@ -55,8 +102,106 @@ public int getUserId(String firstname) {
     } catch (SQLException ex) {
         ex.printStackTrace();
     }
+    
+    
 
     return userId;
+}
+private void loadRejectedApplicationCount() {
+    dbConnect db = new dbConnect();
+    Connection conn = db.getConnection();
+
+   
+    String query = "SELECT COUNT(*) AS rejectedCount FROM tbl_records WHERE user_id = ? AND status = 'rejected'";
+
+    try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setInt(1, Session.getInstance().getUser_id());  
+
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            int rejectedCount = rs.getInt("rejectedCount");
+
+           
+            reject.setText(""+rejectedCount);
+        }
+
+        rs.close();
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error fetching rejected application count: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+private void loadApprovedApplicationCount() {
+    dbConnect db = new dbConnect();
+    Connection conn = db.getConnection();
+
+   
+    String query = "SELECT COUNT(*) AS approvedCount FROM tbl_records WHERE user_id = ? AND status = 'approved'";
+
+    try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setInt(1, Session.getInstance().getUser_id());  
+
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            int approvedCount = rs.getInt("approvedCount");
+
+            
+            approved.setText(""+approvedCount);
+        }
+
+        rs.close();
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error fetching approved application count: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+private void loadApplicationCount() {
+    dbConnect db = new dbConnect();
+    Connection conn = db.getConnection();
+
+   
+    String query = "SELECT COUNT(*) AS applicationCount FROM tbl_records WHERE user_id = ?";
+
+    try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setInt(1, Session.getInstance().getUser_id());  
+
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            int applicationCount = rs.getInt("applicationCount");
+
+          
+            all.setText(""+applicationCount);
+        }
+
+        rs.close();
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error fetching application count: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+private void loadPendingApplicationCount() {
+    dbConnect db = new dbConnect();
+    Connection conn = db.getConnection();
+
+   
+    String query = "SELECT COUNT(*) AS pendingCount FROM tbl_records WHERE user_id = ? AND status = 'pending'";
+
+    try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setInt(1, Session.getInstance().getUser_id()); 
+
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            int pendingCount = rs.getInt("pendingCount");
+
+          
+            pending.setText(""+pendingCount);
+        }
+
+        rs.close();
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error fetching pending application count: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
 }
  Color hover = new Color (255,255,255);
     Color defaultcolor = new Color  (102,102,102);
@@ -94,25 +239,25 @@ public int getUserId(String firstname) {
         jLabel23 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
         jLabel28 = new javax.swing.JLabel();
-        jLabel25 = new javax.swing.JLabel();
+        all = new javax.swing.JLabel();
         jLabel26 = new javax.swing.JLabel();
         jLabel33 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tbl_recent = new javax.swing.JTable();
         jLabel16 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
         jLabel19 = new javax.swing.JLabel();
-        jLabel27 = new javax.swing.JLabel();
+        pending = new javax.swing.JLabel();
         jLabel29 = new javax.swing.JLabel();
         jPanel12 = new javax.swing.JPanel();
         jLabel30 = new javax.swing.JLabel();
-        jLabel31 = new javax.swing.JLabel();
+        approved = new javax.swing.JLabel();
         jLabel32 = new javax.swing.JLabel();
         jPanel13 = new javax.swing.JPanel();
         jLabel17 = new javax.swing.JLabel();
-        jLabel20 = new javax.swing.JLabel();
+        reject = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -284,6 +429,11 @@ public int getUserId(String firstname) {
         jLabel6.setFont(new java.awt.Font("Arial Black", 1, 15)); // NOI18N
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/userdashboardlogo.png"))); // NOI18N
         jLabel6.setText("  Application's");
+        jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel6MouseClicked(evt);
+            }
+        });
         usersnav.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, 170, 30));
 
         jPanel2.add(usersnav, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 290, 260, 50));
@@ -317,9 +467,9 @@ public int getUserId(String firstname) {
         jLabel28.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/finalsib.png"))); // NOI18N
         jPanel6.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 130, 70));
 
-        jLabel25.setFont(new java.awt.Font("Arial Black", 1, 48)); // NOI18N
-        jLabel25.setText("0");
-        jPanel6.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 70, 70, 80));
+        all.setFont(new java.awt.Font("Arial Black", 1, 48)); // NOI18N
+        all.setText("0");
+        jPanel6.add(all, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 70, 70, 80));
 
         jLabel26.setFont(new java.awt.Font("Arial Black", 1, 15)); // NOI18N
         jLabel26.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -340,8 +490,10 @@ public int getUserId(String firstname) {
         jLabel2.setToolTipText("");
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 10, 800, 100));
 
-        jTable1.setBackground(new java.awt.Color(153, 153, 153));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tbl_recent.setBackground(new java.awt.Color(153, 153, 153));
+        tbl_recent.setFont(new java.awt.Font("Arial Black", 0, 12)); // NOI18N
+        tbl_recent.setForeground(new java.awt.Color(255, 255, 255));
+        tbl_recent.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -349,7 +501,7 @@ public int getUserId(String firstname) {
 
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tbl_recent);
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 430, 950, 270));
 
@@ -372,9 +524,9 @@ public int getUserId(String firstname) {
         jLabel19.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/pendingapplication.png"))); // NOI18N
         jPanel7.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, 130, 60));
 
-        jLabel27.setFont(new java.awt.Font("Arial Black", 1, 48)); // NOI18N
-        jLabel27.setText("0");
-        jPanel7.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 60, 80, 100));
+        pending.setFont(new java.awt.Font("Arial Black", 1, 48)); // NOI18N
+        pending.setText("0");
+        jPanel7.add(pending, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 60, 80, 100));
 
         jLabel29.setFont(new java.awt.Font("Arial Black", 1, 15)); // NOI18N
         jLabel29.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -392,9 +544,9 @@ public int getUserId(String firstname) {
         jLabel30.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/approve.png"))); // NOI18N
         jPanel12.add(jLabel30, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 110, 60));
 
-        jLabel31.setFont(new java.awt.Font("Arial Black", 1, 48)); // NOI18N
-        jLabel31.setText("0");
-        jPanel12.add(jLabel31, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 70, 70, 70));
+        approved.setFont(new java.awt.Font("Arial Black", 1, 48)); // NOI18N
+        approved.setText("0");
+        jPanel12.add(approved, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 70, 70, 70));
 
         jLabel32.setFont(new java.awt.Font("Arial Black", 1, 15)); // NOI18N
         jLabel32.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -411,9 +563,9 @@ public int getUserId(String firstname) {
         jLabel17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/reject.png"))); // NOI18N
         jPanel13.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 10, 80, 60));
 
-        jLabel20.setFont(new java.awt.Font("Arial Black", 1, 48)); // NOI18N
-        jLabel20.setText("0");
-        jPanel13.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 70, 70, 70));
+        reject.setFont(new java.awt.Font("Arial Black", 1, 48)); // NOI18N
+        reject.setText("0");
+        jPanel13.add(reject, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 70, 70, 70));
 
         jLabel21.setFont(new java.awt.Font("Arial Black", 1, 15)); // NOI18N
         jLabel21.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -541,6 +693,12 @@ if (choice == JOptionPane.YES_OPTION) {
           this.dispose();
     }//GEN-LAST:event_settingsMouseClicked
 
+    private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
+      applications ap = new applications();
+      ap.setVisible(true);
+      this.dispose();
+    }//GEN-LAST:event_jLabel6MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -579,25 +737,23 @@ if (choice == JOptionPane.YES_OPTION) {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel acc_name;
+    private javax.swing.JLabel all;
+    private javax.swing.JLabel approved;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
-    private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
-    private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
-    private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel33;
     private javax.swing.JLabel jLabel4;
@@ -614,14 +770,16 @@ if (choice == JOptionPane.YES_OPTION) {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel labelscholar;
     private javax.swing.JLabel logout;
     private javax.swing.JPanel logoutnav;
     private javax.swing.JPanel paneldashboard;
     private javax.swing.JPanel panelset;
+    private javax.swing.JLabel pending;
+    private javax.swing.JLabel reject;
     private javax.swing.JPanel scholarnav1;
     private javax.swing.JLabel settings;
+    private javax.swing.JTable tbl_recent;
     private javax.swing.JPanel usersnav;
     // End of variables declaration//GEN-END:variables
 }

@@ -162,7 +162,7 @@ public class RegisterForm extends javax.swing.JFrame {
 
         username.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         username.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        username.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
+        username.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
         username.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 usernameActionPerformed(evt);
@@ -177,7 +177,7 @@ public class RegisterForm extends javax.swing.JFrame {
 
         fname.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         fname.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        fname.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
+        fname.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
         fname.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fnameActionPerformed(evt);
@@ -192,7 +192,7 @@ public class RegisterForm extends javax.swing.JFrame {
 
         lname.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         lname.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        lname.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
+        lname.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
         lname.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 lnameActionPerformed(evt);
@@ -207,7 +207,7 @@ public class RegisterForm extends javax.swing.JFrame {
 
         email.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         email.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        email.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
+        email.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
         email.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 emailActionPerformed(evt);
@@ -217,7 +217,7 @@ public class RegisterForm extends javax.swing.JFrame {
 
         contact.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         contact.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        contact.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
+        contact.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
         contact.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 contactActionPerformed(evt);
@@ -591,7 +591,7 @@ public class RegisterForm extends javax.swing.JFrame {
 
         type.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         type.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Type of User", "Admin", "Applicant", "Scholarship Providers/Committee" }));
-        type.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
+        type.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
         type.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 typeActionPerformed(evt);
@@ -624,7 +624,7 @@ public class RegisterForm extends javax.swing.JFrame {
 
         pass.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         pass.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        pass.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
+        pass.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
         pass.setEchoChar('\u2022');
         pass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -641,10 +641,7 @@ public class RegisterForm extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 699, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 699, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -877,10 +874,10 @@ public class RegisterForm extends javax.swing.JFrame {
             
             try{
                 String pass1 = passwordHasher.hashPassword(pass.getText());
-        if (db.insertData("INSERT INTO tbl_user (username, f_name, l_name, email, contact, type, pass, status, registration_date, sec_ques1, answer_1, sec_qeus2, answer_2) "
+        if (db.insertData("INSERT INTO tbl_user (username, f_name, l_name, email, contact, type, pass, status, registration_date, sec_ques1, answer_1, sec_ques2, answer_2, image) "
     + "VALUES ('" + username.getText() + "', '" + fname.getText() + "', '" + lname.getText() + "', '" + email.getText() + "', "
     + "'" + contact.getText() + "', '" + type.getSelectedItem() + "', '" + pass1 + "', "
-    + "'Pending', CURRENT_TIMESTAMP, 'N/A', 'N/A', 'N/A', 'N/A')") == 1) {
+    + "'Pending', CURRENT_TIMESTAMP, 'N/A', 'N/A', 'N/A', 'N/A', 'N/A')") == 1) {
 
             
             

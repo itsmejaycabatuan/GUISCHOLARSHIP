@@ -130,6 +130,7 @@ Color hover = new Color (255,255,255);
         des = new javax.swing.JLabel();
         deadline1 = new javax.swing.JLabel();
         status = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -614,6 +615,9 @@ Color hover = new Color (255,255,255);
         status.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
         jPanel1.add(status, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 530, 290, 50));
 
+        jLabel1.setText("__________________________________________________________________________________________________________________________________________________");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, 1030, -1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -786,9 +790,46 @@ Color hover = new Color (255,255,255);
     }//GEN-LAST:event_registernav4MouseExited
 
     private void applyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_applyMouseClicked
-     
+          int id = Integer.parseInt(s_id.getText()); 
+
+    dbConnect db = new dbConnect();
+    try (Connection con = db.getConnection()) {
+      
+        String checkAvailabilityQuery = "SELECT capacity, status FROM tbl_scholarship WHERE s_id = ?";
+        PreparedStatement pstmt = con.prepareStatement(checkAvailabilityQuery);
+        pstmt.setInt(1, id);
+        ResultSet rs = pstmt.executeQuery();
+
+        if (rs.next()) {
+            int currentCapacity = rs.getInt("capacity");
+            String status = rs.getString("status");
+
+            
+            if (currentCapacity > 0 && !"Not Available".equalsIgnoreCase(status)) {
+               
+                applyForm af = new applyForm(id);
+                af.setVisible(true);
+                this.dispose();
+            } else {
+              
+                String message = "This scholarship is no longer available";
+                if ("Not Available".equalsIgnoreCase(status)) {
+                    message = "This scholarship is currently not available.";
+                } else if (currentCapacity <= 0) {
+                    message = "This scholarship has reached its capacity.";
+                }
+                JOptionPane.showMessageDialog(null, message, "Scholarship Unavailable", JOptionPane.WARNING_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Scholarship not found.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
         
-        
+        rs.close();
+        pstmt.close();
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+    }
+
         
     }//GEN-LAST:event_applyMouseClicked
 
@@ -859,6 +900,7 @@ Color hover = new Color (255,255,255);
     private javax.swing.JLabel deadline1;
     private javax.swing.JLabel des;
     private javax.swing.JLabel gpa;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;

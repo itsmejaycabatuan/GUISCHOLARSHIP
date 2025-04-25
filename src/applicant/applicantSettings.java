@@ -42,49 +42,49 @@ public class applicantSettings extends javax.swing.JFrame {
         fetchAndDisplayImage();
         checkUserImage();
     }
-                    private void checkUserImage() {
-                       try {
-                           dbConnect dc = new dbConnect();
-                           Connection con = dc.getConnection();
-                           if (con == null) {
-                               JOptionPane.showMessageDialog(null, "Database connection failed!", "Error", JOptionPane.ERROR_MESSAGE);
-                               return;
-                           }
+                 private void checkUserImage() {
+    try {
+        dbConnect dc = new dbConnect();
+        Connection con = dc.getConnection();
+        if (con == null) {
+            JOptionPane.showMessageDialog(null, "Database connection failed!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
+        String imagePath = null;
+        String query = "SELECT image FROM tbl_user WHERE u_id = ?";
+        PreparedStatement pstmt = con.prepareStatement(query);
+        Integer userId = Session.getInstance().getUser_id();
 
-                           String imagePath = null;
-                           String query = "SELECT image FROM tbl_user WHERE u_id = ?";
-                           PreparedStatement pstmt = con.prepareStatement(query);
-                           Integer userId = Session.getInstance().getUser_id();
+        if (userId == null) {
+            JOptionPane.showMessageDialog(null, "Session error: User ID not found!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-                           if (userId == null) {
-                               JOptionPane.showMessageDialog(null, "Session error: User ID not found!", "Error", JOptionPane.ERROR_MESSAGE);
-                               return;
-                           }
+        pstmt.setInt(1, userId);
+        ResultSet rs = pstmt.executeQuery();
+        if (rs.next()) {
+            imagePath = rs.getString("image");
+        }
 
-                           pstmt.setInt(1, userId);
-                           ResultSet rs = pstmt.executeQuery();
-                           if (rs.next()) {
-                               imagePath = rs.getString("image");
-                           }
+        rs.close();
+        pstmt.close();
+        con.close();
 
-                           rs.close();
-                           pstmt.close();
-                           con.close();
+        // Check if imagePath is valid and the file actually exists
+        if (imagePath != null && !imagePath.isEmpty() && new File(imagePath).exists()) {
+            image.setIcon(ResizeImage(imagePath, null, image)); // Optional: display image
+            remove.setEnabled(true);
+            select.setEnabled(false);
+        } else {
+            remove.setEnabled(false);
+            select.setEnabled(true);
+        }
 
-
-                           if (imagePath != null && !imagePath.isEmpty()) {
-                               remove.setEnabled(true);
-                               select.setEnabled(false);
-                           } else {
-                               remove.setEnabled(false);
-                               select.setEnabled(true);
-                           }
-
-                       } catch (SQLException e) {
-                           JOptionPane.showMessageDialog(null, "Database error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                       }
-                   }
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Database error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
 
                   private void fetchAndDisplayImage() {
                        dbConnect dc = new dbConnect();

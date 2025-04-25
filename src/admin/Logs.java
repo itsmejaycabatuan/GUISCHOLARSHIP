@@ -27,22 +27,27 @@ public class Logs extends javax.swing.JFrame {
         initComponents();
         loadLogsIntoTable();
     }
-    public void loadLogsIntoTable() {
+public void loadLogsIntoTable() {
     try {
         dbConnect dc = new dbConnect();
         Connection con = dc.getConnection();
 
-        String query = "SELECT log_id, user_id, action, date_time FROM tbl_logs ORDER BY date_time DESC";
+      
+        String query = "SELECT l.log_id, l.user_id, u.email, l.action, l.date_time " +
+                       "FROM tbl_logs l " +
+                       "INNER JOIN tbl_user u ON l.user_id = u.u_id " +  
+                       "ORDER BY l.date_time DESC";
         PreparedStatement pst = con.prepareStatement(query);
         ResultSet rs = pst.executeQuery();
 
         DefaultTableModel model = new DefaultTableModel();
-        model.setColumnIdentifiers(new String[]{"Log ID", "User ID", "Action", "Date/Time"});
+        model.setColumnIdentifiers(new String[]{"Log ID", "User ID", "Email Address", "Action", "Date/Time"});
         
         while (rs.next()) {
             model.addRow(new Object[]{
                 rs.getInt("log_id"),
                 rs.getInt("user_id"),
+                rs.getString("email"),  
                 rs.getString("action"),
                 rs.getTimestamp("date_time")
             });

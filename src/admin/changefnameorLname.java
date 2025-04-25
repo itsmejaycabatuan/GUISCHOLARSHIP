@@ -186,66 +186,44 @@ public class changefnameorLname extends javax.swing.JFrame {
     }//GEN-LAST:event_newlastnameActionPerformed
 
     private void updateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateMouseClicked
+if (newlastname.getText().isEmpty()) {
+    JOptionPane.showMessageDialog(null, "New Last Name is required!", "Missing Information", JOptionPane.WARNING_MESSAGE);
+    return;
+}
 
-            if (fname1.getText().isEmpty() || newlastname.getText().isEmpty()) {
-        JOptionPane.showMessageDialog(null, "All Fields Required!", "Missing Information", JOptionPane.WARNING_MESSAGE);
-        return;
+dbConnect dc = new dbConnect();
+Connection con = dc.getConnection();
+
+try {
+    // Update last name in the database
+    String updateQuery = "UPDATE tbl_user SET l_name = ? WHERE u_id = ?";
+    PreparedStatement updateStmt = con.prepareStatement(updateQuery);
+    updateStmt.setString(1, newlastname.getText().trim()); // ✅ Trim to avoid extra spaces
+    updateStmt.setInt(2, Session.getInstance().getUser_id());
+
+    int updatedRows = updateStmt.executeUpdate();
+    if (updatedRows > 0) {
+        JOptionPane.showMessageDialog(null, "Last Name Updated Successfully!");
+
+        // Update session data
+        Session.getInstance().setLname(newlastname.getText().trim());
+
+        // Refresh UI
+        adminSettings as = new adminSettings();
+        as.setVisible(true);
+        this.dispose();
+    } else {
+        JOptionPane.showMessageDialog(null, "Failed to Update Last Name!", "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    dbConnect dc = new dbConnect();
-    Connection con = dc.getConnection();
+    // Close resources
+    updateStmt.close();
+    con.close();
 
-    try {
-        // Fetch current last name from database
-        String fetchQuery = "SELECT l_name FROM tbl_user WHERE u_id = ?";
-        PreparedStatement fetchStmt = con.prepareStatement(fetchQuery);
-        fetchStmt.setInt(1, Session.getInstance().getUser_id());
-        ResultSet rs = fetchStmt.executeQuery();
-
-        if (rs.next()) {
-            String actualCurrentLname = rs.getString("l_name");
-
-            // Verify if entered last name matches the one in the database
-            if (!fname1.getText().equalsIgnoreCase(actualCurrentLname)) {
-                JOptionPane.showMessageDialog(null, "Incorrect Current Last Name!", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "User not found!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // Update last name in the database
-        String updateQuery = "UPDATE tbl_user SET l_name = ? WHERE u_id = ?";
-        PreparedStatement updateStmt = con.prepareStatement(updateQuery);
-        updateStmt.setString(1, newlastname.getText());
-        updateStmt.setInt(2, Session.getInstance().getUser_id());
-
-        int updatedRows = updateStmt.executeUpdate();
-        if (updatedRows > 0) {
-            JOptionPane.showMessageDialog(null, "Last Name Updated Successfully!");
-
-            // Update session data
-            Session sess = Session.getInstance();
-            sess.setLname(newlastname.getText());
-
-            // Refresh UI
-            adminSettings as = new adminSettings();
-            as.setVisible(true);
-            this.dispose();
-        } else {
-            JOptionPane.showMessageDialog(null, "Failed to Update Last Name!", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-
-        // Close resources
-        updateStmt.close();
-        fetchStmt.close();
-        con.close();
-
-    } catch (SQLException ex) {
-        ex.printStackTrace();
-        JOptionPane.showMessageDialog(null, "Error updating Last Name!", "Error", JOptionPane.ERROR_MESSAGE);
-    }
+} catch (SQLException ex) {
+    ex.printStackTrace();
+    JOptionPane.showMessageDialog(null, "Error updating Last Name!", "Error", JOptionPane.ERROR_MESSAGE);
+}
 
         
         

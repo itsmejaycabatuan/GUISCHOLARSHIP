@@ -505,15 +505,18 @@ Color hover = new Color (255,255,255);
 
         status.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         status.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Status", "Availabe", "Not Available" }));
+        status.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
         jPanel1.add(status, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 520, 290, 50));
 
         s_id.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
         s_id.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        s_id.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
         s_id.setEnabled(false);
         jPanel1.add(s_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 220, 290, 50));
 
         sname.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
         sname.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        sname.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
         sname.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 snameActionPerformed(evt);
@@ -523,6 +526,7 @@ Color hover = new Color (255,255,255);
 
         gpa.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
         gpa.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        gpa.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
         gpa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 gpaActionPerformed(evt);
@@ -532,10 +536,12 @@ Color hover = new Color (255,255,255);
 
         capacity.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
         capacity.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        capacity.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
         jPanel1.add(capacity, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 320, 290, 50));
 
         annincome.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
         annincome.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        annincome.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
         annincome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 annincomeActionPerformed(evt);
@@ -545,6 +551,7 @@ Color hover = new Color (255,255,255);
 
         amount.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
         amount.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        amount.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
         amount.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 amountActionPerformed(evt);
@@ -554,14 +561,17 @@ Color hover = new Color (255,255,255);
 
         require.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
         require.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        require.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
         jPanel1.add(require, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 430, 290, 150));
 
         des.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
         des.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        des.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
         jPanel1.add(des, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 430, 290, 150));
 
         deadline1.setFont(new java.awt.Font("Arial Black", 1, 12)); // NOI18N
         deadline1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        deadline1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
         deadline1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deadline1ActionPerformed(evt);

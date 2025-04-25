@@ -209,9 +209,9 @@ Color hover = new Color (255,255,255);
     }//GEN-LAST:event_back2MouseExited
 
     private void backMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backMouseClicked
-         secQuestion sq = new secQuestion();
-         sq.setVisible(true);
-        this.dispose();
+       entermail em = new entermail();
+       em.setVisible(true);
+       this.dispose();
     }//GEN-LAST:event_backMouseClicked
 
     private void back2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_back2MouseClicked

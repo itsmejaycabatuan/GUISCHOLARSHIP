@@ -55,18 +55,24 @@ public class usersTable extends javax.swing.JFrame {
     }
     
     
-    public void displayUsers(){
-        
-        try{
-            dbConnect db = new dbConnect();
-        ResultSet rs = db.getData("SELECT u_id, f_name, l_name, email, status FROM tbl_user");
-        tbl_users.setModel(DbUtils.resultSetToTableModel(rs));
-        rs.close();
-        }catch(SQLException e){
-            System.out.println("Erros: "+e.getMessage());
-        }
+   public void displayUsers() {
+    try {
+        dbConnect db = new dbConnect();
+        Integer currentUserId = Session.getInstance().getUser_id(); // Get current user's ID
 
+        String query = "SELECT u_id, f_name, l_name, email, status FROM tbl_user WHERE u_id != ?";
+        PreparedStatement pst = db.getConnection().prepareStatement(query);
+        pst.setInt(1, currentUserId); // Exclude the current user
+
+        ResultSet rs = pst.executeQuery();
+        tbl_users.setModel(DbUtils.resultSetToTableModel(rs));
+
+        rs.close();
+        pst.close();
+    } catch (SQLException e) {
+        System.out.println("Error: " + e.getMessage());
     }
+}
     private void searchTable() {
     String searchText = searchfield.getText().toLowerCase().trim(); // Normalize input
 
