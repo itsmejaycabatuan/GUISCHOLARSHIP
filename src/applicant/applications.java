@@ -33,11 +33,10 @@ private void loadApplicantApplications() {
     dbConnect db = new dbConnect();
     Connection conn = db.getConnection();
 
-    // SQL query to join tbl_records and tbl_scholarship and get the application details
-    String query = "SELECT r.r_id, r.fname, r.lname, r.u_email, r.contact, r.GPA, r.annual_income, r.date_submit, r.status, s.s_name " +
+    String query = "SELECT r.r_id, r.fname, r.lname, r.u_email, r.contact, r.GPA, r.annual_income, r.date_submit, r.status, r.status_release, s.s_name " +
                    "FROM tbl_records r " +
                    "JOIN tbl_scholarship s ON r.s_id = s.s_id " +
-                   "WHERE r.user_id = ?"; 
+                   "WHERE r.user_id = ?";
 
     try (PreparedStatement stmt = conn.prepareStatement(query)) {
         stmt.setInt(1, Session.getInstance().getUser_id());  // Use user_id from session
@@ -54,11 +53,10 @@ private void loadApplicantApplications() {
         model.addColumn("GPA");
         model.addColumn("Annual Income");
         model.addColumn("Date Submitted");
-       
         model.addColumn("Scholarship Name");
-         model.addColumn("Status");
+        model.addColumn("Status");
+        model.addColumn("Status Release");  // New column
 
-        
         while (rs.next()) {
             model.addRow(new Object[] {
                 rs.getInt("r_id"),
@@ -69,20 +67,20 @@ private void loadApplicantApplications() {
                 rs.getDouble("GPA"),
                 rs.getInt("annual_income"),
                 rs.getDate("date_submit"),
-                
-                rs.getString("s_name"), 
-                    rs.getString("status")
+                rs.getString("s_name"),
+                rs.getString("status"),
+                rs.getString("status_release")  // New data
             });
         }
 
-     
-        tbl_application.setModel(model);  // Assuming applicantApplicationsTable is the name of the JTable
+        tbl_application.setModel(model);  // Apply the model to the JTable
 
         rs.close();
     } catch (SQLException e) {
         JOptionPane.showMessageDialog(null, "Error fetching application records: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
+
 
   Color hover = new Color (255,255,255);
     Color defaultcolor = new Color  (102,102,102);
