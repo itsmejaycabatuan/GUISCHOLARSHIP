@@ -620,30 +620,30 @@ public void loadRejectedApplications() {
     }//GEN-LAST:event_panelsetMouseExited
 
     private void logoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseClicked
-        String username = acc_name.getText();
-
-
-int userId = getUserId(username);
-
-if (userId == -1) { 
-    System.out.println("🚨 User not found! Cannot log out.");
-    JOptionPane.showMessageDialog(null, "Error: Cannot log action. User not found!", "Error", JOptionPane.ERROR_MESSAGE);
-    return; 
-}
-
-System.out.println("✅ User found! userId: " + userId);
-
-int choice = JOptionPane.showConfirmDialog(null, "Do you want to log out?", "Logout Confirmation!",
-        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-
-if (choice == JOptionPane.YES_OPTION) {
-    dbConnect dc = new dbConnect();
-    dc.insertLog(userId, "Logout");
-
-    LoginForm lf = new LoginForm();
-    lf.setVisible(true);
-    this.dispose();
-}
+//        String username = acc_name.getText();
+//
+//
+//int userId = getUserId(username);
+//
+//if (userId == -1) { 
+//    System.out.println("🚨 User not found! Cannot log out.");
+//    JOptionPane.showMessageDialog(null, "Error: Cannot log action. User not found!", "Error", JOptionPane.ERROR_MESSAGE);
+//    return; 
+//}
+//
+//System.out.println("✅ User found! userId: " + userId);
+//
+//int choice = JOptionPane.showConfirmDialog(null, "Do you want to log out?", "Logout Confirmation!",
+//        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+//
+//if (choice == JOptionPane.YES_OPTION) {
+//    dbConnect dc = new dbConnect();
+//    dc.insertLog(userId, "Logout");
+//
+//    LoginForm lf = new LoginForm();
+//    lf.setVisible(true);
+//    this.dispose();
+//}
     }//GEN-LAST:event_logoutMouseClicked
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
