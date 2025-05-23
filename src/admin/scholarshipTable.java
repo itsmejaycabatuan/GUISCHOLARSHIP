@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import net.proteanit.sql.DbUtils;
+import scholarcommitte.sDashBoard;
 
 /**
  *
@@ -263,7 +264,7 @@ public class scholarshipTable extends javax.swing.JFrame {
     }//GEN-LAST:event_refreshnavMouseEntered
 
     private void refreshnavMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refreshnavMouseClicked
-        adminDashboard ad = new adminDashboard();
+        sDashBoard ad = new sDashBoard();
         ad.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_refreshnavMouseClicked

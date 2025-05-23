@@ -517,7 +517,7 @@ Color hover = new Color (255,255,255);
 
         jLabel9.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("Fund Amount:");
+        jLabel9.setText("Benefits:");
         jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 270, 200, 60));
 
         jLabel11.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N

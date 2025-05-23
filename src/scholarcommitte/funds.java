@@ -5,9 +5,13 @@
  */
 package scholarcommitte;
 import config.dbConnect;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.TableModel;
 import net.proteanit.sql.DbUtils;
 /**
@@ -22,7 +26,68 @@ public class funds extends javax.swing.JFrame {
     public funds() {
         initComponents();
         displayUsers();
+          searchfield.getDocument().addDocumentListener(new DocumentListener() {
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        searchFundsTable(); // Call searchTable when text is added
     }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+        searchFundsTable(); // Call searchTable when text is removed
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+        searchFundsTable(); // Needed for text formatting changes (rare)
+    }
+});
+    }
+    private void searchFundsTable() {
+    String searchText = searchfield.getText().toLowerCase().trim(); // Normalize input
+
+    dbConnect db = new dbConnect();
+    Connection conn = db.getConnection();
+
+    if (conn == null) {
+        JOptionPane.showMessageDialog(this, "Database connection failed. Please check your settings.");
+        return;
+    }
+
+    String query;
+    boolean isSearchEmpty = searchText.isEmpty();
+
+    if (isSearchEmpty) {
+        // Show only approved applications by default
+        query = "SELECT * FROM tbl_records WHERE LOWER(status) = 'approved'";
+    } else {
+        // Search only within approved applications
+        query = "SELECT * FROM tbl_records WHERE LOWER(status) = 'approved' AND " +
+                "(LOWER(fname) LIKE ? OR LOWER(status_release) LIKE ?)";
+    }
+
+    try (PreparedStatement statement = conn.prepareStatement(query)) {
+        if (!isSearchEmpty) {
+            String likeText = "%" + searchText + "%";
+            statement.setString(1, likeText);
+            statement.setString(2, likeText);
+        }
+
+        try (ResultSet resultSet = statement.executeQuery()) {
+            tbl_app.setModel(DbUtils.resultSetToTableModel(resultSet));
+
+            if (tbl_app.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(this, "No approved matching records found.");
+            }
+        }
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error executing query: " + ex.getMessage());
+        ex.printStackTrace();
+    } finally {
+        db.close();
+    }
+}
+
 public void displayUsers() {
     try {
         dbConnect db = new dbConnect();

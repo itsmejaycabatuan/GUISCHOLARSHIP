@@ -6,9 +6,13 @@
 package scholarcommitte;
 
 import config.dbConnect;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.TableModel;
 import net.proteanit.sql.DbUtils;
 
@@ -24,7 +28,67 @@ public class applicants extends javax.swing.JFrame {
     public applicants() {
         initComponents();
         displayUsers();
+          searchfield.getDocument().addDocumentListener(new DocumentListener() {
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        searchApplicationTable(); // Call searchTable when text is added
     }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+       searchApplicationTable(); // Call searchTable when text is removed
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+        searchApplicationTable(); // Needed for text formatting changes (rare)
+    }
+});
+    }
+   private void searchApplicationTable() {
+    String searchText = searchfield.getText().toLowerCase().trim(); // Normalize input
+
+    dbConnect db = new dbConnect();
+    Connection conn = db.getConnection();
+
+    if (conn == null) {
+        JOptionPane.showMessageDialog(this, "Database connection failed. Please check your settings.");
+        return;
+    }
+
+    String query;
+    boolean isSearchEmpty = searchText.isEmpty();
+
+    if (isSearchEmpty) {
+        query = "SELECT * FROM tbl_records"; 
+    } else {
+        query = "SELECT * FROM tbl_records WHERE LOWER(fname) LIKE ? OR LOWER(status) LIKE ? OR LOWER(status_release) LIKE ?";
+    }
+
+    try (PreparedStatement statement = conn.prepareStatement(query)) {
+        if (!isSearchEmpty) {
+            String likeText = "%" + searchText + "%";
+            statement.setString(1, likeText);
+            statement.setString(2, likeText);
+            statement.setString(3, likeText);
+        }
+
+        try (ResultSet resultSet = statement.executeQuery()) {
+            tbl_app.setModel(DbUtils.resultSetToTableModel(resultSet));
+
+            if (tbl_app.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(this, "No matching records found.");
+            }
+        }
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error executing query: " + ex.getMessage());
+        ex.printStackTrace();
+    } finally {
+        db.close();
+    }
+}
+
+
    public void displayUsers() {
     try {
         dbConnect db = new dbConnect();
@@ -153,6 +217,11 @@ public class applicants extends javax.swing.JFrame {
         searchfield.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         searchfield.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         searchfield.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 204, 102), 3));
+        searchfield.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchfieldActionPerformed(evt);
+            }
+        });
         jPanel1.add(searchfield, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 130, 850, 40));
 
         searchnav.setBackground(new java.awt.Color(255, 255, 255));
@@ -261,6 +330,10 @@ if (rowIndex < 0) {
         sd.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel8MouseClicked
+
+    private void searchfieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchfieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_searchfieldActionPerformed
 
     /**
      * @param args the command line arguments

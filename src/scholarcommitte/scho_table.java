@@ -5,6 +5,7 @@
  */
 package scholarcommitte;
 
+import admin.adminDashboard;
 import config.dbConnect;
 import java.awt.Color;
 import java.sql.Connection;
@@ -428,7 +429,7 @@ public class scho_table extends javax.swing.JFrame {
     }//GEN-LAST:event_searchnavMouseExited
 
     private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
-        sDashBoard sd = new sDashBoard();
+        adminDashboard sd = new adminDashboard();
         sd.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel8MouseClicked

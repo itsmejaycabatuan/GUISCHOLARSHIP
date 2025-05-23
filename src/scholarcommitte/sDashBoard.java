@@ -5,6 +5,7 @@
  */
 package scholarcommitte;
 
+import admin.scholarshipTable;
 import config.Session;
 import config.dbConnect;
 import java.awt.Color;
@@ -466,12 +467,12 @@ public void loadRejectedApplications() {
 
         jPanel1.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 150, 230, 220));
 
-        jLabel2.setFont(new java.awt.Font("Arial Black", 1, 48)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Arial Black", 1, 40)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 204, 102));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("COMMITTEE DASHBOARD");
+        jLabel2.setText("SCHOLARSHIP STAFF DASHBOARD");
         jLabel2.setToolTipText("");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 10, 800, 100));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 10, 940, 100));
 
         tbl_recent.setBackground(new java.awt.Color(153, 153, 153));
         tbl_recent.setFont(new java.awt.Font("Arial Black", 0, 12)); // NOI18N
@@ -680,7 +681,7 @@ if (choice == JOptionPane.YES_OPTION) {
     }//GEN-LAST:event_jLabel6MouseClicked
 
     private void labelscholar1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelscholar1MouseClicked
-       scho_table sc = new scho_table();
+       scholarshipTable sc = new scholarshipTable();
        sc.setVisible(true);
        this.dispose(    );
     }//GEN-LAST:event_labelscholar1MouseClicked

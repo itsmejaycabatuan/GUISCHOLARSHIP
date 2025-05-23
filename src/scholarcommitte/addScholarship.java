@@ -5,6 +5,7 @@
  */
 package scholarcommitte;
 
+import admin.adminDashboard;
 import java.awt.Color;
 import config.dbConnect;
 import java.text.SimpleDateFormat;
@@ -513,7 +514,7 @@ Color hover = new Color (255,255,255);
 
         jLabel9.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("Fund Amount:");
+        jLabel9.setText("Benefits:");
         jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 480, 200, 60));
 
         amount.setFont(new java.awt.Font("Arial Black", 1, 14)); // NOI18N
@@ -623,7 +624,7 @@ else if (!amount.getText().matches("^[a-zA-Z\\s]*\\d*[a-zA-Z\\s]*$")) {
                         JOptionPane.showMessageDialog(null, "Scholarship Submitted Successfully");
 
 
-                        sDashBoard sd = new sDashBoard();
+                        adminDashboard sd = new adminDashboard();
                         sd.setVisible(true);
                         this.dispose();
                     }

@@ -609,18 +609,18 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Arial Black" size="48" style="1"/>
+              <Font name="Arial Black" size="40" style="1"/>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="66" green="cc" red="ff" type="rgb"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="ADMIN DASHBOARD"/>
+            <Property name="text" type="java.lang.String" value="SCHOLARSHIP HEAD DASHBOARD"/>
             <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="470" y="60" width="610" height="50"/>
+              <AbsoluteConstraints x="350" y="60" width="850" height="50"/>
             </Constraint>
           </Constraints>
         </Component>

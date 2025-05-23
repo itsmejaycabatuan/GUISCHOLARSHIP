@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+import scholarcommitte.scho_table;
 import scholarshipgui.LoginForm;
 
 /**
@@ -470,12 +471,12 @@ public void PendingUser() {
 
         jPanel1.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 160, 560, 220));
 
-        jLabel2.setFont(new java.awt.Font("Arial Black", 1, 48)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Arial Black", 1, 40)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 204, 102));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("ADMIN DASHBOARD");
+        jLabel2.setText("SCHOLARSHIP HEAD DASHBOARD");
         jLabel2.setToolTipText("");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 60, 610, 50));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 60, 850, 50));
 
         recent_table.setBackground(new java.awt.Color(153, 153, 153));
         recent_table.setFont(new java.awt.Font("Arial Black", 0, 12)); // NOI18N
@@ -644,7 +645,7 @@ public void PendingUser() {
     }//GEN-LAST:event_panelsetMouseExited
 
     private void labelscholarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelscholarMouseClicked
-        scholarshipTable st = new scholarshipTable();
+        scho_table st = new scho_table();
         st.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_labelscholarMouseClicked
